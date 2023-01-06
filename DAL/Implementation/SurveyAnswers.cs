@@ -11,6 +11,13 @@ namespace DAL.Implementation
         {
         }
 
+        public SurveyAnswer Add(SurveyAnswer surveyAnswer)
+        {
+            SurveyAnswer addedSurveyAnswer = _context.SurveyAnswers.Add(surveyAnswer).Entity;
+            _context.SaveChanges();
+            return addedSurveyAnswer;
+        }
+
         public List<SurveyAnswer> GetAll()
         {
             return _context.SurveyAnswers

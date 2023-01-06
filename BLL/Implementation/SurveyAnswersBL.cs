@@ -11,6 +11,12 @@ namespace BLL.Implementation
         {
         }
 
+        public SurveyAnswerCreate Add(SurveyAnswerCreate surveyAnswer)
+        {
+            DAL.Models.SurveyAnswer addedSurveyAnswer = SurveyAnswerCreateConverter.ToDALModel(surveyAnswer);
+            return SurveyAnswerCreateConverter.ToBLLModel(_dalContext.SurveyAnswers.Add(addedSurveyAnswer));
+        }
+
         public List<SurveyAnswerRead> GetAll()
         {
             return _dalContext.SurveyAnswers

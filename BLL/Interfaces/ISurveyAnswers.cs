@@ -4,7 +4,7 @@ namespace BLL.Interfaces
 {
     public interface ISurveyAnswers
     {
-        //SurveyAnswer Add(SurveyAnswer surveyAnswer);
+        SurveyAnswerCreate Add(SurveyAnswerCreate surveyAnswer);
         List<SurveyAnswerRead> GetAll();
         //void Update(SurveyAnswer surveyAnswer);
         //void Delete(Guid uid);

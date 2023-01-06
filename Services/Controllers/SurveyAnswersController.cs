@@ -5,6 +5,18 @@ namespace Services.Controllers
 {
     public class SurveyAnswersController : ApiControllerBase
     {
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public IActionResult Add([FromBody] SurveyAnswerCreate surveyAnswer)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            return new ObjectResult(BusinessContext.SurveyAnswers.Add(surveyAnswer)) { StatusCode = StatusCodes.Status201Created };
+        }
+
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SurveyAnswerRead>))]
         public IActionResult GetAll()
