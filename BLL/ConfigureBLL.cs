@@ -4,7 +4,7 @@ using BLL.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Optimum.BLL;
+namespace BLL;
 public static class ConfigureBLL
 {
     public static IServiceCollection AddBLLServices(this IServiceCollection services, IConfiguration configuration)

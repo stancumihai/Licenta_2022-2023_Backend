@@ -6,14 +6,16 @@
         {
             return new Library.Models.SurveyQuestion.SurveyQuestionCreate
             {
-                Value = surveyQuestionDALModel.Value
+                Value = surveyQuestionDALModel.Value,
+                Category = (Library.Enums.SurveyQuestionCategory)surveyQuestionDALModel.Category
             };
         }
         internal static DAL.Models.SurveyQuestion ToDALModel(Library.Models.SurveyQuestion.SurveyQuestionCreate surveyQuestionBLLModel)
         {
             return new DAL.Models.SurveyQuestion
             {
-                Value = surveyQuestionBLLModel.Value
+                Value = surveyQuestionBLLModel.Value,
+                Category = (DAL.Enums.SurveyQuestionCategory)surveyQuestionBLLModel.Category
             };
         }
     }

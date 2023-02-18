@@ -6,8 +6,7 @@ namespace BLL.Interfaces
     {
         SurveyAnswerCreate Add(SurveyAnswerCreate surveyAnswer);
         List<SurveyAnswerRead> GetAll();
-        //void Update(SurveyAnswer surveyAnswer);
-        //void Delete(Guid uid);
+        List<SurveyAnswerRead> GetAllByQuestionUid(Guid uid);
         SurveyAnswerRead? GetByUid(Guid uid);
     }
 }

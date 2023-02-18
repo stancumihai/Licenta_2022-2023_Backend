@@ -1,6 +1,7 @@
 ﻿using DAL.Core;
 using DAL.Interfaces;
 using DAL.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Implementation
 {
@@ -12,14 +13,14 @@ namespace DAL.Implementation
 
         public List<SurveyQuestion> GetAll()
         {
-            return _context.SurveyQuestions.ToList();
+            return _context.SurveyQuestions.Include(sq => sq.SurveyAnswers).ToList();
         }
 
         public SurveyQuestion? GetByUid(Guid uid)
         {
-            SurveyQuestion? surveyQuestion = _context.SurveyQuestions
+            SurveyQuestion? surveyQuestion = _context.SurveyQuestions.Include(sq => sq.SurveyAnswers)
                                                 .FirstOrDefault(sq => sq.SurveyQuestionGUID.Equals(uid));
-            if(surveyQuestion == null)
+            if (surveyQuestion == null)
             {
                 return null;
             }

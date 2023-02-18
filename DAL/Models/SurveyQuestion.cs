@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DAL.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Models
 {
@@ -6,7 +7,14 @@ namespace DAL.Models
     {
         [Key]
         public Guid SurveyQuestionGUID { get; set; }
-        public string Value { get; set; }
-        public List<SurveyAnswer> SurveyAnswers { get; set; }
+        public string? Value { get; set; }
+        public List<SurveyAnswer>? SurveyAnswers { get; set; }
+        public SurveyQuestionCategory Category { get; set; }
+
+        public override string ToString()
+        {
+            return "SurveyQuestionGUID :" + SurveyQuestionGUID +
+                " Value: " + Value + "Category: " + Category.ToString();
+        }
     }
 }

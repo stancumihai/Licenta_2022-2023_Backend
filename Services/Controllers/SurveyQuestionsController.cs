@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Services.Controllers
 {
-    public class SurveyQuestionController : ApiControllerBase
+    public class SurveyQuestionsController : ApiControllerBase
     {
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SurveyQuestionRead>))]

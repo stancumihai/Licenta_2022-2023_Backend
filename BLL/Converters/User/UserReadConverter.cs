@@ -13,6 +13,7 @@ namespace BLL.Converters.User
                 Username = userDALModel.Username,
                 Email = userDALModel.Email,
                 Password = userDALModel.Password,
+                Role = (Library.Enums.Roles)userDALModel.Role,
                 SurveyAnswers = userDALModel.SurveyAnswers
                     .Select(surveyAnswer => SurveyAnswerReadConverter.ToBLLModel(surveyAnswer))
                     .ToList()
@@ -25,8 +26,9 @@ namespace BLL.Converters.User
             {
                 UserGUID = userBLLModel.Uid,
                 Username = userBLLModel.Username,
-                Password = userBLLModel.Password,
                 Email = userBLLModel.Email,
+                Password = userBLLModel.Password,
+                Role = (DAL.Enums.Roles)userBLLModel.Role,
                 SurveyAnswers = userBLLModel.SurveyAnswers
                     .Select(surveyAnswer => SurveyAnswerReadConverter.ToDALModel(surveyAnswer))
                     .ToList()

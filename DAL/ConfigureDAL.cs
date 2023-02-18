@@ -6,7 +6,7 @@ using DAL.Interfaces;
 using DAL;
 using DAL.Implementation;
 
-namespace Optimum.DAL;
+namespace DAL;
 public static class ConfigureDAL
 {
     public static IServiceCollection AddDALServices(this IServiceCollection services, IConfiguration configuration)

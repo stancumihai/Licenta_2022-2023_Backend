@@ -25,6 +25,14 @@ namespace BLL.Implementation
                .ToList();
         }
 
+        public List<SurveyAnswerRead> GetAllByQuestionUid(Guid questionUid)
+        {
+            return _dalContext.SurveyAnswers
+                .GetAllByQuestionUid(questionUid)
+                .Select(surveyAnswer => SurveyAnswerReadConverter.ToBLLModel(surveyAnswer))
+                .ToList();
+        }
+
         public SurveyAnswerRead? GetByUid(Guid uid)
         {
             return _dalContext.SurveyAnswers

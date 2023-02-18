@@ -3,9 +3,9 @@
 namespace BLL.Core;
 public class BusinessContext
 {
-    public IUsers Users { get; set; }
-    public ISurveyQuestions SurveyQuestions { get; set; }
-    public ISurveyAnswers SurveyAnswers { get; set; }
+    public IUsers? Users { get; set; }
+    public ISurveyQuestions? SurveyQuestions { get; set; }
+    public ISurveyAnswers? SurveyAnswers { get; set; }
 
     public BusinessContext(IUsers users, ISurveyQuestions surveyQuestions, ISurveyAnswers surveyAnswers)
     {

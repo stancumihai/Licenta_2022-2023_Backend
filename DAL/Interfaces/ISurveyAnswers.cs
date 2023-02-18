@@ -6,8 +6,7 @@ namespace DAL.Interfaces
     {
         SurveyAnswer Add(SurveyAnswer surveyAnswer);
         List<SurveyAnswer> GetAll();
-        //void Update(SurveyAnswer surveyAnswer);
-        //void Delete(Guid uid);
+        List<SurveyAnswer> GetAllByQuestionUid(Guid questionUid);
         SurveyAnswer? GetByUid(Guid uid);
     }
 }

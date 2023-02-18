@@ -21,11 +21,18 @@ namespace Services.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SurveyAnswerRead>))]
         public IActionResult GetAll()
         {
-            return Ok(BusinessContext.SurveyQuestions.GetAll());
+            return Ok(BusinessContext.SurveyAnswers.GetAll());
+        }
+
+        [HttpGet("question/{questionUid}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SurveyAnswerRead>))]
+        public IActionResult GetAllByQuestionUid([FromRoute] Guid questionUid)
+        {
+            return Ok(BusinessContext.SurveyAnswers.GetAllByQuestionUid(questionUid));
         }
 
         [HttpGet("{uid:Guid}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SurveyAnswerRead>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SurveyAnswerRead))]
         public IActionResult GetByUid([FromRoute] Guid uid)
         {
             SurveyAnswerRead? surveyAnswer = BusinessContext.SurveyAnswers.GetByUid(uid);

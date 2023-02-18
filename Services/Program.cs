@@ -1,5 +1,5 @@
-using Optimum.BLL;
-using Optimum.DAL;
+using BLL;
+using DAL;
 
 var builder = WebApplication.CreateBuilder(args);
 
