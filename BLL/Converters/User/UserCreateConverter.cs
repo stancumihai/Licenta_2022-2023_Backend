@@ -8,9 +8,13 @@ namespace BLL.Converters.User
         {
             return new UserCreate
             {
-                Username = userDALModel.Username,
                 Email = userDALModel.Email,
                 Password = userDALModel.Password,
+                PasswordHash = userDALModel.PasswordHash,
+                PasswordSalt = userDALModel.PasswordSalt,
+                RefreshToken = userDALModel.RefreshToken,
+                TokenCreated = userDALModel.TokenCreated,
+                TokenExpires = userDALModel.TokenExpires
             };
         }
 
@@ -18,9 +22,13 @@ namespace BLL.Converters.User
         {
             return new DAL.Models.User
             {
-                Username = userBLLModel.Username,
                 Email = userBLLModel.Email,
                 Password = userBLLModel.Password,
+                PasswordHash = userBLLModel.PasswordHash,
+                PasswordSalt = userBLLModel.PasswordSalt,
+                RefreshToken = userBLLModel.RefreshToken,
+                TokenCreated = userBLLModel.TokenCreated,
+                TokenExpires = userBLLModel.TokenExpires
             };
         }
     }

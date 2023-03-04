@@ -31,10 +31,14 @@ namespace DAL.Migrations
                 columns: table => new
                 {
                     UserGUID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Role = table.Column<int>(type: "int", nullable: false)
+                    Role = table.Column<int>(type: "int", nullable: false),
+                    PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TokenCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TokenExpires = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -89,11 +93,11 @@ namespace DAL.Migrations
                 columns: new[] { "SurveyQuestionGUID", "Category", "Value" },
                 values: new object[,]
                 {
-                    { new Guid("13d3263b-a9e1-47f4-a3f3-f439ffe73bb8"), 3, "1.How frequently do you watch movies?" },
-                    { new Guid("5e440fc9-6e23-4656-bfc8-e41149e18808"), 1, "3.Who is your favourite actor?" },
-                    { new Guid("ac3f76a8-a404-4c52-a418-140d6203a0bb"), 0, "2.Out of all the movies you have ever seen, which is your most favourite?" },
-                    { new Guid("cbded710-7709-4f19-86b3-bcb5d6989402"), 3, "5.What are your top 3 favourite kind of genres?" },
-                    { new Guid("d33e780a-3bb5-4da9-a9cf-6bf052d53a96"), 2, "4.Who is your favourite director?" }
+                    { new Guid("26ad8332-1472-486c-b042-4b9eee4ff9e5"), 0, "2.Out of all the movies you have ever seen, which is your most favourite?" },
+                    { new Guid("2b90292e-28da-46a5-a256-3dc3d9993b4b"), 3, "1.How frequently do you watch movies?" },
+                    { new Guid("9353cc10-8e92-4190-803a-563d14d5e3a5"), 1, "3.Who is your favourite actor?" },
+                    { new Guid("cf403395-0f5a-40d2-a744-92ecd8b8774d"), 3, "5.What are your top 3 favourite kind of genres?" },
+                    { new Guid("e3ef3359-4f3a-4a3b-bd20-c01821603707"), 2, "4.Who is your favourite director?" }
                 });
 
             migrationBuilder.InsertData(
@@ -101,22 +105,22 @@ namespace DAL.Migrations
                 columns: new[] { "SurveyAnswerGUID", "SurveyQuestionGUID", "Value" },
                 values: new object[,]
                 {
-                    { new Guid("1072e9cb-908c-43cd-bbb7-68bd671a0e0d"), new Guid("13d3263b-a9e1-47f4-a3f3-f439ffe73bb8"), "Extremely often" },
-                    { new Guid("1a1002f7-2268-42ee-9823-7bcfdb7606bb"), new Guid("cbded710-7709-4f19-86b3-bcb5d6989402"), "Thriller" },
-                    { new Guid("2d293d69-e613-475c-a7e7-507906742cd1"), new Guid("d33e780a-3bb5-4da9-a9cf-6bf052d53a96"), null },
-                    { new Guid("59480e9a-eb08-4407-992a-19ae6ba73ae4"), new Guid("13d3263b-a9e1-47f4-a3f3-f439ffe73bb8"), "Moderately often" },
-                    { new Guid("5e9349c4-8e25-445b-8a3c-6ea69d2267c5"), new Guid("13d3263b-a9e1-47f4-a3f3-f439ffe73bb8"), "Slightly often" },
-                    { new Guid("61bb3a70-3128-4a99-9955-b8164a197d7e"), new Guid("13d3263b-a9e1-47f4-a3f3-f439ffe73bb8"), "Very often" },
-                    { new Guid("6a5b1785-3adf-4933-95eb-15193f885135"), new Guid("cbded710-7709-4f19-86b3-bcb5d6989402"), "Romance" },
-                    { new Guid("6e83041b-2c00-4fe7-8330-fd668cae33a4"), new Guid("13d3263b-a9e1-47f4-a3f3-f439ffe73bb8"), "Not at all often" },
-                    { new Guid("883c5483-6d28-4fab-ac2f-ac6b48ca34a8"), new Guid("cbded710-7709-4f19-86b3-bcb5d6989402"), "Comedy" },
-                    { new Guid("9c31dc0c-ddf8-49a7-b679-1c0d35ac62cb"), new Guid("cbded710-7709-4f19-86b3-bcb5d6989402"), "Drama" },
-                    { new Guid("bbfcc9fd-38bc-4cf8-b002-489f825c07bf"), new Guid("cbded710-7709-4f19-86b3-bcb5d6989402"), "Action/Adventure" },
-                    { new Guid("c8153397-3be7-4ffb-909e-c768ffaaf79b"), new Guid("cbded710-7709-4f19-86b3-bcb5d6989402"), "Science-Fiction" },
-                    { new Guid("cfecac5c-d99c-4144-9ce7-8037ac9bdcab"), new Guid("cbded710-7709-4f19-86b3-bcb5d6989402"), "Musical" },
-                    { new Guid("dbf44912-4f51-491d-bbef-58c7aee78098"), new Guid("cbded710-7709-4f19-86b3-bcb5d6989402"), "Horror" },
-                    { new Guid("dce80b33-501f-4d4b-a2bf-85d2b72bbe0b"), new Guid("5e440fc9-6e23-4656-bfc8-e41149e18808"), null },
-                    { new Guid("e056a827-ea14-489e-8159-2309ce905dd9"), new Guid("ac3f76a8-a404-4c52-a418-140d6203a0bb"), null }
+                    { new Guid("134817d0-5597-46b2-8c1c-d9a52bbace85"), new Guid("9353cc10-8e92-4190-803a-563d14d5e3a5"), null },
+                    { new Guid("1d673f1d-e1e4-49dc-a4f2-9c3bac17c94e"), new Guid("cf403395-0f5a-40d2-a744-92ecd8b8774d"), "Horror" },
+                    { new Guid("206e7443-3404-4db8-9a3b-7993baa7d1bc"), new Guid("cf403395-0f5a-40d2-a744-92ecd8b8774d"), "Thriller" },
+                    { new Guid("30fd1543-f191-4c72-b685-d613e2a58e6e"), new Guid("2b90292e-28da-46a5-a256-3dc3d9993b4b"), "Not at all often" },
+                    { new Guid("5fbe5531-2bab-4311-b894-2239a3229957"), new Guid("cf403395-0f5a-40d2-a744-92ecd8b8774d"), "Drama" },
+                    { new Guid("6b964967-4412-4617-b8d9-dd96608aaa2a"), new Guid("cf403395-0f5a-40d2-a744-92ecd8b8774d"), "Comedy" },
+                    { new Guid("7db810be-f6af-4dd0-a295-57e4f65e74de"), new Guid("e3ef3359-4f3a-4a3b-bd20-c01821603707"), null },
+                    { new Guid("7f7fdd5d-110b-4082-9036-519292a7ae32"), new Guid("cf403395-0f5a-40d2-a744-92ecd8b8774d"), "Musical" },
+                    { new Guid("86f02947-46f7-49de-9fa1-27f6d1e6bcce"), new Guid("2b90292e-28da-46a5-a256-3dc3d9993b4b"), "Very often" },
+                    { new Guid("94acb601-a7de-4e6a-90d0-9c4b8f37c8cc"), new Guid("cf403395-0f5a-40d2-a744-92ecd8b8774d"), "Romance" },
+                    { new Guid("bb96a9cf-58c6-4a32-b1f8-767e2f0dc8ee"), new Guid("2b90292e-28da-46a5-a256-3dc3d9993b4b"), "Slightly often" },
+                    { new Guid("c047c073-dad2-4dc5-ab8a-f0a496c24c2b"), new Guid("2b90292e-28da-46a5-a256-3dc3d9993b4b"), "Moderately often" },
+                    { new Guid("ca43832d-926a-4ab8-8380-0a8b015ef3c3"), new Guid("cf403395-0f5a-40d2-a744-92ecd8b8774d"), "Action/Adventure" },
+                    { new Guid("db1517ef-f746-47e0-930e-48d351bb4707"), new Guid("2b90292e-28da-46a5-a256-3dc3d9993b4b"), "Extremely often" },
+                    { new Guid("e69ab1e6-8e25-45f2-b0d7-f8e1090ac71a"), new Guid("26ad8332-1472-486c-b042-4b9eee4ff9e5"), null },
+                    { new Guid("f8f9828e-0862-4402-961d-a9f67b37a0c4"), new Guid("cf403395-0f5a-40d2-a744-92ecd8b8774d"), "Science-Fiction" }
                 });
 
             migrationBuilder.CreateIndex(

@@ -66,7 +66,6 @@ namespace DAL.Core
             //{
             //    System.Diagnostics.Debugger.Launch();
             //}
-
             modelBuilder
                 .Entity<User>()
                 .HasMany(sa => sa.SurveyAnswers)

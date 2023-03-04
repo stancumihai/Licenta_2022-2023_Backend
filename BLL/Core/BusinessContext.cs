@@ -7,7 +7,8 @@ public class BusinessContext
     public ISurveyQuestions? SurveyQuestions { get; set; }
     public ISurveyAnswers? SurveyAnswers { get; set; }
 
-    public BusinessContext(IUsers users, ISurveyQuestions surveyQuestions, ISurveyAnswers surveyAnswers)
+    public BusinessContext(IUsers users, ISurveyQuestions surveyQuestions,
+                           ISurveyAnswers surveyAnswers)
     {
         Users = users;
         SurveyQuestions = surveyQuestions;

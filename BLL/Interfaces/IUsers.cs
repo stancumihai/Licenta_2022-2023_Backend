@@ -8,6 +8,10 @@ namespace BLL.Interfaces
         List<UserRead> GetAll();
         void Update(UserRead user);
         void Delete(Guid uid);
+        void DeleteAll();
         UserRead? GetByUid(Guid uid);
+        UserRead? GetByEmail(string email);
+        UserRead? GetByRefreshToken(string refreshToken);
+        UserToken GetLoggedInUser();
     }
 }

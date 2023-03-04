@@ -24,9 +24,6 @@
 		<Folder Include="Migrations\" />
 	</ItemGroup>
 	<ItemGroup>
-		<Folder Include="Models\" />
-	</ItemGroup>
-	<ItemGroup>
 	  <ProjectReference Include="..\Library\Library.csproj" />
 	</ItemGroup>
 </Project>

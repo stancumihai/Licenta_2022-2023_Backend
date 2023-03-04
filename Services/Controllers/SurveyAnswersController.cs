@@ -10,10 +10,6 @@ namespace Services.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public IActionResult Add([FromBody] SurveyAnswerCreate surveyAnswer)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
             return new ObjectResult(BusinessContext.SurveyAnswers.Add(surveyAnswer)) { StatusCode = StatusCodes.Status201Created };
         }
 

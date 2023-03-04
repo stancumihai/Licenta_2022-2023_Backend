@@ -13,7 +13,6 @@ public static class ConfigureBLL
         services.AddScoped<IUsers, UsersBL>();
         services.AddScoped<ISurveyAnswers, SurveyAnswersBL>();
         services.AddScoped<ISurveyQuestions, SurveyQuestionsBL>();
-
         return services;
     }
 }

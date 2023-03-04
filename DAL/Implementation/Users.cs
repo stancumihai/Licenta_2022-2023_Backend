@@ -43,6 +43,15 @@ namespace DAL.Implementation
             _context.Users.Remove(user);
             _context.SaveChanges();
         }
+        public void DeleteAll()
+        {
+            List<User> users = _context.Users.ToList();
+            foreach (User user in users)
+            {
+                _context.Users.Remove(user);
+            }
+            _context.SaveChanges();
+        }
         public User? GetByUid(Guid uid)
         {
             User? user = _context.Users.Include(u => u.SurveyAnswers).FirstOrDefault(u => u.UserGUID.Equals(uid));
@@ -52,11 +61,31 @@ namespace DAL.Implementation
             }
             return user;
         }
-        private void UpdateFields(User oldUser, User newUser)
+        public User? GetByEmail(string email)
         {
-            oldUser.Username = newUser.Username;
+            User? user = _context.Users.Include(u => u.SurveyAnswers).FirstOrDefault(u => u.Email.Equals(email));
+            if (user == null)
+            {
+                return null;
+            }
+            return user;
+        }
+        public User? GetByRefreshToken(string refreshToken)
+        {
+            User? user = _context.Users.Include(u => u.SurveyAnswers).FirstOrDefault(u => u.RefreshToken.Equals(refreshToken));
+            if (user == null)
+            {
+                return null;
+            }
+            return user;
+        }
+        private static void UpdateFields(User oldUser, User newUser)
+        {
             oldUser.Email = newUser.Email;
             oldUser.Password = newUser.Password;
+            oldUser.RefreshToken = newUser.RefreshToken;
+            oldUser.TokenCreated = newUser.TokenCreated;
+            oldUser.TokenExpires = newUser.TokenExpires;
         }
     }
 }

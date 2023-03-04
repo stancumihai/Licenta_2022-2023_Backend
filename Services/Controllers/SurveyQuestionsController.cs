@@ -1,5 +1,6 @@
 ﻿using Library.Models.SurveyQuestion;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Services.Controllers
 {
@@ -9,7 +10,12 @@ namespace Services.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SurveyQuestionRead>))]
         public IActionResult GetAll()
         {
-            return Ok(BusinessContext.SurveyQuestions.GetAll());
+            var surveyQuestions = BusinessContext.SurveyQuestions.GetAll();
+            if (surveyQuestions == null)
+            {
+                return StatusCode((int)HttpStatusCode.Unauthorized, "My error message");
+            }
+            return Ok(surveyQuestions);
         }
 
         [HttpGet("{uid:Guid}")]

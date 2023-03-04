@@ -10,13 +10,17 @@ namespace BLL.Converters.User
             return new UserRead
             {
                 Uid = userDALModel.UserGUID,
-                Username = userDALModel.Username,
                 Email = userDALModel.Email,
                 Password = userDALModel.Password,
                 Role = (Library.Enums.Roles)userDALModel.Role,
-                SurveyAnswers = userDALModel.SurveyAnswers
-                    .Select(surveyAnswer => SurveyAnswerReadConverter.ToBLLModel(surveyAnswer))
-                    .ToList()
+                PasswordHash = userDALModel.PasswordHash,
+                PasswordSalt = userDALModel.PasswordSalt,
+                RefreshToken = userDALModel.RefreshToken,
+                TokenCreated = userDALModel.TokenCreated,
+                TokenExpires = userDALModel.TokenExpires,
+                //SurveyAnswers = userDALModel.SurveyAnswers
+                //    .Select(surveyAnswer => SurveyAnswerReadConverter.ToBLLModel(surveyAnswer))
+                //    .ToList()
             };
         }
 
@@ -25,13 +29,16 @@ namespace BLL.Converters.User
             return new DAL.Models.User
             {
                 UserGUID = userBLLModel.Uid,
-                Username = userBLLModel.Username,
                 Email = userBLLModel.Email,
                 Password = userBLLModel.Password,
                 Role = (DAL.Enums.Roles)userBLLModel.Role,
-                SurveyAnswers = userBLLModel.SurveyAnswers
-                    .Select(surveyAnswer => SurveyAnswerReadConverter.ToDALModel(surveyAnswer))
-                    .ToList()
+                PasswordSalt = userBLLModel.PasswordSalt,
+                RefreshToken = userBLLModel.RefreshToken,
+                TokenCreated = userBLLModel.TokenCreated,
+                TokenExpires = userBLLModel.TokenExpires,
+                //SurveyAnswers = userBLLModel.SurveyAnswers
+                //    .Select(surveyAnswer => SurveyAnswerReadConverter.ToDALModel(surveyAnswer))
+                //    .ToList()
             };
         }
     }

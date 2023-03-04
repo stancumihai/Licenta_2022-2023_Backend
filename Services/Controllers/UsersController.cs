@@ -1,5 +1,8 @@
 ﻿using Library.Models.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Services.Exceptions;
+using System.Net;
 
 namespace Services.Controllers
 {
@@ -17,10 +20,6 @@ namespace Services.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public IActionResult Add([FromBody] UserCreate user)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
             return new ObjectResult(BusinessContext.Users.Add(user)) { StatusCode = StatusCodes.Status201Created };
         }
 
@@ -61,9 +60,30 @@ namespace Services.Controllers
             UserRead? user = BusinessContext.Users.GetByUid(uid);
             if (user == null)
             {
-                return NotFound();
+                var response = new HttpResponseException((int)HttpStatusCode.NotFound, "User Not Found");
+                return BadRequest(response);
             }
             return Ok(user);
+        }
+
+        [HttpGet("email/{email}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserRead))]
+        public IActionResult GetByEmail([FromRoute] string email)
+        {
+            UserRead? user = BusinessContext.Users.GetByEmail(email);
+            if (user == null)
+            {
+                var response = new HttpResponseException((int)HttpStatusCode.NotFound, "User Not Found");
+                return BadRequest(response);
+            }
+            return Ok(user);
+        }
+        [HttpDelete("all")]
+        public IActionResult DeleteAllUsers()
+        {
+            BusinessContext.Users.DeleteAll();
+            return Ok("All users deleted");
         }
     }
 }
