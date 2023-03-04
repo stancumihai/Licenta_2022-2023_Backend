@@ -1,6 +1,8 @@
-﻿using Library.Enums;
+﻿using BLL.Interfaces.Mechanisms;
+using Library.Enums;
 using Library.Models.Security;
 using Library.Models.Users;
+using Library.Settings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Services.Exceptions;
@@ -14,6 +16,13 @@ namespace Services.Controllers
 {
     public class AuthenticationController : ApiControllerBase
     {
+        private IEmailSender _emailSender;
+
+        public AuthenticationController(IEmailSender emailSender)
+        {
+            this._emailSender = emailSender;
+        }
+
         [HttpGet("loggedUser")]
         public ActionResult<UserToken> GetLoggedInUser()
         {
@@ -39,6 +48,48 @@ namespace Services.Controllers
             user.PasswordSalt = passwordSalt;
             BusinessContext.Users.Add(user);
             return Ok(request);
+        }
+
+        [HttpPut("renew-password")]
+        public async Task<ActionResult<UserRead>> RenewPassword([FromBody] RenewPasswordPasswordRequest request)
+        {
+            UserRead user = BusinessContext.Users.GetByEmail(request.Email);
+            if (user == null)
+            {
+                return BadRequest(new HttpResponseException((int)HttpStatusCode.BadRequest, "User does not exist"));
+            }
+            UserRead userToUpdate = user;
+            userToUpdate.Password = request.Password;
+            BusinessContext.Users.Update(userToUpdate);
+            return Ok(userToUpdate);
+        }
+
+        [HttpPost("send-email/{email}")]
+        public async Task<ActionResult<string>> SendEmail([FromRoute] string email)
+        {
+            UserRead user = BusinessContext.Users.GetByEmail(email);
+            if (user == null)
+            {
+                return BadRequest(new HttpResponseException((int)HttpStatusCode.BadRequest, "User does not exist"));
+            }
+            string newPasswordUrl = $"http://localhost:3000/renewPassword/email={email}";
+            string body = "<p>Change Password</p><br>" +
+                "<p>Click on the link below</p>" +
+                $"<a href='{newPasswordUrl}'>Click here</a>";
+            var message = new Message(new string[] { email },
+                "Change Password",
+                body,
+                null);
+            try
+            {
+                await _emailSender.SendEmailAsync(message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new HttpResponseException((int)HttpStatusCode.BadRequest, e.Message));
+
+            }
+            return Ok(message.ToString());
         }
 
         [HttpPost("login")]

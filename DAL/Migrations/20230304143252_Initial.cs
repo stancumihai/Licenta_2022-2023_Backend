@@ -93,11 +93,11 @@ namespace DAL.Migrations
                 columns: new[] { "SurveyQuestionGUID", "Category", "Value" },
                 values: new object[,]
                 {
-                    { new Guid("26ad8332-1472-486c-b042-4b9eee4ff9e5"), 0, "2.Out of all the movies you have ever seen, which is your most favourite?" },
-                    { new Guid("2b90292e-28da-46a5-a256-3dc3d9993b4b"), 3, "1.How frequently do you watch movies?" },
-                    { new Guid("9353cc10-8e92-4190-803a-563d14d5e3a5"), 1, "3.Who is your favourite actor?" },
-                    { new Guid("cf403395-0f5a-40d2-a744-92ecd8b8774d"), 3, "5.What are your top 3 favourite kind of genres?" },
-                    { new Guid("e3ef3359-4f3a-4a3b-bd20-c01821603707"), 2, "4.Who is your favourite director?" }
+                    { new Guid("13e40ae9-09f9-4bb0-9bf9-da77885fe7fe"), 2, "4.Who is your favourite director?" },
+                    { new Guid("23efff79-ee79-4692-8264-2196e07770d0"), 1, "3.Who is your favourite actor?" },
+                    { new Guid("7a4e6704-e8aa-415c-af33-e30e31d2afdd"), 0, "2.Out of all the movies you have ever seen, which is your most favourite?" },
+                    { new Guid("a8b16aab-e87e-4a23-9c1c-d33c7087f273"), 3, "5.What are your top 3 favourite kind of genres?" },
+                    { new Guid("af0b4627-6d33-4377-8a13-f1939c4e5c41"), 3, "1.How frequently do you watch movies?" }
                 });
 
             migrationBuilder.InsertData(
@@ -105,22 +105,22 @@ namespace DAL.Migrations
                 columns: new[] { "SurveyAnswerGUID", "SurveyQuestionGUID", "Value" },
                 values: new object[,]
                 {
-                    { new Guid("134817d0-5597-46b2-8c1c-d9a52bbace85"), new Guid("9353cc10-8e92-4190-803a-563d14d5e3a5"), null },
-                    { new Guid("1d673f1d-e1e4-49dc-a4f2-9c3bac17c94e"), new Guid("cf403395-0f5a-40d2-a744-92ecd8b8774d"), "Horror" },
-                    { new Guid("206e7443-3404-4db8-9a3b-7993baa7d1bc"), new Guid("cf403395-0f5a-40d2-a744-92ecd8b8774d"), "Thriller" },
-                    { new Guid("30fd1543-f191-4c72-b685-d613e2a58e6e"), new Guid("2b90292e-28da-46a5-a256-3dc3d9993b4b"), "Not at all often" },
-                    { new Guid("5fbe5531-2bab-4311-b894-2239a3229957"), new Guid("cf403395-0f5a-40d2-a744-92ecd8b8774d"), "Drama" },
-                    { new Guid("6b964967-4412-4617-b8d9-dd96608aaa2a"), new Guid("cf403395-0f5a-40d2-a744-92ecd8b8774d"), "Comedy" },
-                    { new Guid("7db810be-f6af-4dd0-a295-57e4f65e74de"), new Guid("e3ef3359-4f3a-4a3b-bd20-c01821603707"), null },
-                    { new Guid("7f7fdd5d-110b-4082-9036-519292a7ae32"), new Guid("cf403395-0f5a-40d2-a744-92ecd8b8774d"), "Musical" },
-                    { new Guid("86f02947-46f7-49de-9fa1-27f6d1e6bcce"), new Guid("2b90292e-28da-46a5-a256-3dc3d9993b4b"), "Very often" },
-                    { new Guid("94acb601-a7de-4e6a-90d0-9c4b8f37c8cc"), new Guid("cf403395-0f5a-40d2-a744-92ecd8b8774d"), "Romance" },
-                    { new Guid("bb96a9cf-58c6-4a32-b1f8-767e2f0dc8ee"), new Guid("2b90292e-28da-46a5-a256-3dc3d9993b4b"), "Slightly often" },
-                    { new Guid("c047c073-dad2-4dc5-ab8a-f0a496c24c2b"), new Guid("2b90292e-28da-46a5-a256-3dc3d9993b4b"), "Moderately often" },
-                    { new Guid("ca43832d-926a-4ab8-8380-0a8b015ef3c3"), new Guid("cf403395-0f5a-40d2-a744-92ecd8b8774d"), "Action/Adventure" },
-                    { new Guid("db1517ef-f746-47e0-930e-48d351bb4707"), new Guid("2b90292e-28da-46a5-a256-3dc3d9993b4b"), "Extremely often" },
-                    { new Guid("e69ab1e6-8e25-45f2-b0d7-f8e1090ac71a"), new Guid("26ad8332-1472-486c-b042-4b9eee4ff9e5"), null },
-                    { new Guid("f8f9828e-0862-4402-961d-a9f67b37a0c4"), new Guid("cf403395-0f5a-40d2-a744-92ecd8b8774d"), "Science-Fiction" }
+                    { new Guid("0052b03d-6155-4655-9ee6-e697c66441b6"), new Guid("a8b16aab-e87e-4a23-9c1c-d33c7087f273"), "Science-Fiction" },
+                    { new Guid("01c3bee8-9502-4651-8a5c-827ca1755b22"), new Guid("23efff79-ee79-4692-8264-2196e07770d0"), null },
+                    { new Guid("04cb7327-8782-448a-a901-bbce363c001b"), new Guid("a8b16aab-e87e-4a23-9c1c-d33c7087f273"), "Thriller" },
+                    { new Guid("0fe9d79a-bcff-4723-b7aa-3d632489d876"), new Guid("af0b4627-6d33-4377-8a13-f1939c4e5c41"), "Very often" },
+                    { new Guid("43b46f29-9302-4935-bee4-672ecf441d8e"), new Guid("a8b16aab-e87e-4a23-9c1c-d33c7087f273"), "Romance" },
+                    { new Guid("6c8e3b1c-0bf5-4db6-a31e-ccfbd477e2d8"), new Guid("af0b4627-6d33-4377-8a13-f1939c4e5c41"), "Not at all often" },
+                    { new Guid("6df6d514-9125-4fa5-94f6-a2850d4143ec"), new Guid("a8b16aab-e87e-4a23-9c1c-d33c7087f273"), "Musical" },
+                    { new Guid("8aa86e69-a8fe-42d9-8da7-22a4bac7e538"), new Guid("a8b16aab-e87e-4a23-9c1c-d33c7087f273"), "Comedy" },
+                    { new Guid("8f54486e-bdaf-4221-a544-c08186255420"), new Guid("7a4e6704-e8aa-415c-af33-e30e31d2afdd"), null },
+                    { new Guid("9fcbee6c-4cf5-435e-b43b-e36802306d06"), new Guid("13e40ae9-09f9-4bb0-9bf9-da77885fe7fe"), null },
+                    { new Guid("a337bb44-e13c-4f0d-b64d-e5831fc11387"), new Guid("af0b4627-6d33-4377-8a13-f1939c4e5c41"), "Moderately often" },
+                    { new Guid("a41538c2-3078-4eef-a396-032c06a09753"), new Guid("a8b16aab-e87e-4a23-9c1c-d33c7087f273"), "Action/Adventure" },
+                    { new Guid("ababcdc7-cb13-4bde-a60e-f6226070b6a0"), new Guid("af0b4627-6d33-4377-8a13-f1939c4e5c41"), "Extremely often" },
+                    { new Guid("b4cc6044-8728-40ea-887a-d0bce2348a1a"), new Guid("af0b4627-6d33-4377-8a13-f1939c4e5c41"), "Slightly often" },
+                    { new Guid("b9a0f8e6-b87e-4812-ace3-682149411c0b"), new Guid("a8b16aab-e87e-4a23-9c1c-d33c7087f273"), "Drama" },
+                    { new Guid("f35ad373-662d-43d9-bfe2-6d71d65f94a8"), new Guid("a8b16aab-e87e-4a23-9c1c-d33c7087f273"), "Horror" }
                 });
 
             migrationBuilder.CreateIndex(

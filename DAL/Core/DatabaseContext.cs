@@ -1,6 +1,5 @@
 ﻿using DAL.Enums;
 using DAL.Models;
-using Library.Comparer;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Core

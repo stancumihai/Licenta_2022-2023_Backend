@@ -1,6 +1,9 @@
 ﻿using BLL.Core;
 using BLL.Implementation;
+using BLL.Implementation.Mechanisms;
 using BLL.Interfaces;
+using BLL.Interfaces.Mechanisms;
+using Library.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +16,11 @@ public static class ConfigureBLL
         services.AddScoped<IUsers, UsersBL>();
         services.AddScoped<ISurveyAnswers, SurveyAnswersBL>();
         services.AddScoped<ISurveyQuestions, SurveyQuestionsBL>();
+        var emailConfig = configuration
+                .GetSection("EmailConfiguration")
+                .Get<EmailConfiguration>();
+        services.AddSingleton(emailConfig);
+        services.AddScoped<IEmailSender, EmailSender>();
         return services;
     }
 }
