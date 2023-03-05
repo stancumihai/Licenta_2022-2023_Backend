@@ -73,8 +73,7 @@ namespace Services.Controllers
                 return BadRequest(new HttpResponseException((int)HttpStatusCode.BadRequest, "User does not exist"));
             }
             string newPasswordUrl = $"http://localhost:3000/renewPassword/email={email}";
-            string body = "<p>Change Password</p><br>" +
-                "<p>Click on the link below</p>" +
+            string body = "<p>Click on the link below to change your password!</p>" +
                 $"<a href='{newPasswordUrl}'>Click here</a>";
             var message = new Message(new string[] { email },
                 "Change Password",
