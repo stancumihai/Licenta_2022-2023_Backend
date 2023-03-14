@@ -20,19 +20,20 @@ namespace DAL.Implementation
         public List<SurveyAnswer> GetAll()
         {
             return _context.SurveyAnswers
-                .Include(sa => sa.SurveyQuestion)
+                .Include(sa => sa.SurveyUserAnswers)
                 .ToList();
         }
         public List<SurveyAnswer> GetAllByQuestionUid(Guid questionUid)
         {
             return _context.SurveyAnswers
+                .Include(sa => sa.SurveyUserAnswers)
                 .Where(sa => sa.SurveyQuestionGUID == questionUid)
-                .ToList(); ;
+                .ToList();
         }
         public SurveyAnswer? GetByUid(Guid uid)
         {
             SurveyAnswer? surveyAnswer = _context.SurveyAnswers
-                .Include(sa => sa.SurveyQuestion)
+                .Include(sa => sa.SurveyUserAnswers)
                 .FirstOrDefault(sa => sa.SurveyAnswerGUID.Equals(uid));
             if (surveyAnswer == null)
             {

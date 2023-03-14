@@ -1,34 +1,25 @@
-﻿using Library.Models.Users;
+﻿using DAL.Models;
+using Library.Models.Users;
 
 namespace BLL.Converters.User
 {
     public class UserCreateConverter
     {
-        internal static UserCreate ToBLLModel(DAL.Models.User userDALModel)
+        internal static UserRegister ToBLLModel(ApplicationUser userDALModel)
         {
-            return new UserCreate
+            return new UserRegister
             {
                 Email = userDALModel.Email,
                 Password = userDALModel.Password,
-                PasswordHash = userDALModel.PasswordHash,
-                PasswordSalt = userDALModel.PasswordSalt,
-                RefreshToken = userDALModel.RefreshToken,
-                TokenCreated = userDALModel.TokenCreated,
-                TokenExpires = userDALModel.TokenExpires
             };
         }
 
-        internal static DAL.Models.User ToDALModel(UserCreate userBLLModel)
+        internal static ApplicationUser ToDALModel(UserRegister userBLLModel)
         {
-            return new DAL.Models.User
+            return new ApplicationUser
             {
                 Email = userBLLModel.Email,
                 Password = userBLLModel.Password,
-                PasswordHash = userBLLModel.PasswordHash,
-                PasswordSalt = userBLLModel.PasswordSalt,
-                RefreshToken = userBLLModel.RefreshToken,
-                TokenCreated = userBLLModel.TokenCreated,
-                TokenExpires = userBLLModel.TokenExpires
             };
         }
     }

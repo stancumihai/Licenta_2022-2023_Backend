@@ -10,21 +10,33 @@ namespace DAL.Implementation
         public Users(DatabaseContext context) : base(context)
         {
         }
-        public User Add(User user)
-        {
-            User addedUser = _context.Users.Add(user).Entity;
-            _context.SaveChanges();
-            return addedUser;
-        }
-        public List<User> GetAll()
+
+        public List<ApplicationUser> GetAll()
         {
             return _context.Users
-                .Include(u => u.SurveyAnswers)
+                .Include(u => u.SurveyUserAnswers)
+                .ThenInclude(sua => sua.SurveyQuestion)
                 .ToList();
         }
-        public void Update(User user)
+
+        public ApplicationUser? GetByUid(Guid uid)
         {
-            User? oldUser = _context.Users.FirstOrDefault(u => u.UserGUID.Equals(user.UserGUID));
+            return _context.Users
+                .Include(u => u.SurveyUserAnswers)
+                .ThenInclude(sua => sua.SurveyQuestion)
+                .FirstOrDefault(u => u.Id == uid.ToString());
+        }
+
+        public ApplicationUser? GetByEmail(string email)
+        {
+            return _context.Users
+                .Include(u => u.SurveyUserAnswers)
+                .FirstOrDefault(u => u.Email == email);
+        }
+
+        public void Update(ApplicationUser user)
+        {
+            ApplicationUser? oldUser = _context.Users.FirstOrDefault(u => u.Id.Equals(user.Id));
             if (oldUser == null)
             {
                 return;
@@ -33,59 +45,14 @@ namespace DAL.Implementation
             _context.Users.Update(oldUser);
             _context.SaveChanges();
         }
-        public void Delete(Guid uid)
-        {
-            User? user = _context.Users.Include(u => u.SurveyAnswers).FirstOrDefault(u => u.UserGUID.Equals(uid));
-            if (user == null)
-            {
-                return;
-            }
-            _context.Users.Remove(user);
-            _context.SaveChanges();
-        }
-        public void DeleteAll()
-        {
-            List<User> users = _context.Users.ToList();
-            foreach (User user in users)
-            {
-                _context.Users.Remove(user);
-            }
-            _context.SaveChanges();
-        }
-        public User? GetByUid(Guid uid)
-        {
-            User? user = _context.Users.Include(u => u.SurveyAnswers).FirstOrDefault(u => u.UserGUID.Equals(uid));
-            if (user == null)
-            {
-                return null;
-            }
-            return user;
-        }
-        public User? GetByEmail(string email)
-        {
-            User? user = _context.Users.Include(u => u.SurveyAnswers).FirstOrDefault(u => u.Email.Equals(email));
-            if (user == null)
-            {
-                return null;
-            }
-            return user;
-        }
-        public User? GetByRefreshToken(string refreshToken)
-        {
-            User? user = _context.Users.Include(u => u.SurveyAnswers).FirstOrDefault(u => u.RefreshToken.Equals(refreshToken));
-            if (user == null)
-            {
-                return null;
-            }
-            return user;
-        }
-        private static void UpdateFields(User oldUser, User newUser)
+
+        private static void UpdateFields(ApplicationUser oldUser, ApplicationUser newUser)
         {
             oldUser.Email = newUser.Email;
             oldUser.Password = newUser.Password;
             oldUser.RefreshToken = newUser.RefreshToken;
-            oldUser.TokenCreated = newUser.TokenCreated;
-            oldUser.TokenExpires = newUser.TokenExpires;
+            oldUser.RefreshTokenExpiryTime = newUser.RefreshTokenExpiryTime;
+            //oldUser.SurveyAnswers = newUser.SurveyAnswers;
         }
     }
 }

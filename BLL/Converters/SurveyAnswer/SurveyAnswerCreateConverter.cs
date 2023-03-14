@@ -6,7 +6,7 @@
         {
             return new Library.Models.SurveyAnswer.SurveyAnswerCreate
             {
-                SurveyQuestionGUID = surveyAnswerDALModel.SurveyQuestionGUID,
+                SurveyQuestionUid = surveyAnswerDALModel.SurveyQuestionGUID,
                 Value = surveyAnswerDALModel.Value
             };
         }
@@ -15,8 +15,8 @@
         {
             return new DAL.Models.SurveyAnswer
             {
-                SurveyQuestionGUID = surveyAnswerBLLModel.SurveyQuestionGUID,
-                Value = surveyAnswerBLLModel.Value
+                SurveyQuestionGUID = surveyAnswerBLLModel.SurveyQuestionUid,
+                Value = surveyAnswerBLLModel.Value,
             };
         }
     }

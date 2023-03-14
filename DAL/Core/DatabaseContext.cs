@@ -1,15 +1,21 @@
 ﻿using DAL.Enums;
 using DAL.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Core
 {
-    public class DatabaseContext : DbContext
+    public class DatabaseContext : IdentityDbContext<ApplicationUser>
     {
+        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
+        {
+        }
+
         private static readonly string ConnectionString = "Database=Licenta;Trusted_Connection=True;TrustServerCertificate=True;";
-        public DbSet<User> Users { get; set; }
         public DbSet<SurveyAnswer> SurveyAnswers { get; set; }
         public DbSet<SurveyQuestion> SurveyQuestions { get; set; }
+        public DbSet<SurveyUserAnswer> SurveyUserAnswers { get; set; }
+        public DbSet<Movie> Movies { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder dbContext)
            => dbContext.UseSqlServer(ConnectionString);
 
@@ -61,15 +67,17 @@ namespace DAL.Core
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //if (System.Diagnostics.Debugger.IsAttached == false)
-            //{
-            //    System.Diagnostics.Debugger.Launch();
-            //}
-            modelBuilder
-                .Entity<User>()
-                .HasMany(sa => sa.SurveyAnswers)
-                .WithMany(u => u.Users)
-                .UsingEntity(e => e.ToTable("SurveyAnswersUsers"));
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<SurveyUserAnswer>()
+                .HasOne(sua => sua.User)
+                .WithMany(u => u.SurveyUserAnswers)
+                .HasForeignKey(sua => sua.UserGUID);
+
+            //modelBuilder.Entity<SurveyUserAnswer>()
+            //    .HasOne(sua => sua.SurveyAnswer)
+            //    .WithMany(sa => sa.SurveyUserAnswers)
+            //    .HasForeignKey(sua => sua.SurveyAnswerGUID);
 
             modelBuilder
                 .Entity<SurveyAnswer>()
@@ -102,7 +110,8 @@ namespace DAL.Core
                         {
                             SurveyQuestionGUID = surveyQuestionGuid,
                             SurveyAnswerGUID = Guid.NewGuid(),
-                            Value = surveyAnswer
+                            Value = surveyAnswer,
+                            SurveyUserAnswers = new List<SurveyUserAnswer>()
                         };
                         surveyAnswers.Add(sa);
                         modelBuilder.Entity<SurveyAnswer>().HasData(sa);
@@ -113,7 +122,9 @@ namespace DAL.Core
                     SurveyAnswer sa = new()
                     {
                         SurveyQuestionGUID = surveyQuestionGuid,
-                        SurveyAnswerGUID = Guid.NewGuid()
+                        SurveyAnswerGUID = Guid.NewGuid(),
+                        Value = "",
+                        SurveyUserAnswers = new List<SurveyUserAnswer>()
                     };
                     surveyAnswers.Add(sa);
                     modelBuilder.Entity<SurveyAnswer>().HasData(sa);

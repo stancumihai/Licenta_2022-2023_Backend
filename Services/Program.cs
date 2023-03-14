@@ -1,6 +1,11 @@
 using BLL;
+using BLL.Implementation.Mechanisms;
 using DAL;
+using DAL.Core;
+using DAL.Models;
+using Library.Enums;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -10,11 +15,10 @@ using System.Text;
 using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
-IConfiguration configuration = builder.Services.BuildServiceProvider().GetRequiredService<IConfiguration>();
+IConfiguration configuration = builder.Services.BuildServiceProvider()!
+    .GetRequiredService<IConfiguration>();
 
-// Add services to the container.
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -33,19 +37,35 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddDALServices(builder.Configuration);
 builder.Services.AddBLLServices(builder.Configuration);
 
-#region JWT Configuration
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+#region IdentityConfiguration
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<DatabaseContext>()
+    .AddDefaultTokenProviders();
+#endregion
+
+#region AuthenticationConfiguration
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new TokenValidationParameters()
     {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                .GetBytes("superSecretKey@345")),
-            ValidateIssuer = false,
-            ValidateAudience = false
-        };
-    });
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ClockSkew = TimeSpan.Zero,
+        ValidAudience = configuration["JWT:ValidAudience"],
+        ValidIssuer = configuration["JWT:ValidIssuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]!))
+    };
+});
 #endregion
 
 #region Cors Origin Request Service
@@ -84,11 +104,25 @@ builder.Services.AddControllers(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+
+async Task CreateRoles(IServiceProvider serviceProvider)
+{
+    using var scope = app.Services.CreateScope();
+    var RoleManager = (RoleManager<IdentityRole>)scope.ServiceProvider.GetService(typeof(RoleManager<IdentityRole>))!;
+    if (!RoleManager.RoleExistsAsync(UserRoles.Member).Result)
+    {
+        await RoleManager.CreateAsync(new IdentityRole(UserRoles.Member));
+    }
+
+    if (!RoleManager.RoleExistsAsync(UserRoles.Administrator).Result)
+    {
+        await RoleManager.CreateAsync(new IdentityRole(UserRoles.Administrator));
+    }
 }
 
 app.UseHttpsRedirection();
@@ -98,5 +132,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+CreateRoles(app.Services).Wait();
+CSVReader.ReadPersons();
 
 app.Run();

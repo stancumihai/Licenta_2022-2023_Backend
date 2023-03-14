@@ -2,7 +2,7 @@
 {
     public class SurveyAnswerCreate
     {
-        public Guid? SurveyQuestionGUID { get; set; }
+        public Guid SurveyQuestionUid { get; set; }
         public string? Value { get; set; }
     }
 }

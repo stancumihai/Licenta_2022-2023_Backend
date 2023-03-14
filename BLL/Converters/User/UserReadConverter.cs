@@ -1,44 +1,40 @@
-﻿using BLL.Converters.SurveyAnswer;
+﻿using BLL.Converters.Role;
+using BLL.Converters.SurveyAnswer;
+using BLL.Converters.SurveyUserAnswer;
+using DAL.Models;
 using Library.Models.Users;
 
 namespace BLL.Converters.User
 {
     public class UserReadConverter
     {
-        internal static UserRead ToBLLModel(DAL.Models.User userDALModel)
+        internal static UserRead ToBLLModel(ApplicationUser userDALModel)
         {
             return new UserRead
             {
-                Uid = userDALModel.UserGUID,
+                Uid = new Guid(userDALModel.Id),
                 Email = userDALModel.Email,
                 Password = userDALModel.Password,
-                Role = (Library.Enums.Roles)userDALModel.Role,
-                PasswordHash = userDALModel.PasswordHash,
-                PasswordSalt = userDALModel.PasswordSalt,
                 RefreshToken = userDALModel.RefreshToken,
-                TokenCreated = userDALModel.TokenCreated,
-                TokenExpires = userDALModel.TokenExpires,
-                //SurveyAnswers = userDALModel.SurveyAnswers
-                //    .Select(surveyAnswer => SurveyAnswerReadConverter.ToBLLModel(surveyAnswer))
-                //    .ToList()
+                RefreshTokenExpiryTime = userDALModel.RefreshTokenExpiryTime,
+                SurveyUserAnswers = userDALModel.SurveyUserAnswers!
+                    .Select(surveyUserAnswer => SurveyUserAnswerReadConverter.ToBLLModel(surveyUserAnswer))
+                    .ToList()
             };
         }
 
-        internal static DAL.Models.User ToDALModel(UserRead userBLLModel)
+        internal static ApplicationUser ToDALModel(UserRead userBLLModel)
         {
-            return new DAL.Models.User
+            return new ApplicationUser
             {
-                UserGUID = userBLLModel.Uid,
+                Id = userBLLModel.Uid.ToString(),
                 Email = userBLLModel.Email,
                 Password = userBLLModel.Password,
-                Role = (DAL.Enums.Roles)userBLLModel.Role,
-                PasswordSalt = userBLLModel.PasswordSalt,
                 RefreshToken = userBLLModel.RefreshToken,
-                TokenCreated = userBLLModel.TokenCreated,
-                TokenExpires = userBLLModel.TokenExpires,
-                //SurveyAnswers = userBLLModel.SurveyAnswers
-                //    .Select(surveyAnswer => SurveyAnswerReadConverter.ToDALModel(surveyAnswer))
-                //    .ToList()
+                RefreshTokenExpiryTime = userBLLModel.RefreshTokenExpiryTime,
+                SurveyUserAnswers = userBLLModel.SurveyUserAnswers!
+                    .Select(surveyUserAnswer => SurveyUserAnswerReadConverter.ToDALModel(surveyUserAnswer))
+                    .ToList()
             };
         }
     }

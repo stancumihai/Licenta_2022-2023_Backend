@@ -11,7 +11,7 @@ namespace BLL.Converters.SurveyQuestion
                 Uid = surveyQuestionDALModel.SurveyQuestionGUID,
                 Value = surveyQuestionDALModel.Value,
                 Category = (Library.Enums.SurveyQuestionCategory)surveyQuestionDALModel.Category,
-                SurveyAnswers = surveyQuestionDALModel.SurveyAnswers
+                SurveyAnswers = surveyQuestionDALModel.SurveyAnswers!
                     .Select(sa => SurveyAnswerReadConverter.ToBLLModel(sa)).ToList(),
             };
         }
@@ -21,8 +21,8 @@ namespace BLL.Converters.SurveyQuestion
             {
                 SurveyQuestionGUID = surveyQuestionBLLModel.Uid,
                 Value = surveyQuestionBLLModel.Value,
-                Category = (DAL.Enums.SurveyQuestionCategory)surveyQuestionBLLModel.Category,
-                SurveyAnswers = surveyQuestionBLLModel.SurveyAnswers
+                Category = (DAL.Enums.SurveyQuestionCategory)surveyQuestionBLLModel.Category!,
+                SurveyAnswers = surveyQuestionBLLModel.SurveyAnswers!
                     .Select(sa => SurveyAnswerReadConverter.ToDALModel(sa)).ToList(),
             };
         }

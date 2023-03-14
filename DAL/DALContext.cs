@@ -2,17 +2,25 @@
 
 namespace DAL
 {
-    public class DALContext: IDALContext
+    public class DALContext : IDALContext
     {
         public IUsers Users { get; }
         public ISurveyAnswers SurveyAnswers { get; }
         public ISurveyQuestions SurveyQuestions { get; }
+        public ISurveyUserAnswers SurveyUserAnswers { get; }
+        public IMovies Movies { get; }
 
-        public DALContext(IUsers users, ISurveyAnswers surveyAnswers, ISurveyQuestions surveyQuestions)
+        public DALContext(ISurveyAnswers surveyAnswers,
+            ISurveyQuestions surveyQuestions,
+            IUsers users,
+            ISurveyUserAnswers surveyUserAnswers,
+            IMovies movies)
         {
-            Users = users;
             SurveyAnswers = surveyAnswers;
             SurveyQuestions = surveyQuestions;
+            Users = users;
+            SurveyUserAnswers = surveyUserAnswers;
+            Movies = movies;
         }
     }
 }

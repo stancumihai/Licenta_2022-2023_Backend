@@ -3,9 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using DAL.Core;
 using DAL.Interfaces;
-using DAL;
 using DAL.Implementation;
-using Microsoft.AspNetCore.Http;
 
 namespace DAL;
 public static class ConfigureDAL
@@ -23,6 +21,8 @@ public static class ConfigureDAL
         services.AddScoped<IUsers, Users>();
         services.AddScoped<ISurveyAnswers, SurveyAnswers>();
         services.AddScoped<ISurveyQuestions, SurveyQuestions>();
+        services.AddScoped<ISurveyUserAnswers, SurveyUserAnswers>();
+
         return services;
     }
 }

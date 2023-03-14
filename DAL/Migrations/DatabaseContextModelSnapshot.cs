@@ -22,6 +22,81 @@ namespace DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("DAL.Models.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
+                });
+
             modelBuilder.Entity("DAL.Models.SurveyAnswer", b =>
                 {
                     b.Property<Guid?>("SurveyAnswerGUID")
@@ -43,95 +118,98 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            SurveyAnswerGUID = new Guid("ababcdc7-cb13-4bde-a60e-f6226070b6a0"),
-                            SurveyQuestionGUID = new Guid("af0b4627-6d33-4377-8a13-f1939c4e5c41"),
+                            SurveyAnswerGUID = new Guid("13c3768f-b65d-4335-a1d3-1237a9dee323"),
+                            SurveyQuestionGUID = new Guid("033e11c4-ecbd-4d93-8945-8412af7d5e84"),
                             Value = "Extremely often"
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("0fe9d79a-bcff-4723-b7aa-3d632489d876"),
-                            SurveyQuestionGUID = new Guid("af0b4627-6d33-4377-8a13-f1939c4e5c41"),
+                            SurveyAnswerGUID = new Guid("75c8c08c-993f-4f5f-94e3-406fba55f400"),
+                            SurveyQuestionGUID = new Guid("033e11c4-ecbd-4d93-8945-8412af7d5e84"),
                             Value = "Very often"
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("a337bb44-e13c-4f0d-b64d-e5831fc11387"),
-                            SurveyQuestionGUID = new Guid("af0b4627-6d33-4377-8a13-f1939c4e5c41"),
+                            SurveyAnswerGUID = new Guid("940dc8ae-3cf6-4a10-bb58-3b8527d2a0c6"),
+                            SurveyQuestionGUID = new Guid("033e11c4-ecbd-4d93-8945-8412af7d5e84"),
                             Value = "Moderately often"
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("b4cc6044-8728-40ea-887a-d0bce2348a1a"),
-                            SurveyQuestionGUID = new Guid("af0b4627-6d33-4377-8a13-f1939c4e5c41"),
+                            SurveyAnswerGUID = new Guid("baee7704-2583-4053-98c1-c4e887ec6177"),
+                            SurveyQuestionGUID = new Guid("033e11c4-ecbd-4d93-8945-8412af7d5e84"),
                             Value = "Slightly often"
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("6c8e3b1c-0bf5-4db6-a31e-ccfbd477e2d8"),
-                            SurveyQuestionGUID = new Guid("af0b4627-6d33-4377-8a13-f1939c4e5c41"),
+                            SurveyAnswerGUID = new Guid("a7b2a252-96b9-4e53-ad5e-c4ee5748938b"),
+                            SurveyQuestionGUID = new Guid("033e11c4-ecbd-4d93-8945-8412af7d5e84"),
                             Value = "Not at all often"
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("8f54486e-bdaf-4221-a544-c08186255420"),
-                            SurveyQuestionGUID = new Guid("7a4e6704-e8aa-415c-af33-e30e31d2afdd")
+                            SurveyAnswerGUID = new Guid("3e8db6e0-821e-4706-99b2-da8e7614f776"),
+                            SurveyQuestionGUID = new Guid("151f9f15-c839-4706-8130-dee51e277169"),
+                            Value = ""
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("01c3bee8-9502-4651-8a5c-827ca1755b22"),
-                            SurveyQuestionGUID = new Guid("23efff79-ee79-4692-8264-2196e07770d0")
+                            SurveyAnswerGUID = new Guid("ae70f5b6-9cb2-494c-8d5b-a8f9d65d1e70"),
+                            SurveyQuestionGUID = new Guid("74fda842-522d-4a01-9cb3-5792825ae6cc"),
+                            Value = ""
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("9fcbee6c-4cf5-435e-b43b-e36802306d06"),
-                            SurveyQuestionGUID = new Guid("13e40ae9-09f9-4bb0-9bf9-da77885fe7fe")
+                            SurveyAnswerGUID = new Guid("376ac2d0-3560-407f-8228-8494534a2481"),
+                            SurveyQuestionGUID = new Guid("484a41a6-2aab-45f3-9b89-39b73bfb9248"),
+                            Value = ""
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("f35ad373-662d-43d9-bfe2-6d71d65f94a8"),
-                            SurveyQuestionGUID = new Guid("a8b16aab-e87e-4a23-9c1c-d33c7087f273"),
+                            SurveyAnswerGUID = new Guid("cd0953b1-19fb-490c-abd0-f10eb8d29175"),
+                            SurveyQuestionGUID = new Guid("6708b211-1ab5-4e3b-82b8-2c514c624f53"),
                             Value = "Horror"
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("43b46f29-9302-4935-bee4-672ecf441d8e"),
-                            SurveyQuestionGUID = new Guid("a8b16aab-e87e-4a23-9c1c-d33c7087f273"),
+                            SurveyAnswerGUID = new Guid("d367ed2b-5bde-47f8-8029-3740d3f569ef"),
+                            SurveyQuestionGUID = new Guid("6708b211-1ab5-4e3b-82b8-2c514c624f53"),
                             Value = "Romance"
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("a41538c2-3078-4eef-a396-032c06a09753"),
-                            SurveyQuestionGUID = new Guid("a8b16aab-e87e-4a23-9c1c-d33c7087f273"),
+                            SurveyAnswerGUID = new Guid("ff90c783-f5a5-4d5a-a274-447283c467b7"),
+                            SurveyQuestionGUID = new Guid("6708b211-1ab5-4e3b-82b8-2c514c624f53"),
                             Value = "Action/Adventure"
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("04cb7327-8782-448a-a901-bbce363c001b"),
-                            SurveyQuestionGUID = new Guid("a8b16aab-e87e-4a23-9c1c-d33c7087f273"),
+                            SurveyAnswerGUID = new Guid("92635bf1-779c-4a08-bb90-b503d7f1fc75"),
+                            SurveyQuestionGUID = new Guid("6708b211-1ab5-4e3b-82b8-2c514c624f53"),
                             Value = "Thriller"
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("0052b03d-6155-4655-9ee6-e697c66441b6"),
-                            SurveyQuestionGUID = new Guid("a8b16aab-e87e-4a23-9c1c-d33c7087f273"),
+                            SurveyAnswerGUID = new Guid("2682f6d5-95b6-4d95-969d-f5927565356a"),
+                            SurveyQuestionGUID = new Guid("6708b211-1ab5-4e3b-82b8-2c514c624f53"),
                             Value = "Science-Fiction"
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("8aa86e69-a8fe-42d9-8da7-22a4bac7e538"),
-                            SurveyQuestionGUID = new Guid("a8b16aab-e87e-4a23-9c1c-d33c7087f273"),
+                            SurveyAnswerGUID = new Guid("b5ad8ed8-b22e-45ab-b0a2-874ff5b1c4f0"),
+                            SurveyQuestionGUID = new Guid("6708b211-1ab5-4e3b-82b8-2c514c624f53"),
                             Value = "Comedy"
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("b9a0f8e6-b87e-4812-ace3-682149411c0b"),
-                            SurveyQuestionGUID = new Guid("a8b16aab-e87e-4a23-9c1c-d33c7087f273"),
+                            SurveyAnswerGUID = new Guid("e3fd09a8-16bf-4212-a93f-365c16baa74f"),
+                            SurveyQuestionGUID = new Guid("6708b211-1ab5-4e3b-82b8-2c514c624f53"),
                             Value = "Drama"
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("6df6d514-9125-4fa5-94f6-a2850d4143ec"),
-                            SurveyQuestionGUID = new Guid("a8b16aab-e87e-4a23-9c1c-d33c7087f273"),
+                            SurveyAnswerGUID = new Guid("1bc97a69-78b2-4b7b-9775-fcbbcb0e1aca"),
+                            SurveyQuestionGUID = new Guid("6708b211-1ab5-4e3b-82b8-2c514c624f53"),
                             Value = "Musical"
                         });
                 });
@@ -155,89 +233,197 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            SurveyQuestionGUID = new Guid("af0b4627-6d33-4377-8a13-f1939c4e5c41"),
+                            SurveyQuestionGUID = new Guid("033e11c4-ecbd-4d93-8945-8412af7d5e84"),
                             Category = 3,
                             Value = "1.How frequently do you watch movies?"
                         },
                         new
                         {
-                            SurveyQuestionGUID = new Guid("7a4e6704-e8aa-415c-af33-e30e31d2afdd"),
+                            SurveyQuestionGUID = new Guid("151f9f15-c839-4706-8130-dee51e277169"),
                             Category = 0,
                             Value = "2.Out of all the movies you have ever seen, which is your most favourite?"
                         },
                         new
                         {
-                            SurveyQuestionGUID = new Guid("23efff79-ee79-4692-8264-2196e07770d0"),
+                            SurveyQuestionGUID = new Guid("74fda842-522d-4a01-9cb3-5792825ae6cc"),
                             Category = 1,
                             Value = "3.Who is your favourite actor?"
                         },
                         new
                         {
-                            SurveyQuestionGUID = new Guid("13e40ae9-09f9-4bb0-9bf9-da77885fe7fe"),
+                            SurveyQuestionGUID = new Guid("484a41a6-2aab-45f3-9b89-39b73bfb9248"),
                             Category = 2,
                             Value = "4.Who is your favourite director?"
                         },
                         new
                         {
-                            SurveyQuestionGUID = new Guid("a8b16aab-e87e-4a23-9c1c-d33c7087f273"),
+                            SurveyQuestionGUID = new Guid("6708b211-1ab5-4e3b-82b8-2c514c624f53"),
                             Category = 3,
                             Value = "5.What are your top 3 favourite kind of genres?"
                         });
                 });
 
-            modelBuilder.Entity("DAL.Models.User", b =>
+            modelBuilder.Entity("DAL.Models.SurveyUserAnswer", b =>
                 {
-                    b.Property<Guid>("UserGUID")
+                    b.Property<Guid>("SurveyUserAnswerGUID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Email")
+                    b.Property<Guid?>("SurveyAnswerGUID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SurveyQuestionGUID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserGUID")
                         .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("SurveyUserAnswerGUID");
 
-                    b.Property<byte[]>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                    b.HasIndex("SurveyAnswerGUID");
 
-                    b.Property<byte[]>("PasswordSalt")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                    b.HasIndex("SurveyQuestionGUID");
 
-                    b.Property<string>("RefreshToken")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasIndex("UserGUID");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("TokenCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("TokenExpires")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("UserGUID");
-
-                    b.ToTable("Users");
+                    b.ToTable("SurveyUserAnswers");
                 });
 
-            modelBuilder.Entity("SurveyAnswerUser", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
-                    b.Property<Guid>("SurveyAnswersSurveyAnswerGUID")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid>("UsersUserGUID")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("SurveyAnswersSurveyAnswerGUID", "UsersUserGUID");
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
-                    b.HasIndex("UsersUserGUID");
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
-                    b.ToTable("SurveyAnswersUsers", (string)null);
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("DAL.Models.SurveyAnswer", b =>
@@ -250,19 +436,88 @@ namespace DAL.Migrations
                     b.Navigation("SurveyQuestion");
                 });
 
-            modelBuilder.Entity("SurveyAnswerUser", b =>
+            modelBuilder.Entity("DAL.Models.SurveyUserAnswer", b =>
                 {
                     b.HasOne("DAL.Models.SurveyAnswer", null)
+                        .WithMany("SurveyUserAnswers")
+                        .HasForeignKey("SurveyAnswerGUID");
+
+                    b.HasOne("DAL.Models.SurveyQuestion", "SurveyQuestion")
                         .WithMany()
-                        .HasForeignKey("SurveyAnswersSurveyAnswerGUID")
+                        .HasForeignKey("SurveyQuestionGUID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DAL.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersUserGUID")
+                    b.HasOne("DAL.Models.ApplicationUser", "User")
+                        .WithMany("SurveyUserAnswers")
+                        .HasForeignKey("UserGUID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("SurveyQuestion");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("DAL.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("DAL.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("DAL.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DAL.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("SurveyUserAnswers");
+                });
+
+            modelBuilder.Entity("DAL.Models.SurveyAnswer", b =>
+                {
+                    b.Navigation("SurveyUserAnswers");
                 });
 
             modelBuilder.Entity("DAL.Models.SurveyQuestion", b =>

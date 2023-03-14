@@ -20,10 +20,12 @@ namespace BLL.Implementation
 
         public SurveyQuestionRead? GetByUid(Guid uid)
         {
-            return _dalContext.SurveyQuestions
-                .GetAll()
-                .Select(surveyQuestion => SurveyQuestionReadConverter.ToBLLModel(surveyQuestion))
-                .FirstOrDefault(surveyQuestion => surveyQuestion.Uid.Equals(uid));
+            return SurveyQuestionReadConverter.ToBLLModel(_dalContext.SurveyQuestions.GetByUid(uid)!);
+        }
+
+        public Guid GetGuidBySurveyAnswerGuid(Guid surveyAnswerGuid)
+        {
+            return _dalContext.SurveyQuestions.GetGuidBySurveyAnswerGuid(surveyAnswerGuid);
         }
     }
 }
