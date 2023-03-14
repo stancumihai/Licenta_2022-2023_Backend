@@ -9,18 +9,21 @@ namespace DAL
         public ISurveyQuestions SurveyQuestions { get; }
         public ISurveyUserAnswers SurveyUserAnswers { get; }
         public IMovies Movies { get; }
+        public IMovieRatings MovieRatings { get; }
 
         public DALContext(ISurveyAnswers surveyAnswers,
             ISurveyQuestions surveyQuestions,
             IUsers users,
             ISurveyUserAnswers surveyUserAnswers,
-            IMovies movies)
+            IMovies movies,
+            IMovieRatings movieRatings)
         {
             SurveyAnswers = surveyAnswers;
             SurveyQuestions = surveyQuestions;
             Users = users;
             SurveyUserAnswers = surveyUserAnswers;
             Movies = movies;
+            MovieRatings = movieRatings;
         }
     }
 }

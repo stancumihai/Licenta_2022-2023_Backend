@@ -16,6 +16,8 @@ namespace DAL.Core
         public DbSet<SurveyQuestion> SurveyQuestions { get; set; }
         public DbSet<SurveyUserAnswer> SurveyUserAnswers { get; set; }
         public DbSet<Movie> Movies { get; set; }
+        public DbSet<MovieRating> MovieRatings { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder dbContext)
            => dbContext.UseSqlServer(ConnectionString);
 
@@ -65,26 +67,8 @@ namespace DAL.Core
             return SurveyQuestionCategory.None;
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        private static void AddSurveyRelatedData(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<SurveyUserAnswer>()
-                .HasOne(sua => sua.User)
-                .WithMany(u => u.SurveyUserAnswers)
-                .HasForeignKey(sua => sua.UserGUID);
-
-            //modelBuilder.Entity<SurveyUserAnswer>()
-            //    .HasOne(sua => sua.SurveyAnswer)
-            //    .WithMany(sa => sa.SurveyUserAnswers)
-            //    .HasForeignKey(sua => sua.SurveyAnswerGUID);
-
-            modelBuilder
-                .Entity<SurveyAnswer>()
-                .HasOne(sa => sa.SurveyQuestion)
-                .WithMany(sq => sq.SurveyAnswers)
-                .OnDelete(DeleteBehavior.Cascade);
-
             var sortedDictionary = new SortedDictionary<string, List<string>>(dictionary,
                         Comparer<string>.Create(
                             (x, y) =>
@@ -130,6 +114,28 @@ namespace DAL.Core
                     modelBuilder.Entity<SurveyAnswer>().HasData(sa);
                 }
             }
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //if (System.Diagnostics.Debugger.IsAttached == false)
+            //{
+            //    System.Diagnostics.Debugger.Launch();
+            //}
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<SurveyUserAnswer>()
+                .HasOne(sua => sua.User)
+                .WithMany(u => u.SurveyUserAnswers)
+                .HasForeignKey(sua => sua.UserGUID);
+
+            modelBuilder
+                .Entity<SurveyAnswer>()
+                .HasOne(sa => sa.SurveyQuestion)
+                .WithMany(sq => sq.SurveyAnswers)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            AddSurveyRelatedData(modelBuilder);
         }
     }
 }

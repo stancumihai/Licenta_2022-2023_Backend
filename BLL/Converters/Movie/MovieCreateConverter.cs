@@ -2,13 +2,12 @@
 
 namespace BLL.Converters.Movie
 {
-    public class MovieReadConverter
+    public class MovieCreateConverter
     {
-        public static MovieRead ToBLLModel(DAL.Models.Movie movieDALModel)
+        public static MovieCreate ToBLLModel(DAL.Models.Movie movieDALModel)
         {
-            MovieRead movieRead = new()
+            MovieCreate movieCreate = new()
             {
-                Uid = movieDALModel.MovieGUID,
                 MovieId = movieDALModel.MovieId,
                 Title = movieDALModel.Title,
                 YearOfRelease = movieDALModel.YearOfRelease,
@@ -16,14 +15,13 @@ namespace BLL.Converters.Movie
                 Genres = movieDALModel.Genres
             };
 
-            return movieRead;
+            return movieCreate;
         }
 
-        public static DAL.Models.Movie ToDALModel(MovieRead movieBLLModel)
+        public static DAL.Models.Movie ToDALModel(MovieCreate movieBLLModel)
         {
             DAL.Models.Movie movieEntity = new()
             {
-                MovieGUID = movieBLLModel.Uid,
                 MovieId = movieBLLModel.MovieId,
                 Title = movieBLLModel.Title,
                 YearOfRelease = movieBLLModel.YearOfRelease,

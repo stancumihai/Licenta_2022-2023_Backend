@@ -1,5 +1,7 @@
-﻿using BLL.Core;
+﻿using BLL.Converters.Movie;
+using BLL.Core;
 using BLL.Interfaces;
+using DAL.Models;
 using Library.Models.Movie;
 
 namespace BLL.Implementation
@@ -12,17 +14,30 @@ namespace BLL.Implementation
 
         public MovieCreate Add(MovieCreate movie)
         {
-            _dalContext.Movies.Add(movie);
+            Movie addedMovie = MovieCreateConverter.ToDALModel(movie);
+            return MovieCreateConverter.ToBLLModel(_dalContext.Movies.Add(addedMovie));
         }
 
         public List<MovieRead> GetAll()
         {
-            throw new NotImplementedException();
+            return _dalContext.Movies
+                .GetAll()
+                .Select(movie => MovieReadConverter.ToBLLModel(movie))
+                .ToList();
+        }
+
+        public MovieRead? GetByMovieId(string movieId)
+        {
+            return MovieReadConverter
+                 .ToBLLModel(_dalContext.Movies
+                 .GetByMovieId(movieId)!);
         }
 
         public MovieRead? GetByUid(Guid uid)
         {
-            throw new NotImplementedException();
+            return MovieReadConverter
+                .ToBLLModel(_dalContext.Movies
+                .GetByUid(uid)!);
         }
     }
 }

@@ -22,6 +22,8 @@ public static class ConfigureDAL
         services.AddScoped<ISurveyAnswers, SurveyAnswers>();
         services.AddScoped<ISurveyQuestions, SurveyQuestions>();
         services.AddScoped<ISurveyUserAnswers, SurveyUserAnswers>();
+        services.AddScoped<IMovies, Movies>();
+        services.AddScoped<IMovieRatings, MovieRatings>();
 
         return services;
     }

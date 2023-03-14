@@ -12,6 +12,7 @@ namespace Services.Controllers
         {
             return Ok(BusinessContext.SurveyAnswers!.Add(surveyAnswer));
         }
+
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SurveyAnswerRead>))]
         public IActionResult GetAll()

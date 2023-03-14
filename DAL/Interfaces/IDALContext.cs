@@ -7,5 +7,6 @@
         ISurveyQuestions SurveyQuestions { get; }
         ISurveyUserAnswers SurveyUserAnswers { get; }
         IMovies Movies { get; }
+        IMovieRatings MovieRatings { get; }
     }
 }

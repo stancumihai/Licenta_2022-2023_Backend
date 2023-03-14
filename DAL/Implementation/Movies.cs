@@ -27,5 +27,11 @@ namespace DAL.Implementation
             return _context.Movies
                 .FirstOrDefault(movie => movie.MovieGUID == movieUid);
         }
+
+        public Movie? GetByMovieId(string movieId)
+        {
+            return _context.Movies
+                .FirstOrDefault(movie => movie.MovieId == movieId);
+        }
     }
 }

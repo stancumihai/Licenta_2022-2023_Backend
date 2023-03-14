@@ -1,5 +1,8 @@
 using BLL;
+using BLL.Converters.Movie;
+using BLL.Implementation;
 using BLL.Implementation.Mechanisms;
+using BLL.Interfaces;
 using DAL;
 using DAL.Core;
 using DAL.Models;
@@ -125,6 +128,26 @@ async Task CreateRoles(IServiceProvider serviceProvider)
     }
 }
 
+void CreateMovies(IServiceProvider serviceProvider)
+{
+    using var scope = app.Services.CreateScope();
+    IMovies movieBL = (MoviesBL)scope.ServiceProvider.GetService(typeof(IMovies))!;
+    List<Movie> movies = CSVReader.GetMovies();
+    bool hasData = movieBL.GetAll().Count != 0;
+    if (!hasData)
+    {
+        foreach(Movie movie in movies)
+        {
+            movieBL.Add(MovieCreateConverter.ToBLLModel(movie));
+        }
+    }
+}
+
+void CreateMovieRatings(IServiceProvider serviceProvider)
+{
+    using var scope = app.Services.CreateScope();
+}
+
 app.UseHttpsRedirection();
 app.UseCors("CorsPolicy");
 
@@ -134,6 +157,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 CreateRoles(app.Services).Wait();
-CSVReader.ReadPersons();
-
+CreateMovies(app.Services);
 app.Run();

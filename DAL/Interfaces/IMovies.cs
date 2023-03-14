@@ -7,5 +7,6 @@ namespace DAL.Interfaces
         Movie Add(Movie movie);
         List<Movie> GetAll();
         Movie? GetByUid(Guid uid);
+        Movie? GetByMovieId(string movieId);
     }
 }

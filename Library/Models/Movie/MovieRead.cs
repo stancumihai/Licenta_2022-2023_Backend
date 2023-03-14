@@ -7,6 +7,6 @@
         public string Title { get; set; }
         public int YearOfRelease { get; set; }
         public int Runtime { get; set; }
-        public List<string> Genres { get; set; }
+        public string Genres { get; set; }
     }
 }

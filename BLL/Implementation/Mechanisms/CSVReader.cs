@@ -14,11 +14,12 @@ namespace BLL.Implementation.Mechanisms
         private readonly static string PERSON_DATA_PATH =
             "D:\\Munca\\Licenta\\backend\\Licenta_2022_Backend\\DAL\\Datasets\\data1Dummy.xlsx";
 
-        public static void ReadMovies()
+        public static List<Movie> GetMovies()
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             using var stream = File.Open(MOVIE_DATA_PATH, FileMode.Open, FileAccess.Read);
             using var reader = ExcelReaderFactory.CreateReader(stream);
+            List<Movie> movies = new();
             do
             {
                 int index = 0;
@@ -36,12 +37,14 @@ namespace BLL.Implementation.Mechanisms
                         Title = reader.GetValue(1).ToString()!,
                         YearOfRelease = int.Parse(reader.GetValue(2).ToString()!),
                         Runtime = int.Parse(reader.GetValue(3).ToString()!),
-                        Genres = HandleEnumeration(reader.GetValue(4).ToString()!)
+                        Genres = reader.GetValue(4).ToString()!
                     };
+                    movies.Add(movie);
                 }
             } while (reader.NextResult());
+            return movies;
         }
-        public static void ReadMovieRatings()
+        public static void GetMovieRatings()
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             using var stream = File.Open(RATING_DATA_PATH, FileMode.Open, FileAccess.Read);
@@ -56,7 +59,7 @@ namespace BLL.Implementation.Mechanisms
                     {
                         continue;
                     }
-                    MovieRating movieRating = new()
+                    Library.Models.Excel.MovieRating movieRating = new()
                     {
                         MovieRatingGUID = Guid.NewGuid(),
                         MovieId = reader.GetValue(0).ToString()!,
