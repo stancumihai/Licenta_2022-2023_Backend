@@ -50,6 +50,7 @@ namespace BLL.Implementation
             ApplicationUser user = new()
             {
                 Id = newUserGuid.ToString(),
+                Password = model.Password,
                 UserName = model.Email,
                 Email = model.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
@@ -101,20 +102,28 @@ namespace BLL.Implementation
                 string role = result[0];
                 var authClaims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Name, user.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(ClaimTypes.Role, role)
                 };
                 JwtSecurityToken token = CreateToken(authClaims);
                 if (!model.RememberMe)
                 {
+                    user.RefreshToken = "";
+                    user.RefreshTokenExpiryTime = DateTime.UtcNow;
+                    await _userManager.UpdateAsync(user);
                     return Tuple.Create(token, "");
                 }
 
                 string refreshToken = GenerateRefreshToken();
-                _ = int.TryParse(_configuration["JWT:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);
+                bool outcome = int.TryParse(_configuration["JWT:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);
+                if (!outcome)
+                {
+                    return null;
+                }
                 user.RefreshToken = refreshToken;
                 user.RefreshTokenExpiryTime = DateTime.Now.AddDays(refreshTokenValidityInDays);
+                //user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(1);
 
                 var result2 = await _userManager.UpdateAsync(user);
                 if (!result2.Succeeded)
@@ -142,7 +151,12 @@ namespace BLL.Implementation
                 return null;
             }
 
+            #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+            #pragma warning disable CS8602 // Dereference of a possibly null reference.
             string email = principal.Identity.Name;
+            #pragma warning restore CS8602 // Dereference of a possibly null reference.
+            #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+
 
             var user = await _userManager.FindByEmailAsync(email);
 
@@ -203,12 +217,11 @@ namespace BLL.Implementation
 
         public async Task<UserRead> GetLoggedInUser()
         {
-            var email = _httpContextAccessor.HttpContext!.User?.FindFirstValue(ClaimTypes.Email);
+            var email = _httpContextAccessor.HttpContext!.User?.FindFirstValue(ClaimTypes.Name);
             var userEntity = _dalContext.Users.GetByEmail(email!);
             var roles = await _userManager.GetRolesAsync(userEntity!);
             var userModel = UserReadConverter.ToBLLModel(userEntity!);
-            userModel.Roles = RoleConverter.ToBLLModel(roles[0]);
-            userModel.RefreshToken = "";
+            userModel.Role = RoleConverter.ToBLLModel(roles[0]);
             return userModel;
         }
 

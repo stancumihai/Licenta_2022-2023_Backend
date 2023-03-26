@@ -21,14 +21,17 @@ namespace BLL.Implementation
             {
                 return null;
             }
-            if(surveyUserAnswer.SurveyAnswerUid != Guid.Empty)
+            if (surveyUserAnswer.SurveyAnswerUid != Guid.Empty)
             {
                 SurveyAnswer surveyAnswer = _dalContext.SurveyAnswers.GetByUid(surveyUserAnswer.SurveyAnswerUid)!;
-                if(surveyAnswer != null)
+                if (surveyAnswer != null)
                 {
                     addedSurveyUserAnswer.Value = surveyAnswer.Value;
                 }
             }
+            addedSurveyUserAnswer.SurveyAnswer = null;
+            addedSurveyUserAnswer.SurveyAnswerGUID = null;
+
             return SurveyUserAnswerCreateConverter.ToBLLModel(_dalContext.SurveyUserAnswers.Add(addedSurveyUserAnswer));
         }
 

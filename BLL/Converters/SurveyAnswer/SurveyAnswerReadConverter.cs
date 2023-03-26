@@ -11,17 +11,11 @@ namespace BLL.Converters.SurveyAnswer
                 surveyAnswerDALModel.Value = "";
             }
 
-            if (surveyAnswerDALModel.SurveyUserAnswers == null)
-            {
-                surveyAnswerDALModel.SurveyUserAnswers = new List<DAL.Models.SurveyUserAnswer>();
-            }
-
             SurveyAnswerRead surveyAnswerRead = new()
             {
                 Uid = surveyAnswerDALModel.SurveyAnswerGUID,
                 SurveyQuestionGUID = surveyAnswerDALModel.SurveyQuestionGUID,
                 Value = surveyAnswerDALModel.Value,
-                SurveyUserAnswers = new List<Library.Models.SurveyUserAnswerRead>()
             };
 
             return surveyAnswerRead;
@@ -34,7 +28,6 @@ namespace BLL.Converters.SurveyAnswer
                 SurveyAnswerGUID = surveyAnswerBLLModel.Uid,
                 SurveyQuestionGUID = surveyAnswerBLLModel.SurveyQuestionGUID,
                 Value = surveyAnswerBLLModel.Value,
-                SurveyUserAnswers = new List<DAL.Models.SurveyUserAnswer>()
             };
         }
     }

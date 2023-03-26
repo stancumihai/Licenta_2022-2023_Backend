@@ -1,6 +1,4 @@
-﻿using BLL.Converters.Role;
-using BLL.Converters.SurveyAnswer;
-using BLL.Converters.SurveyUserAnswer;
+﻿using BLL.Converters.SurveyUserAnswer;
 using DAL.Models;
 using Library.Models.Users;
 

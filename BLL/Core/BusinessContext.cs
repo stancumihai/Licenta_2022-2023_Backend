@@ -8,11 +8,12 @@ public class BusinessContext
     public ISurveyQuestions? SurveyQuestions { get; set; }
     public ISurveyAnswers? SurveyAnswers { get; set; }
     public ISurveyUserAnswers? SurveyUserAnswers { get; set; }
-
     public IAuthentication? Authentication { get; set; }
     public IMovies? Movies { get; set; }
     public IMovieRatings? MovieRatings { get; set; }
     public IEmailSender EmailSender { get; set; }
+    public IPersons Persons { get; set; }
+    public IKnownFor KnownFor { get; set; }
 
     public BusinessContext(ISurveyQuestions surveyQuestions,
                             ISurveyAnswers surveyAnswers,
@@ -21,7 +22,9 @@ public class BusinessContext
                             IEmailSender emailSender,
                             ISurveyUserAnswers? surveyUserAnswers,
                             IMovies? movies,
-                            IMovieRatings? movieRatings)
+                            IMovieRatings? movieRatings,
+                            IKnownFor knownFor,
+                            IPersons persons)
     {
         SurveyQuestions = surveyQuestions;
         SurveyAnswers = surveyAnswers;
@@ -31,5 +34,7 @@ public class BusinessContext
         SurveyUserAnswers = surveyUserAnswers;
         Movies = movies;
         MovieRatings = movieRatings;
+        KnownFor = knownFor;
+        Persons = persons;
     }
 }

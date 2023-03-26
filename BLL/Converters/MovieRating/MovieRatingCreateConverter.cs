@@ -8,7 +8,7 @@ namespace BLL.Converters.MovieRating
         {
             MovieRatingCreate movieRatingCreate = new()
             {
-                MovieRatingUid = movieRatingDALModel.MovieRatingGUID,
+                MovieUid = movieRatingDALModel.MovieGUID,
                 AverageRating = movieRatingDALModel.AverageRating,
                 VotesNumber = movieRatingDALModel.VotesNumber,
             };
@@ -20,7 +20,7 @@ namespace BLL.Converters.MovieRating
         {
             DAL.Models.MovieRating movieRatingEntity = new()
             {
-                MovieRatingGUID = moveRatingBLLModel.MovieRatingUid,
+                MovieGUID = moveRatingBLLModel.MovieUid,
                 AverageRating = moveRatingBLLModel.AverageRating,
                 VotesNumber = moveRatingBLLModel.VotesNumber,
             };

@@ -8,5 +8,6 @@ namespace BLL.Interfaces
         UserRead GetByEmail(string email);
         List<UserRead> GetAll();
         void Update(UserRead user);
+        bool UserHasSurveyAnswers(string userUid);
     }
 }

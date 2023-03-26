@@ -13,6 +13,9 @@ namespace DAL.Models
         [ForeignKey("SurveyQuestion")]
         public Guid SurveyQuestionGUID { get; set; }
         public SurveyQuestion SurveyQuestion { get; set; }
+        [ForeignKey("SurveyAnswer")]
+        public Guid? SurveyAnswerGUID { get; set; }
+        public SurveyAnswer? SurveyAnswer { get; set; }
         public string? Value { get; set; }
     }
 }

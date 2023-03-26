@@ -1,5 +1,8 @@
 using BLL;
+using BLL.Converters.KnownFor;
 using BLL.Converters.Movie;
+using BLL.Converters.MovieRating;
+using BLL.Converters.Person;
 using BLL.Implementation;
 using BLL.Implementation.Mechanisms;
 using BLL.Interfaces;
@@ -7,6 +10,7 @@ using DAL;
 using DAL.Core;
 using DAL.Models;
 using Library.Enums;
+using Library.Models.Movie;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +22,7 @@ using System.Text;
 using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
-IConfiguration configuration = builder.Services.BuildServiceProvider()!
+IConfiguration configuration = builder.Services.BuildServiceProvider()
     .GetRequiredService<IConfiguration>();
 
 builder.Services.AddControllers();
@@ -41,7 +45,12 @@ builder.Services.AddDALServices(builder.Configuration);
 builder.Services.AddBLLServices(builder.Configuration);
 
 #region IdentityConfiguration
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.Password.RequiredLength = 5;
+    options.Password.RequireDigit = true;
+    options.Password.RequireUppercase = true;
+}) 
     .AddEntityFrameworkStores<DatabaseContext>()
     .AddDefaultTokenProviders();
 #endregion
@@ -136,16 +145,71 @@ void CreateMovies(IServiceProvider serviceProvider)
     bool hasData = movieBL.GetAll().Count != 0;
     if (!hasData)
     {
-        foreach(Movie movie in movies)
+        foreach (Movie movie in movies)
         {
             movieBL.Add(MovieCreateConverter.ToBLLModel(movie));
         }
     }
 }
 
-void CreateMovieRatings(IServiceProvider serviceProvider)
+void CreateRatings(IServiceProvider serviceProvider)
 {
     using var scope = app.Services.CreateScope();
+    IMovieRatings movieRatingsBL = (MovieRatingsBL)scope.ServiceProvider.GetService<IMovieRatings>()!;
+    IMovies movieBL = (MoviesBL)scope.ServiceProvider.GetService(typeof(IMovies))!;
+    List<Library.Models.Excel.MovieRating> movieRatings = CSVReader.GetMovieRatings();
+    List<MovieRead> movies = movieBL.GetAll();
+    bool hasData = movieRatingsBL.GetAll().Count != 0;
+    if (!hasData)
+    {
+        foreach (Library.Models.Excel.MovieRating movieExcelEntity in movieRatings)
+        {
+            Movie movie = MovieReadConverter.ToDALModel(movieBL.GetByMovieId(movieExcelEntity.MovieId)!);
+            MovieRating movieRating = new()
+            {
+                MovieRatingGUID = movieExcelEntity.MovieRatingGUID,
+                MovieGUID = movie.MovieGUID,
+                AverageRating = movieExcelEntity.AverageRating,
+                VotesNumber = movieExcelEntity.VotesNumber
+            };
+            movieRatingsBL.Add(MovieRatingCreateConverter.ToBLLModel(movieRating));
+        }
+    }
+}
+
+void CreatePersons(IServiceProvider serviceProvider)
+{
+    using var scope = app.Services.CreateScope();
+    IMovies movieBL = (MoviesBL)scope.ServiceProvider.GetService(typeof(IMovies))!;
+    IKnownFor knownForBL = (KnownForBL)scope.ServiceProvider.GetService(typeof(IKnownFor))!;
+    IPersons personsBL = (PersonsBL)scope.ServiceProvider.GetService(typeof(IPersons))!;
+    List<Library.Models.Excel.Person> persons = CSVReader.GetPersons();
+    bool hasData = personsBL.GetAll().Count != 0;
+    if (!hasData)
+    {
+        foreach (Library.Models.Excel.Person personEntity in persons)
+        {
+            Person person = new()
+            {
+                PersonGUID = personEntity.PersonGUID,
+                Name = personEntity.Name,
+                YearOfBirth = personEntity.YearOfBirth,
+                YearOfDeath = personEntity.YearOfDeath,
+                Profession = personEntity.Profession,
+            };
+            Person addedPerson = PersonReadConverter.ToDALModel(personsBL.Add(PersonCreateConverter.ToBLLModel(person)));
+            foreach (string movieId in personEntity.Movies)
+            {
+                Movie currentMovie = MovieReadConverter.ToDALModel(movieBL.GetByMovieId(movieId)!);
+                KnownFor knownFor = new()
+                {
+                    MovieGUID = currentMovie.MovieGUID,
+                    PersonGUID = addedPerson.PersonGUID
+                };
+                knownForBL.Add(KnownForCreateConverter.ToBLLModel(knownFor));
+            }
+        }
+    }
 }
 
 app.UseHttpsRedirection();
@@ -158,4 +222,7 @@ app.MapControllers();
 
 CreateRoles(app.Services).Wait();
 CreateMovies(app.Services);
+CreateRatings(app.Services);
+CreatePersons(app.Services);
+
 app.Run();

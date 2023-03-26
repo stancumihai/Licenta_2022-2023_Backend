@@ -7,6 +7,6 @@ namespace DAL.Interfaces
         SurveyAnswer Add(SurveyAnswer surveyAnswer);
         List<SurveyAnswer> GetAll();
         List<SurveyAnswer> GetAllByQuestionUid(Guid questionUid);
-        SurveyAnswer? GetByUid(Guid uid);
+        SurveyAnswer? GetByUid(Guid? uid);
     }
 }

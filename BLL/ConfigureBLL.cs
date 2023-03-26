@@ -23,6 +23,8 @@ public static class ConfigureBLL
         services.AddScoped<IAuthentication, AuthenticationBL>();
         services.AddScoped<IMovies, MoviesBL>();
         services.AddScoped<IMovieRatings, MovieRatingsBL>();
+        services.AddScoped<IKnownFor, KnownForBL>();
+        services.AddScoped<IPersons, PersonsBL>();
         var emailConfig = configuration
                 .GetSection("EmailConfiguration")
                 .Get<EmailConfiguration>();

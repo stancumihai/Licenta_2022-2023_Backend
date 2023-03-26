@@ -72,6 +72,21 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Persons",
+                columns: table => new
+                {
+                    PersonGUID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    YearOfBirth = table.Column<int>(type: "int", nullable: false),
+                    YearOfDeath = table.Column<int>(type: "int", nullable: false),
+                    Profession = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Persons", x => x.PersonGUID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SurveyQuestions",
                 columns: table => new
                 {
@@ -211,6 +226,31 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "KnownFor",
+                columns: table => new
+                {
+                    KnownForGUID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MovieGUID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PersonGUID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_KnownFor", x => x.KnownForGUID);
+                    table.ForeignKey(
+                        name: "FK_KnownFor_Movies_MovieGUID",
+                        column: x => x.MovieGUID,
+                        principalTable: "Movies",
+                        principalColumn: "MovieGUID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_KnownFor_Persons_PersonGUID",
+                        column: x => x.PersonGUID,
+                        principalTable: "Persons",
+                        principalColumn: "PersonGUID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SurveyAnswers",
                 columns: table => new
                 {
@@ -236,8 +276,8 @@ namespace DAL.Migrations
                     SurveyUserAnswerGUID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserGUID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     SurveyQuestionGUID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SurveyAnswerGUID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    SurveyAnswerGUID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -266,11 +306,11 @@ namespace DAL.Migrations
                 columns: new[] { "SurveyQuestionGUID", "Category", "Value" },
                 values: new object[,]
                 {
-                    { new Guid("2b182690-efa9-4373-9d3d-97d460b0e1cd"), 1, "3.Who is your favourite actor?" },
-                    { new Guid("66697023-323c-4438-9e61-e501c0fe9e89"), 3, "5.What are your top 3 favourite kind of genres?" },
-                    { new Guid("ac4af256-57cb-496f-89f3-00a1708cac7a"), 2, "4.Who is your favourite director?" },
-                    { new Guid("c0841a98-c0ab-4520-862b-0026b08996bf"), 3, "1.How frequently do you watch movies?" },
-                    { new Guid("e594ade2-d6d8-4ebb-8b91-bf3d9d80ea68"), 0, "2.Out of all the movies you have ever seen, which is your most favourite?" }
+                    { new Guid("625ce2a7-c26b-41c7-8d30-82f8143091e7"), 3, "1.How frequently do you watch movies?" },
+                    { new Guid("795b3cad-c7a9-461f-be05-cdd2aceeb57e"), 3, "5.What are your top 3 favourite kind of genres?" },
+                    { new Guid("882535a9-ed97-4c79-816c-1b868e98cda8"), 0, "2.Out of all the movies you have ever seen, which is your most favourite?" },
+                    { new Guid("c7921377-7c6e-41dc-aead-bd52fc341fca"), 2, "4.Who is your favourite director?" },
+                    { new Guid("d953ee29-72ad-4f7a-a1a3-25cf367f65a3"), 1, "3.Who is your favourite actor?" }
                 });
 
             migrationBuilder.InsertData(
@@ -278,22 +318,22 @@ namespace DAL.Migrations
                 columns: new[] { "SurveyAnswerGUID", "SurveyQuestionGUID", "Value" },
                 values: new object[,]
                 {
-                    { new Guid("125f96f6-1595-4ebb-a351-aaa8299f6bab"), new Guid("66697023-323c-4438-9e61-e501c0fe9e89"), "Comedy" },
-                    { new Guid("32610bc8-905c-49f8-b8f4-d693a3aa1fa7"), new Guid("66697023-323c-4438-9e61-e501c0fe9e89"), "Drama" },
-                    { new Guid("3547af2a-9eae-461e-aa7c-560eeb82b8f2"), new Guid("c0841a98-c0ab-4520-862b-0026b08996bf"), "Very often" },
-                    { new Guid("524a006b-d13f-440d-a6ba-7dfad322e317"), new Guid("c0841a98-c0ab-4520-862b-0026b08996bf"), "Not at all often" },
-                    { new Guid("620ef3a3-04ca-47ed-84bb-3790733089b4"), new Guid("c0841a98-c0ab-4520-862b-0026b08996bf"), "Moderately often" },
-                    { new Guid("635ae7e5-9db0-4c69-aa69-8f3bebae21c0"), new Guid("66697023-323c-4438-9e61-e501c0fe9e89"), "Thriller" },
-                    { new Guid("6913c8af-8e69-4c66-94dd-389937514089"), new Guid("e594ade2-d6d8-4ebb-8b91-bf3d9d80ea68"), "" },
-                    { new Guid("6ae6dcc9-244f-471c-bbea-4b90fd58b553"), new Guid("66697023-323c-4438-9e61-e501c0fe9e89"), "Horror" },
-                    { new Guid("a0bec510-6f41-4294-9ccc-a3d7008ffc4f"), new Guid("2b182690-efa9-4373-9d3d-97d460b0e1cd"), "" },
-                    { new Guid("a363f3ac-4bd7-4fb4-ac58-18388b89d99d"), new Guid("66697023-323c-4438-9e61-e501c0fe9e89"), "Musical" },
-                    { new Guid("acd7c39a-2a38-4744-8f48-46fe26949f6f"), new Guid("66697023-323c-4438-9e61-e501c0fe9e89"), "Action/Adventure" },
-                    { new Guid("b85b316c-da32-4ab7-957c-d15407d992c1"), new Guid("66697023-323c-4438-9e61-e501c0fe9e89"), "Romance" },
-                    { new Guid("d0ff82e7-2500-4346-ae75-899e82a6cf51"), new Guid("c0841a98-c0ab-4520-862b-0026b08996bf"), "Slightly often" },
-                    { new Guid("ea4d9ed2-d9d1-4a56-8ed4-ad8393c683d5"), new Guid("66697023-323c-4438-9e61-e501c0fe9e89"), "Science-Fiction" },
-                    { new Guid("ef91a66f-6594-4b4f-948c-34bab643f37a"), new Guid("ac4af256-57cb-496f-89f3-00a1708cac7a"), "" },
-                    { new Guid("f99b887e-a3f7-43c9-94e5-6d38b689e1cf"), new Guid("c0841a98-c0ab-4520-862b-0026b08996bf"), "Extremely often" }
+                    { new Guid("138726c0-6acf-446b-a217-2ad18389b454"), new Guid("625ce2a7-c26b-41c7-8d30-82f8143091e7"), "Slightly often" },
+                    { new Guid("13d7eda3-8c17-4702-98dc-45d149ab2037"), new Guid("625ce2a7-c26b-41c7-8d30-82f8143091e7"), "Moderately often" },
+                    { new Guid("35aeb7cc-48f7-47ce-8cc0-0686e5a2537e"), new Guid("795b3cad-c7a9-461f-be05-cdd2aceeb57e"), "Horror" },
+                    { new Guid("54a8a8b3-f566-4e83-b032-37a22fae2f07"), new Guid("795b3cad-c7a9-461f-be05-cdd2aceeb57e"), "Drama" },
+                    { new Guid("5a904b22-7d7f-4c55-8d31-59d6c6395705"), new Guid("795b3cad-c7a9-461f-be05-cdd2aceeb57e"), "Comedy" },
+                    { new Guid("796ce628-c742-4363-994a-710793e9b8f5"), new Guid("795b3cad-c7a9-461f-be05-cdd2aceeb57e"), "Romance" },
+                    { new Guid("8db6917f-d44c-4074-ae58-0ca42b09d4eb"), new Guid("625ce2a7-c26b-41c7-8d30-82f8143091e7"), "Very often" },
+                    { new Guid("91221e1a-34f1-48be-8178-7e9b3b55a1c2"), new Guid("625ce2a7-c26b-41c7-8d30-82f8143091e7"), "Extremely often" },
+                    { new Guid("975840bf-3cbe-4fe9-a1bf-a93840cf757d"), new Guid("625ce2a7-c26b-41c7-8d30-82f8143091e7"), "Not at all often" },
+                    { new Guid("9866c84d-8342-4b08-a124-f1b870670875"), new Guid("882535a9-ed97-4c79-816c-1b868e98cda8"), "" },
+                    { new Guid("ad13ebef-5888-4bb1-af96-5552c8b58108"), new Guid("d953ee29-72ad-4f7a-a1a3-25cf367f65a3"), "" },
+                    { new Guid("ba5aa5e3-f55f-46f6-bc9d-498c197e5f18"), new Guid("795b3cad-c7a9-461f-be05-cdd2aceeb57e"), "Thriller" },
+                    { new Guid("db630b93-92e2-4ac0-a914-bcb9e43d9a82"), new Guid("795b3cad-c7a9-461f-be05-cdd2aceeb57e"), "Musical" },
+                    { new Guid("dfc12ad8-7f8c-46f6-83d2-2c0907de1dc4"), new Guid("795b3cad-c7a9-461f-be05-cdd2aceeb57e"), "Action/Adventure" },
+                    { new Guid("efe44b9d-5d15-4f75-9932-1dcb39edeab0"), new Guid("795b3cad-c7a9-461f-be05-cdd2aceeb57e"), "Science-Fiction" },
+                    { new Guid("f88c5a22-610a-4c88-adf5-86b892696631"), new Guid("c7921377-7c6e-41dc-aead-bd52fc341fca"), "" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -334,6 +374,16 @@ namespace DAL.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_KnownFor_MovieGUID",
+                table: "KnownFor",
+                column: "MovieGUID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_KnownFor_PersonGUID",
+                table: "KnownFor",
+                column: "PersonGUID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MovieRatings_MovieGUID",
@@ -380,6 +430,9 @@ namespace DAL.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "KnownFor");
+
+            migrationBuilder.DropTable(
                 name: "MovieRatings");
 
             migrationBuilder.DropTable(
@@ -387,6 +440,9 @@ namespace DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Persons");
 
             migrationBuilder.DropTable(
                 name: "Movies");

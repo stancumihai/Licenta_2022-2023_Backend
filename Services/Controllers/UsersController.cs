@@ -41,5 +41,12 @@ namespace Services.Controllers
             }
             return Ok(user);
         }
+
+        [HttpGet("surveyAnswers/{userUid}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        public IActionResult UserHasSurveyAnswers([FromRoute] string userUid)
+        {
+            return Ok(BusinessContext.Users!.UserHasSurveyAnswers(userUid));
+        }
     }
 }

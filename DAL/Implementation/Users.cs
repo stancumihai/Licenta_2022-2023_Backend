@@ -14,7 +14,7 @@ namespace DAL.Implementation
         public List<ApplicationUser> GetAll()
         {
             return _context.Users
-                .Include(u => u.SurveyUserAnswers)
+                .Include(u => u.SurveyUserAnswers)!
                 .ThenInclude(sua => sua.SurveyQuestion)
                 .ToList();
         }
@@ -22,7 +22,7 @@ namespace DAL.Implementation
         public ApplicationUser? GetByUid(Guid uid)
         {
             return _context.Users
-                .Include(u => u.SurveyUserAnswers)
+                .Include(u => u.SurveyUserAnswers)!
                 .ThenInclude(sua => sua.SurveyQuestion)
                 .FirstOrDefault(u => u.Id == uid.ToString());
         }
@@ -45,6 +45,14 @@ namespace DAL.Implementation
             _context.Users.Update(oldUser);
             _context.SaveChanges();
         }
+
+        public bool UserHasSurveyAnswers(string userUid)
+        {
+            return _context.SurveyUserAnswers
+                .Where(sua => sua.UserGUID == userUid)!.Select(sua => sua.UserGUID)
+                .ToList().Count > 0;
+        }
+
 
         private static void UpdateFields(ApplicationUser oldUser, ApplicationUser newUser)
         {

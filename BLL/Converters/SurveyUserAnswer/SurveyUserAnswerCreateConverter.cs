@@ -9,6 +9,7 @@ namespace BLL.Converters.SurveyUserAnswer
             return new SurveyUserAnswerCreate
             {
                 UserUid = Guid.Parse(surveyUserAnswerDALModel.UserGUID),
+                SurveyAnswerUid = surveyUserAnswerDALModel.SurveyAnswerGUID,
                 SurveyQuestionUid = surveyUserAnswerDALModel.SurveyQuestionGUID,
                 Value = surveyUserAnswerDALModel.Value
             };
@@ -19,6 +20,7 @@ namespace BLL.Converters.SurveyUserAnswer
             return new DAL.Models.SurveyUserAnswer
             {
                 UserGUID = surveyUserAnswerBLLModel.UserUid.ToString(),
+                SurveyAnswerGUID = surveyUserAnswerBLLModel.SurveyAnswerUid,
                 SurveyQuestionGUID = surveyUserAnswerBLLModel.SurveyQuestionUid,
                 Value = surveyUserAnswerBLLModel.Value
             };

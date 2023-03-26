@@ -32,5 +32,10 @@ namespace BLL.Implementation
             ApplicationUser userToUpdate = UserReadConverter.ToDALModel(user);
             _dalContext.Users.Update(userToUpdate);
         }
+
+        public bool UserHasSurveyAnswers(string userUid)
+        {
+            return _dalContext.Users.UserHasSurveyAnswers(userUid);
+        }
     }
 }

@@ -8,5 +8,6 @@ namespace DAL.Interfaces
         ApplicationUser? GetByEmail(string email);
         List<ApplicationUser>? GetAll();
         void Update(ApplicationUser user);
+        bool UserHasSurveyAnswers(string userUid);
     }
 }

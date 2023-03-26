@@ -17,6 +17,8 @@ namespace DAL.Core
         public DbSet<SurveyUserAnswer> SurveyUserAnswers { get; set; }
         public DbSet<Movie> Movies { get; set; }
         public DbSet<MovieRating> MovieRatings { get; set; }
+        public DbSet<KnownFor> KnownFor { get; set; }
+        public DbSet<Person> Persons { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder dbContext)
            => dbContext.UseSqlServer(ConnectionString);
@@ -94,8 +96,7 @@ namespace DAL.Core
                         {
                             SurveyQuestionGUID = surveyQuestionGuid,
                             SurveyAnswerGUID = Guid.NewGuid(),
-                            Value = surveyAnswer,
-                            SurveyUserAnswers = new List<SurveyUserAnswer>()
+                            Value = surveyAnswer
                         };
                         surveyAnswers.Add(sa);
                         modelBuilder.Entity<SurveyAnswer>().HasData(sa);
@@ -108,7 +109,6 @@ namespace DAL.Core
                         SurveyQuestionGUID = surveyQuestionGuid,
                         SurveyAnswerGUID = Guid.NewGuid(),
                         Value = "",
-                        SurveyUserAnswers = new List<SurveyUserAnswer>()
                     };
                     surveyAnswers.Add(sa);
                     modelBuilder.Entity<SurveyAnswer>().HasData(sa);
@@ -128,6 +128,20 @@ namespace DAL.Core
                 .HasOne(sua => sua.User)
                 .WithMany(u => u.SurveyUserAnswers)
                 .HasForeignKey(sua => sua.UserGUID);
+
+            modelBuilder.Entity<SurveyUserAnswer>()
+                .Navigation(x => x.SurveyAnswer)
+                .IsRequired(false);
+
+            modelBuilder.Entity<KnownFor>()
+                .HasOne(k => k.Movie)
+                .WithMany(m => m.KnowFor)
+                .HasForeignKey(k => k.MovieGUID);
+
+            modelBuilder.Entity<KnownFor>()
+               .HasOne(k => k.Person)
+               .WithMany(p => p.KnowFor)
+               .HasForeignKey(k => k.PersonGUID);
 
             modelBuilder
                 .Entity<SurveyAnswer>()

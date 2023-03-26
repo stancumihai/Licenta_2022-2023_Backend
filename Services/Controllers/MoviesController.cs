@@ -18,5 +18,13 @@ namespace Services.Controllers
         {
             return Ok(BusinessContext.Movies!.GetByUid(uid));
         }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public IActionResult Add([FromBody] MovieCreate movie)
+        {
+            return Ok(BusinessContext.Movies!.Add(movie));
+        }
     }
 }

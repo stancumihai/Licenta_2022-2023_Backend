@@ -11,5 +11,6 @@ namespace DAL.Models
         public int YearOfRelease { get; set; }
         public int Runtime { get; set; }
         public string Genres { get; set; }
+        public List<KnownFor> KnowFor { get; set; }
     }
 }

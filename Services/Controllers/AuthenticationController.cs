@@ -82,7 +82,7 @@ namespace Services.Controllers
             }
             return Ok(new
             {
-                Token = new JwtSecurityTokenHandler().WriteToken(result.Item1),
+                AccessToken = new JwtSecurityTokenHandler().WriteToken(result.Item1),
                 RefreshToken = result.Item2,
                 Expiration = result.Item1.ValidTo
             });
@@ -101,7 +101,7 @@ namespace Services.Controllers
             }
             return Ok(new
             {
-                Token = new JwtSecurityTokenHandler().WriteToken(result.Item1),
+                AccessToken = new JwtSecurityTokenHandler().WriteToken(result.Item1),
                 RefreshToken = result.Item2,
             });
         }

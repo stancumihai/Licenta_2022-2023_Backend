@@ -10,7 +10,7 @@ namespace BLL.Converters.MovieRating
             MovieRatingRead movieRatingCreate = new()
             {
                 Uid = movieRatingDALModel.MovieRatingGUID,
-                Movie = MovieReadConverter.ToBLLModel(movieRatingDALModel.Movie),
+                Movie = MovieReadConverter.ToBLLModel(movieRatingDALModel.Movie!),
                 AverageRating = movieRatingDALModel.AverageRating,
                 VotesNumber = movieRatingDALModel.VotesNumber,
             };

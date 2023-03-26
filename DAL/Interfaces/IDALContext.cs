@@ -8,5 +8,7 @@
         ISurveyUserAnswers SurveyUserAnswers { get; }
         IMovies Movies { get; }
         IMovieRatings MovieRatings { get; }
+        IPersons Persons { get; }
+        IKnownFor KnownFor { get; }
     }
 }
