@@ -28,9 +28,14 @@ namespace BLL.Implementation
 
         public MovieRead? GetByMovieId(string movieId)
         {
+            Movie? movie = _dalContext.Movies
+                 .GetByMovieId(movieId)!;
+            if (movie == null)
+            {
+                return null;
+            }
             return MovieReadConverter
-                 .ToBLLModel(_dalContext.Movies
-                 .GetByMovieId(movieId)!);
+                 .ToBLLModel(movie);
         }
 
         public MovieRead? GetByUid(Guid uid)
@@ -38,6 +43,30 @@ namespace BLL.Implementation
             return MovieReadConverter
                 .ToBLLModel(_dalContext.Movies
                 .GetByUid(uid)!);
+        }
+
+        public List<MovieRead> GetPaginatedMovies(int pageNumber, int pageSize)
+        {
+            return _dalContext.Movies
+                .GetPaginatedMovies(pageNumber, pageSize)
+                .Select(movie => MovieReadConverter.ToBLLModel(movie))
+                .ToList();
+        }
+
+        public List<MovieRead> GetAllByPersonUid(Guid personGuid)
+        {
+            return _dalContext.Movies
+               .GetAllByPersonUid(personGuid)
+               .Select(movie => MovieReadConverter.ToBLLModel(movie))
+               .ToList();
+        }
+
+        public List<MovieRead> GetMoviesByGenre(string genre, int pageNumber, int pageSize)
+        {
+            return _dalContext.Movies
+               .GetMoviesByGenre(genre, pageNumber, pageSize)
+               .Select(movie => MovieReadConverter.ToBLLModel(movie))
+               .ToList();
         }
     }
 }

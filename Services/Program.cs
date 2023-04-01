@@ -50,7 +50,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.Password.RequiredLength = 5;
     options.Password.RequireDigit = true;
     options.Password.RequireUppercase = true;
-}) 
+})
     .AddEntityFrameworkStores<DatabaseContext>()
     .AddDefaultTokenProviders();
 #endregion
@@ -140,31 +140,34 @@ async Task CreateRoles(IServiceProvider serviceProvider)
 void CreateMovies(IServiceProvider serviceProvider)
 {
     using var scope = app.Services.CreateScope();
-    IMovies movieBL = (MoviesBL)scope.ServiceProvider.GetService(typeof(IMovies))!;
-    List<Movie> movies = CSVReader.GetMovies();
-    bool hasData = movieBL.GetAll().Count != 0;
-    if (!hasData)
+    IMovies moviesBL = (MoviesBL)scope.ServiceProvider.GetService(typeof(IMovies))!;
+    IMovieRatings movieRatingsBL = (MovieRatingsBL)scope.ServiceProvider.GetService(typeof(IMovieRatings))!;
+
+    Tuple<List<Movie>, List<Library.Models.Excel.MovieRating>> movieInformations = CSVReader.GetMovieInformation();
+    bool hasMovies = moviesBL.GetAll().Count != 0;
+    bool hasMovieRatings = moviesBL.GetAll().Count != 0;
+    if (!hasMovies)
     {
-        foreach (Movie movie in movies)
+        foreach (Movie movie in movieInformations.Item1)
         {
-            movieBL.Add(MovieCreateConverter.ToBLLModel(movie));
+            moviesBL.Add(MovieCreateConverter.ToBLLModel(movie));
         }
     }
 }
 
-void CreateRatings(IServiceProvider serviceProvider)
+void CreateMovieRatings(IServiceProvider serviceProvider)
 {
     using var scope = app.Services.CreateScope();
-    IMovieRatings movieRatingsBL = (MovieRatingsBL)scope.ServiceProvider.GetService<IMovieRatings>()!;
-    IMovies movieBL = (MoviesBL)scope.ServiceProvider.GetService(typeof(IMovies))!;
-    List<Library.Models.Excel.MovieRating> movieRatings = CSVReader.GetMovieRatings();
-    List<MovieRead> movies = movieBL.GetAll();
-    bool hasData = movieRatingsBL.GetAll().Count != 0;
-    if (!hasData)
+    IMovies moviesBL = (MoviesBL)scope.ServiceProvider.GetService(typeof(IMovies))!;
+    IMovieRatings movieRatingsBL = (MovieRatingsBL)scope.ServiceProvider.GetService(typeof(IMovieRatings))!;
+
+    Tuple<List<Movie>, List<Library.Models.Excel.MovieRating>> movieInformations = CSVReader.GetMovieInformation();
+    bool hasMovieRatings = movieRatingsBL.GetAll().Count != 0;
+    if (!hasMovieRatings)
     {
-        foreach (Library.Models.Excel.MovieRating movieExcelEntity in movieRatings)
+        foreach (Library.Models.Excel.MovieRating movieExcelEntity in movieInformations.Item2)
         {
-            Movie movie = MovieReadConverter.ToDALModel(movieBL.GetByMovieId(movieExcelEntity.MovieId)!);
+            Movie movie = MovieReadConverter.ToDALModel(moviesBL.GetByMovieId(movieExcelEntity.MovieId)!);
             MovieRating movieRating = new()
             {
                 MovieRatingGUID = movieExcelEntity.MovieRatingGUID,
@@ -179,7 +182,7 @@ void CreateRatings(IServiceProvider serviceProvider)
 
 void CreatePersons(IServiceProvider serviceProvider)
 {
-    using var scope = app.Services.CreateScope();
+    using var scope = app!.Services.CreateScope();
     IMovies movieBL = (MoviesBL)scope.ServiceProvider.GetService(typeof(IMovies))!;
     IKnownFor knownForBL = (KnownForBL)scope.ServiceProvider.GetService(typeof(IKnownFor))!;
     IPersons personsBL = (PersonsBL)scope.ServiceProvider.GetService(typeof(IPersons))!;
@@ -189,24 +192,50 @@ void CreatePersons(IServiceProvider serviceProvider)
     {
         foreach (Library.Models.Excel.Person personEntity in persons)
         {
-            Person person = new()
+            List<string> personExcelMoviesIds = personEntity.Movies;
+            List<Movie> personFoundMovies = new();
+            foreach (string personMovieId in personExcelMoviesIds)
             {
-                PersonGUID = personEntity.PersonGUID,
-                Name = personEntity.Name,
-                YearOfBirth = personEntity.YearOfBirth,
-                YearOfDeath = personEntity.YearOfDeath,
-                Profession = personEntity.Profession,
-            };
-            Person addedPerson = PersonReadConverter.ToDALModel(personsBL.Add(PersonCreateConverter.ToBLLModel(person)));
-            foreach (string movieId in personEntity.Movies)
-            {
-                Movie currentMovie = MovieReadConverter.ToDALModel(movieBL.GetByMovieId(movieId)!);
-                KnownFor knownFor = new()
+                MovieRead currentMovie = movieBL.GetByMovieId(personMovieId)!;
+                if (currentMovie != null)
                 {
-                    MovieGUID = currentMovie.MovieGUID,
-                    PersonGUID = addedPerson.PersonGUID
+                    personFoundMovies.Add(MovieReadConverter.ToDALModel(currentMovie));
+                }
+            }
+            if (personFoundMovies.Count != 0)
+            {
+                Person person = new()
+                {
+                    PersonGUID = personEntity.PersonGUID,
+                    Name = personEntity.Name,
+                    YearOfBirth = personEntity.YearOfBirth,
+                    YearOfDeath = personEntity.YearOfDeath,
+                    Professions = personEntity.Professions,
                 };
-                knownForBL.Add(KnownForCreateConverter.ToBLLModel(knownFor));
+                try
+                {
+                    Person addedPerson = PersonReadConverter.ToDALModel(personsBL.Add(PersonCreateConverter.ToBLLModel(person)));
+                    foreach (Movie currentMovie in personFoundMovies)
+                    {
+                        try
+                        {
+                            KnownFor knownFor = new()
+                            {
+                                MovieGUID = currentMovie.MovieGUID,
+                                PersonGUID = addedPerson.PersonGUID
+                            };
+                            knownForBL.Add(KnownForCreateConverter.ToBLLModel(knownFor));
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
             }
         }
     }
@@ -221,8 +250,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 CreateRoles(app.Services).Wait();
-CreateMovies(app.Services);
-CreateRatings(app.Services);
+//CreateMovies(app.Services);
+//CreateMovieRatings(app.Services);
 CreatePersons(app.Services);
-
 app.Run();

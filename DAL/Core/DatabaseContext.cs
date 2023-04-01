@@ -118,10 +118,6 @@ namespace DAL.Core
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //if (System.Diagnostics.Debugger.IsAttached == false)
-            //{
-            //    System.Diagnostics.Debugger.Launch();
-            //}
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<SurveyUserAnswer>()

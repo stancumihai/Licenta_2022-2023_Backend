@@ -7,5 +7,6 @@ namespace DAL.Interfaces
         Person Add(Person person);
         List<Person> GetAll();
         Person? GetByUid(Guid uid);
+        List<Person> GetAllByMovieUid(Guid movieGuid);
     }
 }

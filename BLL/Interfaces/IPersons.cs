@@ -7,5 +7,6 @@ namespace BLL.Interfaces
         PersonRead Add(PersonCreate movie);
         List<PersonRead> GetAll();
         PersonRead? GetByUid(Guid uid);
+        List<PersonRead> GetAllByMovieUid(Guid movieGuid);
     }
 }

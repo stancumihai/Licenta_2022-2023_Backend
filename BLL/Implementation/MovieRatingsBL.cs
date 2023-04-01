@@ -12,10 +12,10 @@ namespace BLL.Implementation
         {
         }
 
-        public MovieRatingCreate Add(MovieRatingCreate movieRating)
+        public void Add(MovieRatingCreate movieRating)
         {
             MovieRating addedMovieRating = MovieRatingCreateConverter.ToDALModel(movieRating);
-            return MovieRatingCreateConverter.ToBLLModel(_dalContext.MovieRatings.Add(addedMovieRating));
+            MovieRatingCreateConverter.ToBLLModel(_dalContext.MovieRatings.Add(addedMovieRating));
         }
 
         public List<MovieRatingRead> GetAll()

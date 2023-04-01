@@ -27,5 +27,13 @@ namespace DAL.Implementation
             return _context.Persons
                 .FirstOrDefault(person => person.PersonGUID == uid);
         }
+
+        public List<Person> GetAllByMovieUid(Guid movieGuid)
+        {
+            return _context.KnownFor
+                .Where(knownFor => knownFor.MovieGUID == movieGuid)
+                .Select(kf => kf.Person)
+                .ToList();
+        }
     }
 }

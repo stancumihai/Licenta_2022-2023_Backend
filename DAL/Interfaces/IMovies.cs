@@ -8,5 +8,8 @@ namespace DAL.Interfaces
         List<Movie> GetAll();
         Movie? GetByUid(Guid uid);
         Movie? GetByMovieId(string movieId);
+        List<Movie> GetPaginatedMovies(int pageNumber, int pageSize);
+        List<Movie> GetAllByPersonUid(Guid personGuid);
+        List<Movie> GetMoviesByGenre(string genre, int pageNumber, int pageSize);
     }
 }

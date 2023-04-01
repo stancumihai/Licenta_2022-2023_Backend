@@ -11,7 +11,7 @@ namespace BLL.Converters.Person
                 Name = personDALModel.Name,
                 YearOfBirth = personDALModel.YearOfBirth,
                 YearOfDeath = personDALModel.YearOfDeath,
-                Profession = personDALModel.Profession
+                Professions = personDALModel.Professions
             };
 
             return personRead;
@@ -24,7 +24,7 @@ namespace BLL.Converters.Person
                 Name = personBLLModel.Name,
                 YearOfBirth = personBLLModel.YearOfBirth,
                 YearOfDeath = personBLLModel.YearOfDeath,
-                Profession = personBLLModel.Profession
+                Professions = personBLLModel.Professions
             };
 
             return personEntity;

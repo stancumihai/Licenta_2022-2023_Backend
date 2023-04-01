@@ -6,6 +6,6 @@
         public string Name { get; set; }
         public int YearOfBirth { get; set; }
         public int YearOfDeath { get; set; }
-        public string Profession { get; set; }
+        public string Professions { get; set; }
     }
 }

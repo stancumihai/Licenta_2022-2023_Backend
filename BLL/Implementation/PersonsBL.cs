@@ -32,5 +32,13 @@ namespace BLL.Implementation
                 .ToBLLModel(_dalContext.Persons
                 .GetByUid(uid)!);
         }
+
+        public List<PersonRead> GetAllByMovieUid(Guid movieGuid)
+        {
+            return _dalContext.Persons
+                .GetAllByMovieUid(movieGuid)
+                .Select(person => PersonReadConverter.ToBLLModel(person))
+                .ToList();
+        }
     }
 }

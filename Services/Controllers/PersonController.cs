@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Services.Controllers
 {
-    public class PersonController : ApiControllerBase
+    public class PersonsController : ApiControllerBase
     {
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PersonRead>))]
@@ -17,6 +17,13 @@ namespace Services.Controllers
         public IActionResult GetByUid([FromRoute] Guid uid)
         {
             return Ok(BusinessContext.Persons!.GetByUid(uid));
+        }
+
+        [HttpGet("movie/{movieUid}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PersonRead>))]
+        public IActionResult GetAllByMovieUid([FromRoute] Guid movieUid)
+        {
+            return Ok(BusinessContext.Persons!.GetAllByMovieUid(movieUid));
         }
     }
 }
