@@ -25,5 +25,12 @@ namespace Services.Controllers
         {
             return Ok(BusinessContext.Persons!.GetAllByMovieUid(movieUid));
         }
+
+        [HttpGet("profession/{profession}/{pageNumber}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PersonRead>))]
+        public IActionResult GetPaginatedPersonsByProfession([FromRoute] string profession, [FromRoute] int pageNumber)
+        {
+            return Ok(BusinessContext.Persons!.GetPaginatedPersonsByProfession(profession, pageNumber));
+        }
     }
 }

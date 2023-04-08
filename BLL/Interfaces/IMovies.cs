@@ -11,5 +11,6 @@ namespace BLL.Interfaces
         List<MovieRead> GetPaginatedMovies(int pageNumber, int pageSize);
         List<MovieRead> GetAllByPersonUid(Guid personGuid);
         List<MovieRead> GetMoviesByGenre(string genre, int pageNumber, int pageSize);
+        List<string> GetMovieGenres();
     }
 }

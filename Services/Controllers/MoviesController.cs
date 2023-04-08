@@ -47,5 +47,12 @@ namespace Services.Controllers
         {
             return Ok(BusinessContext.Movies!.GetMoviesByGenre(genre, pageNumber, pageSize));
         }
+
+        [HttpGet("genres")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<string>))]
+        public IActionResult GetMovieGenres()
+        {
+            return Ok(BusinessContext.Movies!.GetMovieGenres());
+        }
     }
 }

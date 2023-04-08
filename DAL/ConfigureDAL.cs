@@ -26,6 +26,10 @@ public static class ConfigureDAL
         services.AddScoped<IMovieRatings, MovieRatings>();
         services.AddScoped<IKnownFor, KnownFor>();
         services.AddScoped<IPersons, Persons>();
+        services.AddScoped<ILikedMovies, LikedMovies>();
+        services.AddScoped<IMovieSubscriptions, MovieSubscriptions>();
+        services.AddScoped<ISeenMovies, SeenMovies>();
+        services.AddScoped<IUserMovieRatings, UserMovieRatings>();
         return services;
     }
 }

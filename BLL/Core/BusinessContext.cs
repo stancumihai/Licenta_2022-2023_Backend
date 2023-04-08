@@ -1,5 +1,6 @@
 ﻿using BLL.Interfaces;
 using BLL.Interfaces.Mechanisms;
+using Microsoft.AspNetCore.Http;
 
 namespace BLL.Core;
 public class BusinessContext
@@ -14,6 +15,10 @@ public class BusinessContext
     public IEmailSender EmailSender { get; set; }
     public IPersons Persons { get; set; }
     public IKnownFor KnownFor { get; set; }
+    public ILikedMovies LikedMovies { get; set; }
+    public IMovieSubscriptions MovieSubscriptions { get; set; }
+    public ISeenMovies SeenMovies { get; set; }
+    public readonly IHttpContextAccessor HttpContextAccessor;
 
     public BusinessContext(ISurveyQuestions surveyQuestions,
                             ISurveyAnswers surveyAnswers,
@@ -24,7 +29,11 @@ public class BusinessContext
                             IMovies? movies,
                             IMovieRatings? movieRatings,
                             IKnownFor knownFor,
-                            IPersons persons)
+                            IPersons persons,
+                            ILikedMovies likedMovies,
+                            IMovieSubscriptions movieSubscriptions,
+                            ISeenMovies seenMovies,
+                            IHttpContextAccessor httpContextAccessor)
     {
         SurveyQuestions = surveyQuestions;
         SurveyAnswers = surveyAnswers;
@@ -36,5 +45,9 @@ public class BusinessContext
         MovieRatings = movieRatings;
         KnownFor = knownFor;
         Persons = persons;
+        LikedMovies = likedMovies;
+        MovieSubscriptions = movieSubscriptions;
+        SeenMovies = seenMovies;
+        HttpContextAccessor = httpContextAccessor;
     }
 }

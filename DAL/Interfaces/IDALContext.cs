@@ -10,5 +10,9 @@
         IMovieRatings MovieRatings { get; }
         IPersons Persons { get; }
         IKnownFor KnownFor { get; }
+        ILikedMovies LikedMovies { get; }
+        IMovieSubscriptions MovieSubscriptions { get; }
+        ISeenMovies SeenMovies { get; }
+        IUserMovieRatings UserMovieRatings { get; }
     }
 }

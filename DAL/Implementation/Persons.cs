@@ -35,5 +35,18 @@ namespace DAL.Implementation
                 .Select(kf => kf.Person)
                 .ToList();
         }
+        public List<Person> GetPaginatedPersonsByProfession(string profession, int pageNumber)
+        {
+            List<Person> persons = _context.Persons.ToList();
+            List<Person> resultList = new();
+            foreach (Person person in persons)
+            {
+                if (person.Professions.Split(",").Contains(profession))
+                {
+                    resultList.Add(person);
+                }
+            }
+            return resultList.Skip((pageNumber - 1) * 5).Take(5).ToList();
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DAL.Core;
+using DAL.Enums;
 using DAL.Interfaces;
 using DAL.Models;
 
@@ -64,6 +65,10 @@ namespace DAL.Implementation
                 }
             }
             return resultList.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+        }
+        public List<string> GetMovieGenres()
+        {
+            return Enum.GetNames(typeof(Genres)).ToList();
         }
     }
 }

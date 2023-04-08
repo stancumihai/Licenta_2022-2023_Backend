@@ -68,5 +68,10 @@ namespace BLL.Implementation
                .Select(movie => MovieReadConverter.ToBLLModel(movie))
                .ToList();
         }
+
+        public List<string> GetMovieGenres()
+        {
+            return _dalContext.Movies.GetMovieGenres();
+        }
     }
 }

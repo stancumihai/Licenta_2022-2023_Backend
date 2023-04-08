@@ -4,6 +4,7 @@ using DAL.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20230408133405_likedMovies table")]
+    partial class likedMoviestable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -191,28 +194,6 @@ namespace DAL.Migrations
                     b.ToTable("MovieRatings");
                 });
 
-            modelBuilder.Entity("DAL.Models.MovieSubscription", b =>
-                {
-                    b.Property<Guid>("MovieSubscriptionGUID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("MovieGUID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserGUID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("MovieSubscriptionGUID");
-
-                    b.HasIndex("MovieGUID");
-
-                    b.HasIndex("UserGUID");
-
-                    b.ToTable("MovieSubscriptions");
-                });
-
             modelBuilder.Entity("DAL.Models.Person", b =>
                 {
                     b.Property<Guid>("PersonGUID")
@@ -238,28 +219,6 @@ namespace DAL.Migrations
                     b.ToTable("Persons");
                 });
 
-            modelBuilder.Entity("DAL.Models.SeenMovie", b =>
-                {
-                    b.Property<Guid>("SeenMovieGUID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("MovieGUID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserGUID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("SeenMovieGUID");
-
-                    b.HasIndex("MovieGUID");
-
-                    b.HasIndex("UserGUID");
-
-                    b.ToTable("SeenMovies");
-                });
-
             modelBuilder.Entity("DAL.Models.SurveyAnswer", b =>
                 {
                     b.Property<Guid>("SurveyAnswerGUID")
@@ -281,98 +240,98 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            SurveyAnswerGUID = new Guid("5dd625b2-5149-4188-8a07-808928fc228d"),
-                            SurveyQuestionGUID = new Guid("40bc9101-7221-4b6b-875d-99e89e8e16e9"),
+                            SurveyAnswerGUID = new Guid("4fb9a955-2755-4291-a25c-102c829aa355"),
+                            SurveyQuestionGUID = new Guid("72d03562-f994-44d4-aab0-5b311abba269"),
                             Value = "Extremely often"
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("199177f5-9fec-4466-bfea-4916e08e3020"),
-                            SurveyQuestionGUID = new Guid("40bc9101-7221-4b6b-875d-99e89e8e16e9"),
+                            SurveyAnswerGUID = new Guid("455568b0-389d-4a9f-91aa-86caf1f60c81"),
+                            SurveyQuestionGUID = new Guid("72d03562-f994-44d4-aab0-5b311abba269"),
                             Value = "Very often"
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("8e040ca0-51df-493a-b67d-a997edf559de"),
-                            SurveyQuestionGUID = new Guid("40bc9101-7221-4b6b-875d-99e89e8e16e9"),
+                            SurveyAnswerGUID = new Guid("ee5ea900-7721-44a3-959e-24888311a074"),
+                            SurveyQuestionGUID = new Guid("72d03562-f994-44d4-aab0-5b311abba269"),
                             Value = "Moderately often"
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("d3db1692-f62e-4d47-938c-ca213cbe87dc"),
-                            SurveyQuestionGUID = new Guid("40bc9101-7221-4b6b-875d-99e89e8e16e9"),
+                            SurveyAnswerGUID = new Guid("cd9eeb12-0606-4e02-9d2e-17de99b2c03f"),
+                            SurveyQuestionGUID = new Guid("72d03562-f994-44d4-aab0-5b311abba269"),
                             Value = "Slightly often"
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("dd713fba-5803-4db4-8c99-c6a56701483b"),
-                            SurveyQuestionGUID = new Guid("40bc9101-7221-4b6b-875d-99e89e8e16e9"),
+                            SurveyAnswerGUID = new Guid("db4d5d0a-7898-4c65-bb71-63eda1fe9f95"),
+                            SurveyQuestionGUID = new Guid("72d03562-f994-44d4-aab0-5b311abba269"),
                             Value = "Not at all often"
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("b331d8f2-2559-4a99-b430-0c6bd5feb2c8"),
-                            SurveyQuestionGUID = new Guid("e2e67ba5-7387-44ea-8957-a964f81f2138"),
+                            SurveyAnswerGUID = new Guid("1fc959a9-0d1f-4b0f-bfb1-c8cfeed160fa"),
+                            SurveyQuestionGUID = new Guid("27bce215-205e-4a15-96a1-ad259be45b49"),
                             Value = ""
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("1242bcdd-639f-4a95-b637-52983404bbaf"),
-                            SurveyQuestionGUID = new Guid("72ca54af-43c1-481a-82ef-aef117f1c09b"),
+                            SurveyAnswerGUID = new Guid("af50d0dd-72d1-47a5-839e-26a53ee53c00"),
+                            SurveyQuestionGUID = new Guid("c4892499-a0a2-4e55-b747-e62805c1568e"),
                             Value = ""
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("082286b0-8459-4775-93e9-5b78c28a8f80"),
-                            SurveyQuestionGUID = new Guid("c28c92ba-afa1-406c-b07e-f0611133187a"),
+                            SurveyAnswerGUID = new Guid("2d3e37ea-1e0b-4a69-bb46-62ac7bb652b3"),
+                            SurveyQuestionGUID = new Guid("1b06bb50-a8b7-45a8-b93e-ca4c21ff5382"),
                             Value = ""
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("02ae396b-c39e-4039-88e1-0a5bf8220cf0"),
-                            SurveyQuestionGUID = new Guid("b1a6057f-a991-4acb-b50d-a5714d3e512c"),
+                            SurveyAnswerGUID = new Guid("e8122d31-4570-483d-807d-2605263ef1c5"),
+                            SurveyQuestionGUID = new Guid("7aa4f744-adc0-4d16-a2cd-794509a3a53e"),
                             Value = "Horror"
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("c4f78d20-1740-41af-98d1-9a914de517b5"),
-                            SurveyQuestionGUID = new Guid("b1a6057f-a991-4acb-b50d-a5714d3e512c"),
+                            SurveyAnswerGUID = new Guid("735a8b08-031e-4980-a459-7d57b8a014fb"),
+                            SurveyQuestionGUID = new Guid("7aa4f744-adc0-4d16-a2cd-794509a3a53e"),
                             Value = "Romance"
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("79e99f78-ae0a-4330-97b0-3f25f327eb8d"),
-                            SurveyQuestionGUID = new Guid("b1a6057f-a991-4acb-b50d-a5714d3e512c"),
+                            SurveyAnswerGUID = new Guid("89d839e1-3c9f-47d0-b3fa-699531d6d303"),
+                            SurveyQuestionGUID = new Guid("7aa4f744-adc0-4d16-a2cd-794509a3a53e"),
                             Value = "Action/Adventure"
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("a1978dc5-bee9-4449-afe5-d26cbdb80c3e"),
-                            SurveyQuestionGUID = new Guid("b1a6057f-a991-4acb-b50d-a5714d3e512c"),
+                            SurveyAnswerGUID = new Guid("d1560311-90f8-4295-90e5-7e6f27ca8d6a"),
+                            SurveyQuestionGUID = new Guid("7aa4f744-adc0-4d16-a2cd-794509a3a53e"),
                             Value = "Thriller"
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("948f7a9d-aa95-4edf-8fce-b061af1d70f2"),
-                            SurveyQuestionGUID = new Guid("b1a6057f-a991-4acb-b50d-a5714d3e512c"),
+                            SurveyAnswerGUID = new Guid("fcb3a9af-f561-4365-ad34-96c445a47306"),
+                            SurveyQuestionGUID = new Guid("7aa4f744-adc0-4d16-a2cd-794509a3a53e"),
                             Value = "Science-Fiction"
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("f55810c0-5b5e-4531-8b4e-03bc11136dab"),
-                            SurveyQuestionGUID = new Guid("b1a6057f-a991-4acb-b50d-a5714d3e512c"),
+                            SurveyAnswerGUID = new Guid("f35cd233-d5b7-4747-b88d-c2247c97eba3"),
+                            SurveyQuestionGUID = new Guid("7aa4f744-adc0-4d16-a2cd-794509a3a53e"),
                             Value = "Comedy"
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("a5b503eb-bead-453d-9752-c1adc186007f"),
-                            SurveyQuestionGUID = new Guid("b1a6057f-a991-4acb-b50d-a5714d3e512c"),
+                            SurveyAnswerGUID = new Guid("d889cbaa-5092-4752-b0cc-0e25617c2625"),
+                            SurveyQuestionGUID = new Guid("7aa4f744-adc0-4d16-a2cd-794509a3a53e"),
                             Value = "Drama"
                         },
                         new
                         {
-                            SurveyAnswerGUID = new Guid("c5490393-73bb-4540-b8a9-e91ff9c8308d"),
-                            SurveyQuestionGUID = new Guid("b1a6057f-a991-4acb-b50d-a5714d3e512c"),
+                            SurveyAnswerGUID = new Guid("b0fbfcd3-81f5-49b6-ae7f-1022d26b7094"),
+                            SurveyQuestionGUID = new Guid("7aa4f744-adc0-4d16-a2cd-794509a3a53e"),
                             Value = "Musical"
                         });
                 });
@@ -396,31 +355,31 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            SurveyQuestionGUID = new Guid("40bc9101-7221-4b6b-875d-99e89e8e16e9"),
+                            SurveyQuestionGUID = new Guid("72d03562-f994-44d4-aab0-5b311abba269"),
                             Category = 3,
                             Value = "1.How frequently do you watch movies?"
                         },
                         new
                         {
-                            SurveyQuestionGUID = new Guid("e2e67ba5-7387-44ea-8957-a964f81f2138"),
+                            SurveyQuestionGUID = new Guid("27bce215-205e-4a15-96a1-ad259be45b49"),
                             Category = 0,
                             Value = "2.Out of all the movies you have ever seen, which is your most favourite?"
                         },
                         new
                         {
-                            SurveyQuestionGUID = new Guid("72ca54af-43c1-481a-82ef-aef117f1c09b"),
+                            SurveyQuestionGUID = new Guid("c4892499-a0a2-4e55-b747-e62805c1568e"),
                             Category = 1,
                             Value = "3.Who is your favourite actor?"
                         },
                         new
                         {
-                            SurveyQuestionGUID = new Guid("c28c92ba-afa1-406c-b07e-f0611133187a"),
+                            SurveyQuestionGUID = new Guid("1b06bb50-a8b7-45a8-b93e-ca4c21ff5382"),
                             Category = 2,
                             Value = "4.Who is your favourite director?"
                         },
                         new
                         {
-                            SurveyQuestionGUID = new Guid("b1a6057f-a991-4acb-b50d-a5714d3e512c"),
+                            SurveyQuestionGUID = new Guid("7aa4f744-adc0-4d16-a2cd-794509a3a53e"),
                             Category = 3,
                             Value = "5.What are your top 3 favourite kind of genres?"
                         });
@@ -636,44 +595,6 @@ namespace DAL.Migrations
                         .IsRequired();
 
                     b.Navigation("Movie");
-                });
-
-            modelBuilder.Entity("DAL.Models.MovieSubscription", b =>
-                {
-                    b.HasOne("DAL.Models.Movie", "Movie")
-                        .WithMany()
-                        .HasForeignKey("MovieGUID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DAL.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserGUID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Movie");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("DAL.Models.SeenMovie", b =>
-                {
-                    b.HasOne("DAL.Models.Movie", "Movie")
-                        .WithMany()
-                        .HasForeignKey("MovieGUID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DAL.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserGUID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Movie");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DAL.Models.SurveyAnswer", b =>

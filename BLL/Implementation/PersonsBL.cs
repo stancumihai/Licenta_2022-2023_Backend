@@ -40,5 +40,13 @@ namespace BLL.Implementation
                 .Select(person => PersonReadConverter.ToBLLModel(person))
                 .ToList();
         }
+
+        public List<PersonRead> GetPaginatedPersonsByProfession(string profession, int pageNumber)
+        {
+            return _dalContext.Persons
+                .GetPaginatedPersonsByProfession(profession, pageNumber)
+                .Select(person => PersonReadConverter.ToBLLModel(person))
+                .ToList();
+        }
     }
 }
