@@ -3,13 +3,19 @@ using BLL.Core;
 using BLL.Interfaces;
 using DAL.Models;
 using Library.Models.SeenMovie;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace BLL.Implementation
 {
     public class SeenMoviesBL : BusinessObject, ISeenMovies
     {
-        public SeenMoviesBL(DAL.Interfaces.IDALContext dalContext) : base(dalContext)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public SeenMoviesBL(DAL.Interfaces.IDALContext dalContext,
+            IHttpContextAccessor httpContextAccessor) : base(dalContext)
         {
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public SeenMovieCreate Add(SeenMovieCreate seenMovie)
@@ -51,9 +57,15 @@ namespace BLL.Implementation
                     .ToBLLModel(seenMovie);
         }
 
-        public SeenMovieRead GetByUserAndMovie(Guid movieUid, string userGUID)
+        public SeenMovieRead GetByUserAndMovie(Guid movieUid)
         {
-            SeenMovie seenMovie = _dalContext.SeenMovies.GetByUserAndMovie(movieUid, userGUID);
+            var email = _httpContextAccessor.HttpContext!.User?.FindFirstValue(ClaimTypes.Name);
+            ApplicationUser? userEntity = _dalContext.Users.GetByEmail(email!);
+            if (userEntity == null)
+            {
+                return null;
+            }
+            SeenMovie seenMovie = _dalContext.SeenMovies.GetByUserAndMovie(movieUid, userEntity.Id);
             if (seenMovie == null)
             {
                 return null;

@@ -13,6 +13,6 @@ namespace DAL.Models
         public string UserGUID { get; set; }
         public Movie Movie { get; set; }
         public ApplicationUser User { get; set; }
-        private decimal Rating { get; set; }
+        public decimal Rating { get; set; }
     }
 }

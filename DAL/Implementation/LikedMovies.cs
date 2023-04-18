@@ -11,19 +11,19 @@ namespace DAL.Implementation
         {
         }
 
-        public LikedMovie Add(LikedMovie likedMovie)
+        public LikedMovie? Add(LikedMovie likedMovie)
         {
-            ApplicationUser user = _context.Users.FirstOrDefault(u => u.Id == likedMovie.UserGUID);
+            ApplicationUser? user = _context.Users.FirstOrDefault(u => u.Id == likedMovie.UserGUID);
             if(user == null)
             {
                 return null;
             }
-            Movie movie = _context.Movies.FirstOrDefault(m => m.MovieGUID == likedMovie.MovieGUID);
+            Movie? movie = _context.Movies.FirstOrDefault(m => m.MovieGUID == likedMovie.MovieGUID);
             if (movie == null)
             {
                 return null;
             }
-            LikedMovie addedLikedMovie = _context.LikedMovies.Add(likedMovie).Entity;
+            LikedMovie? addedLikedMovie = _context.LikedMovies.Add(likedMovie).Entity;
             _context.SaveChanges();
             return addedLikedMovie;
         }
@@ -60,7 +60,7 @@ namespace DAL.Implementation
 
         public List<LikedMovie> GetAllByLoggedUser(string userGUID)
         {
-            ApplicationUser user = _context.Users.FirstOrDefault(u => u.Id == userGUID);
+            ApplicationUser? user = _context.Users.FirstOrDefault(u => u.Id == userGUID);
             if (user == null)
             {
                 return null;
@@ -72,12 +72,12 @@ namespace DAL.Implementation
 
         public LikedMovie GetByUserAndMovie(Guid movieUid, string userGUID)
         {
-            ApplicationUser user = _context.Users.FirstOrDefault(u => u.Id == userGUID);
+            ApplicationUser? user = _context.Users.FirstOrDefault(u => u.Id == userGUID);
             if (user == null)
             {
                 return null;
             }
-            Movie movie = _context.Movies.FirstOrDefault(m => m.MovieGUID == movieUid);
+            Movie? movie = _context.Movies.FirstOrDefault(m => m.MovieGUID == movieUid);
             if (movie == null)
             {
                 return null;

@@ -8,6 +8,6 @@ namespace BLL.Interfaces
         List<MovieSubscriptionRead> GetAll();
         MovieSubscriptionRead? GetByUid(Guid uid);
         MovieSubscriptionRead Delete(Guid uid);
-        MovieSubscriptionRead GetByUserAndMovie(Guid movieUid, string userGUID);
+        MovieSubscriptionRead GetByUserAndMovie(Guid movieUid);
     }
 }

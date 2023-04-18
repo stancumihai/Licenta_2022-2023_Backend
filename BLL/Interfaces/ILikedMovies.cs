@@ -8,7 +8,7 @@ namespace BLL.Interfaces
         List<LikedMovieRead> GetAll();
         LikedMovieRead? GetByUid(Guid uid);
         void Delete(Guid uid);
-        List<LikedMovieRead> GetAllByLoggedUser(string userGUID);
-        LikedMovieRead GetByUserAndMovie(Guid movieUid, string userGUID);
+        List<LikedMovieRead> GetAllByLoggedUser();
+        LikedMovieRead GetByUserAndMovie(Guid movieUid);
     }
 }

@@ -3,19 +3,25 @@ using BLL.Core;
 using BLL.Interfaces;
 using DAL.Models;
 using Library.Models.LikedMovie;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace BLL.Implementation
 {
     public class LikedMoviesBL : BusinessObject, ILikedMovies
     {
-        public LikedMoviesBL(DAL.Interfaces.IDALContext dalContext) : base(dalContext)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public LikedMoviesBL(DAL.Interfaces.IDALContext dalContext,
+            IHttpContextAccessor httpContextAccessor) : base(dalContext)
         {
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public LikedMovieCreate Add(LikedMovieCreate likedMovie)
         {
             LikedMovie addedLikedMovie = LikedMovieCreateConverter.ToDALModel(likedMovie);
-            if(addedLikedMovie == null)
+            if (addedLikedMovie == null)
             {
                 return null;
             }
@@ -42,11 +48,16 @@ namespace BLL.Implementation
                     .GetByUid(uid)!);
         }
 
-        public List<LikedMovieRead> GetAllByLoggedUser(string userUid)
+        public List<LikedMovieRead> GetAllByLoggedUser()
         {
-
+            var email = _httpContextAccessor.HttpContext!.User?.FindFirstValue(ClaimTypes.Name);
+            ApplicationUser? userEntity = _dalContext.Users.GetByEmail(email!);
+            if (userEntity == null)
+            {
+                return null;
+            }
             List<LikedMovie> likedMovies = _dalContext.LikedMovies
-                .GetAllByLoggedUser(userUid);
+                .GetAllByLoggedUser(userEntity.Id);
             if (likedMovies == null)
             {
                 return null;
@@ -57,10 +68,16 @@ namespace BLL.Implementation
             return likedMoviesRead;
         }
 
-        public LikedMovieRead GetByUserAndMovie(Guid movieUid, string userUid)
+        public LikedMovieRead GetByUserAndMovie(Guid movieUid)
         {
-            LikedMovie likedMovie = _dalContext.LikedMovies.GetByUserAndMovie(movieUid, userUid);
-            if(likedMovie == null)
+            var email = _httpContextAccessor.HttpContext!.User?.FindFirstValue(ClaimTypes.Name);
+            ApplicationUser? userEntity = _dalContext.Users.GetByEmail(email!);
+            if (userEntity == null)
+            {
+                return null;
+            }
+            LikedMovie likedMovie = _dalContext.LikedMovies.GetByUserAndMovie(movieUid, userEntity.Id);
+            if (likedMovie == null)
             {
                 return null;
             }

@@ -7,14 +7,14 @@ namespace BLL.Converters.LikedMovie
     {
         public static LikedMovieRead ToBLLModel(DAL.Models.LikedMovie likedMovieDALModel)
         {
-            LikedMovieRead linkedMovieCreate = new()
+            LikedMovieRead linkedMovieRead = new()
             {
                 Uid = likedMovieDALModel.LikedMovieGUID,
                 Movie = MovieReadConverter.ToBLLModel(likedMovieDALModel.Movie),
                 UserGUID = likedMovieDALModel.UserGUID
             };
 
-            return linkedMovieCreate;
+            return linkedMovieRead;
         }
 
         public static DAL.Models.LikedMovie ToDALModel(LikedMovieRead likedMovieBLLModel)

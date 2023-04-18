@@ -48,13 +48,7 @@ namespace Services.Controllers
         [Authorize]
         public IActionResult GetByUserAndMovie([FromRoute] Guid movieUid)
         {
-            var email = BusinessContext.HttpContextAccessor.HttpContext!.User?.FindFirstValue(ClaimTypes.Name);
-            Guid? loggedInUserUid = BusinessContext.Users?.GetByEmail(email!).Uid;
-            if (loggedInUserUid == null)
-            {
-                return null;
-            }
-            SeenMovieRead seenMovie = BusinessContext.SeenMovies!.GetByUserAndMovie(movieUid, loggedInUserUid.ToString());
+            SeenMovieRead seenMovie = BusinessContext.SeenMovies!.GetByUserAndMovie(movieUid);
             if (seenMovie == null)
             {
                 return NotFound();

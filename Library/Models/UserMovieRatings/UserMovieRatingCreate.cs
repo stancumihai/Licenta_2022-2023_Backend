@@ -1,9 +1,9 @@
 ﻿namespace Library.Models.UserMovieRatings
 {
-    public class UserMovieRatingsCreate
+    public class UserMovieRatingCreate
     {
         public Guid MovieUid { get; set; }
         public string UserUid { get; set; }
-        private decimal Rating { get; set; }
+        public decimal Rating { get; set; }
     }
 }

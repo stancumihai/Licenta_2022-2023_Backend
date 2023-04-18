@@ -1,7 +1,6 @@
 ﻿using Library.Models.LikedMovie;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Services.Controllers
 {
@@ -20,13 +19,7 @@ namespace Services.Controllers
         [Authorize]
         public IActionResult GetAllByLoggedUser()
         {
-            var email = BusinessContext.HttpContextAccessor.HttpContext!.User?.FindFirstValue(ClaimTypes.Name);
-            Guid? loggedInUserUid = BusinessContext.Users?.GetByEmail(email!).Uid;
-            if (loggedInUserUid == null)
-            {
-                return null;
-            }
-            List<LikedMovieRead> likedMovies = BusinessContext.LikedMovies!.GetAllByLoggedUser(loggedInUserUid.ToString());
+            List<LikedMovieRead> likedMovies = BusinessContext.LikedMovies!.GetAllByLoggedUser();
             if (likedMovies == null)
             {
                 return NotFound();
@@ -48,13 +41,7 @@ namespace Services.Controllers
         [Authorize]
         public IActionResult GetByUserAndMovie([FromRoute] Guid movieUid)
         {
-            var email = BusinessContext.HttpContextAccessor.HttpContext!.User?.FindFirstValue(ClaimTypes.Name);
-            Guid? loggedInUserUid = BusinessContext.Users?.GetByEmail(email!).Uid;
-            if (loggedInUserUid == null)
-            {
-                return null;
-            }
-            LikedMovieRead likedMovie = BusinessContext.LikedMovies!.GetByUserAndMovie(movieUid, loggedInUserUid.ToString());
+            LikedMovieRead likedMovie = BusinessContext.LikedMovies!.GetByUserAndMovie(movieUid);
             if (likedMovie == null)
             {
                 return NotFound();

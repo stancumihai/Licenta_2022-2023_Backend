@@ -19,14 +19,14 @@ namespace BLL.Converters.SeenMovie
 
         public static DAL.Models.SeenMovie ToDALModel(SeenMovieRead seenMovieBLLModel)
         {
-            DAL.Models.SeenMovie movieSubscriptionEntity = new()
+            DAL.Models.SeenMovie seenMovieEnttiy = new()
             {
                 SeenMovieGUID = seenMovieBLLModel.Uid,
                 MovieGUID = seenMovieBLLModel.Movie.Uid,
                 UserGUID = seenMovieBLLModel.UserGUID
             };
 
-            return movieSubscriptionEntity;
+            return seenMovieEnttiy;
         }
     }
 }

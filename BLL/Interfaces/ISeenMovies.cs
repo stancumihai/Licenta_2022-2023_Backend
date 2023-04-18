@@ -8,6 +8,6 @@ namespace BLL.Interfaces
         List<SeenMovieRead> GetAll();
         SeenMovieRead? GetByUid(Guid uid);
         SeenMovieRead Delete(Guid uid);
-        SeenMovieRead GetByUserAndMovie(Guid movieUid, string userGUID);
+        SeenMovieRead GetByUserAndMovie(Guid movieUid);
     }
 }

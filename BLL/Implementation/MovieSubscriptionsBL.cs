@@ -3,13 +3,19 @@ using BLL.Core;
 using BLL.Interfaces;
 using DAL.Models;
 using Library.Models.MovieSubscription;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace BLL.Implementation
 {
     public class MovieSubscriptionsBL : BusinessObject, IMovieSubscriptions
     {
-        public MovieSubscriptionsBL(DAL.Interfaces.IDALContext dalContext) : base(dalContext)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public MovieSubscriptionsBL(DAL.Interfaces.IDALContext dalContext,
+            IHttpContextAccessor httpContextAccessor) : base(dalContext)
         {
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public MovieSubscriptionCreate Add(MovieSubscriptionCreate movieSubscription)
@@ -51,9 +57,17 @@ namespace BLL.Implementation
                     .ToBLLModel(movieSubscription);
         }
 
-        public MovieSubscriptionRead GetByUserAndMovie(Guid movieUid, string userUid)
+        public MovieSubscriptionRead GetByUserAndMovie(Guid movieUid)
         {
-            MovieSubscription movieSubscription = _dalContext.MovieSubscriptions.GetByUserAndMovie(movieUid, userUid);
+            var email = _httpContextAccessor.HttpContext!.User?.FindFirstValue(ClaimTypes.Name);
+            ApplicationUser? userEntity = _dalContext.Users.GetByEmail(email!);
+            if (userEntity == null)
+            {
+                return null;
+            }
+            MovieSubscription movieSubscription = _dalContext
+                .MovieSubscriptions
+                .GetByUserAndMovie(movieUid, userEntity.Id);
             if (movieSubscription == null)
             {
                 return null;
