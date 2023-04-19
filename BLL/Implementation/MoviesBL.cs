@@ -3,13 +3,19 @@ using BLL.Core;
 using BLL.Interfaces;
 using DAL.Models;
 using Library.Models.Movie;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace BLL.Implementation
 {
     public class MoviesBL : BusinessObject, IMovies
     {
-        public MoviesBL(DAL.Interfaces.IDALContext dalContext) : base(dalContext)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public MoviesBL(DAL.Interfaces.IDALContext dalContext,
+            IHttpContextAccessor httpContextAccessor) : base(dalContext)
         {
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public MovieCreate Add(MovieCreate movie)
@@ -72,6 +78,48 @@ namespace BLL.Implementation
         public List<string> GetMovieGenres()
         {
             return _dalContext.Movies.GetMovieGenres();
+        }
+
+        public List<MovieRead> GetMoviesHistory(int pageNumber, int pageSize)
+        {
+            var email = _httpContextAccessor.HttpContext!.User?.FindFirstValue(ClaimTypes.Name);
+            ApplicationUser? userEntity = _dalContext.Users.GetByEmail(email!);
+            if (userEntity == null)
+            {
+                return null;
+            }
+            return _dalContext.Movies
+              .GetMoviesHistory(userEntity.Id, pageNumber, pageSize)
+              .Select(movie => MovieReadConverter.ToBLLModel(movie))
+              .ToList();
+        }
+
+        public List<MovieRead> GetMoviesSubscription(int pageNumber, int pageSize)
+        {
+            var email = _httpContextAccessor.HttpContext!.User?.FindFirstValue(ClaimTypes.Name);
+            ApplicationUser? userEntity = _dalContext.Users.GetByEmail(email!);
+            if (userEntity == null)
+            {
+                return null;
+            }
+            return _dalContext.Movies
+              .GetMoviesSubscription(userEntity.Id, pageNumber, pageSize)
+              .Select(movie => MovieReadConverter.ToBLLModel(movie))
+              .ToList();
+        }
+
+        public List<MovieRead> GetMoviesCollection(int pageNumber, int pageSize)
+        {
+            var email = _httpContextAccessor.HttpContext!.User?.FindFirstValue(ClaimTypes.Name);
+            ApplicationUser? userEntity = _dalContext.Users.GetByEmail(email!);
+            if (userEntity == null)
+            {
+                return null;
+            }
+            return _dalContext.Movies
+              .GetMoviesCollection(userEntity.Id, pageNumber, pageSize)
+              .Select(movie => MovieReadConverter.ToBLLModel(movie))
+              .ToList();
         }
     }
 }

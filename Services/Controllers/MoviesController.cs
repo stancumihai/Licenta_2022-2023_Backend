@@ -1,4 +1,5 @@
 ﻿using Library.Models.Movie;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Services.Controllers
@@ -53,6 +54,30 @@ namespace Services.Controllers
         public IActionResult GetMovieGenres()
         {
             return Ok(BusinessContext.Movies!.GetMovieGenres());
+        }
+
+        [HttpGet("history/{pageNumber}/{pageSize}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<List<MovieRead>>))]
+        [Authorize]
+        public IActionResult GetMoviesHistory([FromRoute] int pageNumber, [FromRoute] int pageSize)
+        {
+            return Ok(BusinessContext.Movies!.GetMoviesHistory(pageNumber, pageSize));
+        }
+        [HttpGet("subscription/{pageNumber}/{pageSize}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<List<MovieRead>>))]
+        [Authorize]
+        public IActionResult GetMoviesSubscription([FromRoute] int pageNumber, [FromRoute] int pageSize)
+        {
+            return Ok(BusinessContext.Movies!.GetMoviesSubscription(pageNumber, pageSize));
+        }
+
+
+        [HttpGet("collection/{pageNumber}/{pageSize}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<List<MovieRead>>))]
+        [Authorize]
+        public IActionResult GetMoviesCollection([FromRoute] int pageNumber, [FromRoute] int pageSize)
+        {
+            return Ok(BusinessContext.Movies!.GetMoviesCollection(pageNumber, pageSize));
         }
     }
 }
