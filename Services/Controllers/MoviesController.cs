@@ -46,7 +46,7 @@ namespace Services.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MovieRead>))]
         public IActionResult GetMoviesByGenre([FromRoute] string genre, [FromRoute] int pageNumber, [FromRoute] int pageSize)
         {
-            return Ok(BusinessContext.Movies!.GetMoviesByGenre(genre, pageNumber, pageSize));
+            return Ok(BusinessContext.Movies!.GetMoviesByGenrePaginated(genre, pageNumber, pageSize));
         }
 
         [HttpGet("genres")]
@@ -59,25 +59,51 @@ namespace Services.Controllers
         [HttpGet("history/{pageNumber}/{pageSize}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<List<MovieRead>>))]
         [Authorize]
-        public IActionResult GetMoviesHistory([FromRoute] int pageNumber, [FromRoute] int pageSize)
+        public IActionResult GetMoviesHistoryPaginated([FromRoute] int pageNumber, [FromRoute] int pageSize)
         {
-            return Ok(BusinessContext.Movies!.GetMoviesHistory(pageNumber, pageSize));
+            return Ok(BusinessContext.Movies!.GetMoviesHistoryPaginated(pageNumber, pageSize));
         }
+
         [HttpGet("subscription/{pageNumber}/{pageSize}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<List<MovieRead>>))]
         [Authorize]
-        public IActionResult GetMoviesSubscription([FromRoute] int pageNumber, [FromRoute] int pageSize)
+        public IActionResult GetMoviesSubscriptionPaginated([FromRoute] int pageNumber, [FromRoute] int pageSize)
         {
-            return Ok(BusinessContext.Movies!.GetMoviesSubscription(pageNumber, pageSize));
+            return Ok(BusinessContext.Movies!.GetMoviesSubscriptionPaginated(pageNumber, pageSize));
         }
 
 
         [HttpGet("collection/{pageNumber}/{pageSize}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<List<MovieRead>>))]
         [Authorize]
-        public IActionResult GetMoviesCollection([FromRoute] int pageNumber, [FromRoute] int pageSize)
+        public IActionResult GetMoviesCollectionPaginated([FromRoute] int pageNumber, [FromRoute] int pageSize)
         {
-            return Ok(BusinessContext.Movies!.GetMoviesCollection(pageNumber, pageSize));
+            return Ok(BusinessContext.Movies!.GetMoviesCollectionPaginated(pageNumber, pageSize));
+        }
+
+        [HttpGet("history")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<List<MovieRead>>))]
+        [Authorize]
+        public IActionResult GetMoviesHistory()
+        {
+            return Ok(BusinessContext.Movies!.GetMoviesHistory());
+        }
+
+        [HttpGet("subscription")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<List<MovieRead>>))]
+        [Authorize]
+        public IActionResult GetMoviesSubscription()
+        {
+            return Ok(BusinessContext.Movies!.GetMoviesSubscription());
+        }
+
+
+        [HttpGet("collection")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<List<MovieRead>>))]
+        [Authorize]
+        public IActionResult GetMoviesCollection()
+        {
+            return Ok(BusinessContext.Movies!.GetMoviesCollection());
         }
     }
 }

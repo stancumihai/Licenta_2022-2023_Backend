@@ -12,9 +12,11 @@ namespace DAL.Interfaces
         List<Movie> GetAllByPersonUid(Guid personGuid);
         List<Movie> GetMoviesByGenre(string genre, int pageNumber, int pageSize);
         List<string> GetMovieGenres();
-        List<Movie> GetMoviesHistory(string userUid, int pageNumber, int pageSize);
-        List<Movie> GetMoviesSubscription(string userUid, int pageNumber, int pageSize);
-        List<Movie> GetMoviesCollection(string userUid, int pageNumber, int pageSize);
-
+        List<Movie> GetMoviesHistoryPaginated(string userUid, int pageNumber, int pageSize);
+        List<Movie> GetMoviesSubscriptionPaginated(string userUid, int pageNumber, int pageSize);
+        List<Movie> GetMoviesCollectionPaginated(string userUid, int pageNumber, int pageSize);
+        List<Movie> GetMoviesHistory(string userUid);
+        List<Movie> GetMoviesSubscription(string userUid);
+        List<Movie> GetMoviesCollection(string userUid);
     }
 }

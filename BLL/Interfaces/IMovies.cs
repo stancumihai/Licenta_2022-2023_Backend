@@ -10,10 +10,13 @@ namespace BLL.Interfaces
         MovieRead? GetByMovieId(string movieId);
         List<MovieRead> GetPaginatedMovies(int pageNumber, int pageSize);
         List<MovieRead> GetAllByPersonUid(Guid personGuid);
-        List<MovieRead> GetMoviesByGenre(string genre, int pageNumber, int pageSize);
+        List<MovieRead> GetMoviesByGenrePaginated(string genre, int pageNumber, int pageSize);
         List<string> GetMovieGenres();
-        List<MovieRead> GetMoviesHistory(int pageNumber, int pageSize);
-        List<MovieRead> GetMoviesSubscription(int pageNumber, int pageSize);
-        List<MovieRead> GetMoviesCollection(int pageNumber, int pageSize);
+        List<MovieRead> GetMoviesHistoryPaginated(int pageNumber, int pageSize);
+        List<MovieRead> GetMoviesSubscriptionPaginated(int pageNumber, int pageSize);
+        List<MovieRead> GetMoviesCollectionPaginated(int pageNumber, int pageSize);
+        List<MovieRead> GetMoviesHistory();
+        List<MovieRead> GetMoviesSubscription();
+        List<MovieRead> GetMoviesCollection();
     }
 }
