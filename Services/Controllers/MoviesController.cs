@@ -105,5 +105,12 @@ namespace Services.Controllers
         {
             return Ok(BusinessContext.Movies!.GetMoviesCollection());
         }
+
+        [HttpGet("topGenres")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<List<string>>))]
+        public IActionResult GetTopGenres()
+        {
+            return Ok(BusinessContext.Movies.GetTopGenres());
+        }
     }
 }

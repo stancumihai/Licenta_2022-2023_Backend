@@ -11,7 +11,8 @@ namespace BLL.Converters.SeenMovie
             {
                 Uid = seenMovieDALModel.SeenMovieGUID,
                 Movie = MovieReadConverter.ToBLLModel(seenMovieDALModel.Movie),
-                UserGUID = seenMovieDALModel.UserGUID
+                UserGUID = seenMovieDALModel.UserGUID,
+                CreatedAt = seenMovieDALModel.CreatedAt
             };
 
             return seenMovieRead;
@@ -23,7 +24,8 @@ namespace BLL.Converters.SeenMovie
             {
                 SeenMovieGUID = seenMovieBLLModel.Uid,
                 MovieGUID = seenMovieBLLModel.Movie.Uid,
-                UserGUID = seenMovieBLLModel.UserGUID
+                UserGUID = seenMovieBLLModel.UserGUID,
+                CreatedAt = seenMovieBLLModel.CreatedAt
             };
 
             return seenMovieEnttiy;

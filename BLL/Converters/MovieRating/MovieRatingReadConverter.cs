@@ -10,7 +10,7 @@ namespace BLL.Converters.MovieRating
             MovieRatingRead movieRatingCreate = new()
             {
                 Uid = movieRatingDALModel.MovieRatingGUID,
-                Movie = MovieReadConverter.ToBLLModel(movieRatingDALModel.Movie!),
+                Movie =     MovieReadConverter.ToBLLModel(movieRatingDALModel.Movie!),
                 AverageRating = movieRatingDALModel.AverageRating,
                 VotesNumber = movieRatingDALModel.VotesNumber,
             };
@@ -23,6 +23,7 @@ namespace BLL.Converters.MovieRating
             DAL.Models.MovieRating movieRatingEntity = new()
             {
                 MovieRatingGUID = moveRatingBLLModel.Uid,
+                MovieGUID = moveRatingBLLModel.Movie.Uid,
                 Movie = MovieReadConverter.ToDALModel(moveRatingBLLModel.Movie!),
                 AverageRating = moveRatingBLLModel.AverageRating,
                 VotesNumber = moveRatingBLLModel.VotesNumber,

@@ -8,5 +8,7 @@ namespace BLL.Interfaces
         SurveyUserAnswerCreate Add(SurveyUserAnswerCreate surveyUserAnswer);
         List<SurveyUserAnswerRead> GetAll();
         SurveyUserAnswerRead GetByUid(Guid uid);
+        List<SurveyUserAnswerRead> GetAllByUser();
+        int AddInSuperBatches(SurveyUserAnswerCreateBatch surveyUserAnswerCreateBatch);
     }
 }

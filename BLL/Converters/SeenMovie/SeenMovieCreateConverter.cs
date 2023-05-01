@@ -9,7 +9,7 @@ namespace BLL.Converters.SeenMovie
             SeenMovieCreate seenMovieCreate = new()
             {
                 MovieUid = seenMovieDALModel.MovieGUID,
-                UserUid = seenMovieDALModel.UserGUID
+                UserUid = seenMovieDALModel.UserGUID,
             };
 
             return seenMovieCreate;
@@ -20,7 +20,8 @@ namespace BLL.Converters.SeenMovie
             DAL.Models.SeenMovie movieSubscriptionEntity = new()
             {
                 MovieGUID = seenMovieBLLModel.MovieUid,
-                UserGUID = seenMovieBLLModel.UserUid
+                UserGUID = seenMovieBLLModel.UserUid,
+                CreatedAt = DateTime.Now,
             };
 
             return movieSubscriptionEntity;

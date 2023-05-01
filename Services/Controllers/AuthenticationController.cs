@@ -19,6 +19,8 @@ namespace Services.Controllers
         }
 
         [HttpPost("send-email/{email}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<string>> SendEmail([FromRoute] string email)
         {
             UserRead user = BusinessContext.Users!.GetByEmail(email);

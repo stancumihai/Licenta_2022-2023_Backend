@@ -163,5 +163,38 @@ namespace BLL.Implementation
               .Select(movie => MovieReadConverter.ToBLLModel(movie))
               .ToList();
         }
+
+        public List<string> GetTopGenres()
+        {
+            List<Movie> toSearchInMovies = new(_dalContext
+                                                    .LikedMovies
+                                                    .GetAll()
+                                                    .Select(l => l.Movie).ToList()
+                                                        .Concat(_dalContext
+                                                                    .SeenMovies
+                                                                    .GetAll()
+                                                                    .Select(s => s.Movie)
+                                                                    .ToList()));
+            List<string> genres = _dalContext.Movies.GetMovieGenres();
+            IDictionary<string, int> genresDictionary = new Dictionary<string, int>();
+
+            for (int i = 0; i < genres.Count; i++)
+            {
+                genresDictionary.Add(genres[i], 0);
+            }
+            foreach (Movie movie in toSearchInMovies)
+            {
+                string[] movieGenres = movie.Genres.Split(',');
+                foreach (string genre in movieGenres)
+                {
+                    genresDictionary[genre]++;
+                }
+            }
+            IEnumerable<string> mostappreciatedPersonsSortedGenres = from genresDicEntry in genresDictionary
+                                                                     orderby genresDicEntry.Value
+                                                                     descending
+                                                                     select genresDicEntry.Key;
+            return mostappreciatedPersonsSortedGenres.Take(3).ToList();
+        }
     }
 }

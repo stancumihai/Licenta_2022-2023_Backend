@@ -9,7 +9,7 @@ namespace BLL.Converters.LikedMovie
             LikedMovieCreate linkedMovieCreate = new()
             {
                 MovieUid = likedMovieDALModel.MovieGUID,
-                UserUid = likedMovieDALModel.UserGUID
+                UserUid = likedMovieDALModel.UserGUID,
             };
 
             return linkedMovieCreate;
@@ -20,7 +20,8 @@ namespace BLL.Converters.LikedMovie
             DAL.Models.LikedMovie linkedMovieEntity = new()
             {
                 MovieGUID = likedMovieBLLModel.MovieUid,
-                UserGUID = likedMovieBLLModel.UserUid
+                UserGUID = likedMovieBLLModel.UserUid,
+                CreatedAt = DateTime.Now
             };
 
             return linkedMovieEntity;

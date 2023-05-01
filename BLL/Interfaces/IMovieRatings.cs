@@ -8,5 +8,6 @@ namespace BLL.Interfaces
         List<MovieRatingRead> GetAll();
         MovieRatingRead? GetByUid(Guid uid);
         MovieRatingRead? GetByMovieUid(Guid movieUid);
+        MovieRatingRead? Update(MovieRatingRead movieRatingRead);
     }
 }

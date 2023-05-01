@@ -98,6 +98,25 @@ namespace DAL.Implementation
             return newUserMovieRating;
         }
 
+        public UserMovieRating GetByMovieAndUser(Guid movieGUID, string userGUID)
+        {
+            Movie? movie = _context.Movies.FirstOrDefault(m => m.MovieGUID.Equals(movieGUID));
+            if (movie == null)
+            {
+                return null;
+            }
+            ApplicationUser? user = _context.Users.FirstOrDefault(u => u.Id.Equals(userGUID));
+            if (user == null)
+            {
+                return null;
+            }
+            UserMovieRating userMovieRating = _context.UserMovieRatings.FirstOrDefault(umr => umr.Movie.MovieGUID == movieGUID && umr.User.Id == userGUID);
+            if (userMovieRating == null)
+            {
+                return null;
+            }
+            return userMovieRating;
+        }
         private static void UpdateFields(UserMovieRating oldUserMovieRating, UserMovieRating newUserMovieRating)
         {
             oldUserMovieRating.MovieGUID = newUserMovieRating.MovieGUID;

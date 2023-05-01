@@ -25,5 +25,19 @@ namespace Services.Controllers
         {
             return Ok(BusinessContext.MovieRatings!.GetByMovieUid(movieUid));
         }
+
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MovieRatingRead>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+        public IActionResult Update([FromBody] MovieRatingRead movieRatingRead)
+        {
+            MovieRatingRead? newMovieRating = BusinessContext.MovieRatings!.Update(movieRatingRead);
+            if(newMovieRating == null)
+            {
+                return NotFound();
+            }
+            return Ok(newMovieRating);
+        }
     }
 }

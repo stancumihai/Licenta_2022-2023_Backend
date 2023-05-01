@@ -10,5 +10,6 @@ namespace DAL.Interfaces
         UserMovieRating? Add(UserMovieRating userMovieRating);
         void Delete(Guid guid);
         UserMovieRating? Update(UserMovieRating newUserMovieRating);
+        UserMovieRating GetByMovieAndUser(Guid movieGUID, string userGUID);
     }
 }

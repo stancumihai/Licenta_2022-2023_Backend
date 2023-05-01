@@ -10,5 +10,6 @@ namespace BLL.Interfaces
         UserMovieRatingCreate? Add(UserMovieRatingCreate userMovieRating);
         void Delete(Guid guid);
         UserMovieRatingRead? Update(UserMovieRatingRead newUserMovieRating);
+        public UserMovieRatingRead? GetByMovieAndUser(Guid movieGUID);
     }
 }

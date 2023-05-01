@@ -3,13 +3,19 @@ using BLL.Core;
 using DAL.Models;
 using Library.Models;
 using Library.Models.SurveyUserAnswer;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace BLL.Implementation
 {
     public class SurveyUserAnswersBL : BusinessObject, Interfaces.ISurveyUserAnswers
     {
-        public SurveyUserAnswersBL(DAL.Interfaces.IDALContext dalContext) : base(dalContext)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public SurveyUserAnswersBL(DAL.Interfaces.IDALContext dalContext,
+            IHttpContextAccessor httpContextAccessor) : base(dalContext)
         {
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public SurveyUserAnswerCreate Add(SurveyUserAnswerCreate surveyUserAnswer)
@@ -28,6 +34,7 @@ namespace BLL.Implementation
                 {
                     addedSurveyUserAnswer.Value = surveyAnswer.Value;
                 }
+                return SurveyUserAnswerCreateConverter.ToBLLModel(_dalContext.SurveyUserAnswers.Add(addedSurveyUserAnswer));
             }
             addedSurveyUserAnswer.SurveyAnswer = null;
             addedSurveyUserAnswer.SurveyAnswerGUID = null;
@@ -49,6 +56,36 @@ namespace BLL.Implementation
                .GetAll()
                .Select(surveyAnswer => SurveyUserAnswerReadConverter.ToBLLModel(surveyAnswer))
                .FirstOrDefault(surveyUserAnswer => surveyUserAnswer.Uid.Equals(uid))!;
+        }
+        public List<SurveyUserAnswerRead> GetAllByUser()
+        {
+            var email = _httpContextAccessor.HttpContext!.User?.FindFirstValue(ClaimTypes.Name);
+            ApplicationUser? userEntity = _dalContext.Users.GetByEmail(email!);
+            if (userEntity == null)
+            {
+                return null;
+            }
+            List<SurveyUserAnswer> surveyUserAnswers = _dalContext.SurveyUserAnswers.GetAllByUser(userEntity.Id);
+            if (surveyUserAnswers == null)
+            {
+                return null;
+            }
+            return surveyUserAnswers.Select(surveyAnswer => SurveyUserAnswerReadConverter.ToBLLModel(surveyAnswer))
+                .ToList();
+        }
+
+        public int AddInSuperBatches(SurveyUserAnswerCreateBatch surveyUserAnswerCreateBatch)
+        {
+            foreach (SurveyUserAnswerCreate surveyUserAnswer in surveyUserAnswerCreateBatch.surveyUserAnswers)
+            {
+                var response = Add(surveyUserAnswer);
+                if (response == null)
+                {
+                    return -1;
+                }
+            }
+
+            return 1;
         }
     }
 }

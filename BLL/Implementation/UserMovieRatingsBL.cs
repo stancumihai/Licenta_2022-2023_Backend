@@ -73,5 +73,20 @@ namespace BLL.Implementation
 
             return UserMovieRatingReadConverter.ToBLLModel(userToBeUpdated);
         }
+        public UserMovieRatingRead? GetByMovieAndUser(Guid movieGUID)
+        {
+            var email = _httpContextAccessor.HttpContext!.User?.FindFirstValue(ClaimTypes.Name);
+            ApplicationUser? userEntity = _dalContext.Users.GetByEmail(email!);
+            if (userEntity == null)
+            {
+                return null;
+            }
+            UserMovieRating userMovieRating = _dalContext.UserMovieRatings.GetByMovieAndUser(movieGUID, userEntity.Id);
+            if (userMovieRating == null)
+            {
+                return null;
+            }
+            return UserMovieRatingReadConverter.ToBLLModel(userMovieRating);
+        }
     }
 }

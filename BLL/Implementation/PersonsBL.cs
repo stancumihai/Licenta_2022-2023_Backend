@@ -48,5 +48,41 @@ namespace BLL.Implementation
                 .Select(person => PersonReadConverter.ToBLLModel(person))
                 .ToList();
         }
+        public List<PersonRead> GetAristsOfTheMonth()
+        {
+            List<Movie> toSearchInMovies = new(_dalContext
+                                                    .LikedMovies
+                                                    .GetAll()
+                                                    .Select(l => l.Movie).ToList()
+                                                        .Concat(_dalContext
+                                                                    .SeenMovies
+                                                                    .GetAll()
+                                                                    .Select(s => s.Movie)
+                                                                    .ToList()));
+            List<Person> persons = new List<Person>();
+            IDictionary<Person, int> artistsDictionary = new Dictionary<Person, int>();
+            foreach (Movie movie in toSearchInMovies)
+            {
+                persons = _dalContext.Persons.GetAllByMovieUid(movie.MovieGUID);
+                foreach (Person person in persons)
+                {
+                    Guid personGuid = person.PersonGUID;
+                    if (artistsDictionary.ContainsKey(person))
+                    {
+                        artistsDictionary[person]++;
+                        continue;
+                    }
+                    artistsDictionary.Add(person, 1);
+                }
+            }
+            IEnumerable<Person> mostappreciatedPersonsSortedDictionary = from artistDictionaryEntry in artistsDictionary
+                                                                         orderby artistDictionaryEntry.Value
+                                                                         descending
+                                                                         select artistDictionaryEntry.Key;
+            return mostappreciatedPersonsSortedDictionary
+                .Select(p => PersonReadConverter.ToBLLModel(p))
+                .Take(10)
+                .ToList();
+        }
     }
 }

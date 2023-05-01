@@ -32,5 +32,13 @@ namespace Services.Controllers
         {
             return Ok(BusinessContext.Persons!.GetPaginatedPersonsByProfession(profession, pageNumber));
         }
+
+        [HttpGet("artistOfTheMonth")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PersonRead>))]
+
+        public IActionResult GetAristsOfTheMonth()
+        {
+            return Ok(BusinessContext.Persons.GetAristsOfTheMonth());
+        }
     }
 }

@@ -18,6 +18,19 @@ namespace DAL.Implementation
             return addedSurveyUserAnswer;
         }
 
+        public List<SurveyUserAnswer> GetAllByUser(string userUid)
+        {
+            ApplicationUser? user = _context.Users.FirstOrDefault(u => u.Id == userUid);
+            if (user == null)
+            {
+                return null;
+            }
+            return _context.SurveyUserAnswers.
+                Where(sua => sua.UserGUID == userUid)
+               .Include(sua => sua.SurveyQuestion)
+               .ToList();
+        }
+
         public List<SurveyUserAnswer> GetAll()
         {
             return _context.SurveyUserAnswers

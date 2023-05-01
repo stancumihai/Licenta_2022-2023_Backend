@@ -72,5 +72,19 @@ namespace Services.Controllers
             BusinessContext.UserMovieRatings.Delete(uid);
             return NoContent();
         }
+
+        [HttpGet("movie/{movieUid}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserMovieRatingRead))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+        public IActionResult GetByMovieAndUser([FromRoute] Guid movieUid)
+        {
+            UserMovieRatingRead? userMovieRating = BusinessContext.UserMovieRatings.GetByMovieAndUser(movieUid);
+            if(userMovieRating == null)
+            {
+                return NotFound();
+            }
+            return Ok(userMovieRating);
+        }
     }
 }

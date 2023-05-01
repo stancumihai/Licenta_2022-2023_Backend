@@ -26,16 +26,48 @@ namespace DAL.Implementation
 
         public MovieRating? GetByMovieUid(Guid movieUid)
         {
-            return _context.MovieRatings
+            MovieRating? movieRating = _context.MovieRatings
                 .Include(mr => mr.Movie)
                 .FirstOrDefault(mr => mr.MovieGUID == movieUid);
+            if (movieRating == null)
+            {
+                return null;
+            }
+            return movieRating;
         }
 
         public MovieRating? GetByUid(Guid uid)
         {
-            return _context.MovieRatings
+            MovieRating? movieRating = _context.MovieRatings
                 .Include(mr => mr.Movie)
                 .FirstOrDefault(mr => mr.MovieRatingGUID == uid);
+            if (movieRating == null)
+            {
+                return null;
+            }
+            return movieRating;
+        }
+
+        public MovieRating? Update(MovieRating newMovieRating)
+        {
+            MovieRating? oldMovieRating = _context.MovieRatings
+                 .Include(mr => mr.Movie)
+                 .FirstOrDefault(mr => mr.MovieRatingGUID == newMovieRating.MovieRatingGUID);
+            if (oldMovieRating == null)
+            {
+                return null;
+            }
+            UpdateFields(oldMovieRating, newMovieRating);
+            _context.MovieRatings.Update(oldMovieRating);
+            _context.SaveChanges();
+            return newMovieRating;
+        }
+
+        private void UpdateFields(MovieRating oldMovieRating, MovieRating newMovieRating)
+        {
+            oldMovieRating.MovieGUID = newMovieRating.MovieGUID;
+            oldMovieRating.AverageRating = newMovieRating.AverageRating;
+            oldMovieRating.VotesNumber = newMovieRating.VotesNumber;
         }
     }
 }

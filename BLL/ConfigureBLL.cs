@@ -34,6 +34,7 @@ public static class ConfigureBLL
                 .Get<EmailConfiguration>();
         services.AddSingleton(emailConfig);
         services.AddScoped<IEmailSender, EmailSender>();
+        services.AddScoped<IRecommendationManager, RecommendationManager>();
         services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, MyUserClaimsPrincipalFactory>();
 
         return services;

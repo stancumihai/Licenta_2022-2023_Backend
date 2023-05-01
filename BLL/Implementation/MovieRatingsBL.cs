@@ -37,5 +37,15 @@ namespace BLL.Implementation
             return MovieRatingReadConverter.ToBLLModel(_dalContext.MovieRatings
                .GetByUid(uid)!);
         }
+
+        public MovieRatingRead? Update(MovieRatingRead movieRatingRead)
+        {
+            MovieRating? newMovieRating = _dalContext.MovieRatings.Update(MovieRatingReadConverter.ToDALModel(movieRatingRead));
+            if(newMovieRating == null)
+            {
+                return null;
+            }
+            return MovieRatingReadConverter.ToBLLModel(newMovieRating);
+        }
     }
 }

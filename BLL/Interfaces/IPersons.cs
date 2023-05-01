@@ -9,5 +9,6 @@ namespace BLL.Interfaces
         PersonRead? GetByUid(Guid uid);
         List<PersonRead> GetAllByMovieUid(Guid movieGuid);
         List<PersonRead> GetPaginatedPersonsByProfession(string profession, int pageNumber);
+        List<PersonRead> GetAristsOfTheMonth();
     }
 }
