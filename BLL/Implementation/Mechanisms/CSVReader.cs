@@ -7,9 +7,9 @@ namespace BLL.Implementation.Mechanisms
     public class CSVReader
     {
         private readonly static string PERSON_DATA_PATH =
-            "D:\\Munca\\Licenta\\backend\\Licenta_2022_Backend\\DAL\\Datasets\\original\\data1.xlsx";
+            "D:\\Munca\\Licenta\\backend\\DAL\\Datasets\\original\\data1.xlsx";
         private readonly static string MOVIE_AND_RATING_INFORMATION_PATH =
-        "D:\\Munca\\Licenta\\backend\\Licenta_2022_Backend\\DAL\\Datasets\\original\\Final2.xlsx";
+        "D:\\Munca\\Licenta\\backend\\DAL\\Datasets\\original\\Final2.xlsx";
 
         public static Tuple<List<Movie>, List<Library.Models.Excel.MovieRating>> GetMovieInformation()
         {
