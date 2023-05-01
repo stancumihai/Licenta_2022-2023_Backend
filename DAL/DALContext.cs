@@ -16,6 +16,7 @@ namespace DAL
         public IMovieSubscriptions MovieSubscriptions { get; }
         public ISeenMovies SeenMovies { get; }
         public IUserMovieRatings UserMovieRatings { get; }
+        public IUserProfiles UserProfiles { get; }
         public DALContext(ISurveyAnswers surveyAnswers,
             ISurveyQuestions surveyQuestions,
             IUsers users,
@@ -27,7 +28,8 @@ namespace DAL
             ILikedMovies likedMovies,
             IMovieSubscriptions moviesSubscriptions,
             ISeenMovies seenMovies,
-            IUserMovieRatings userMovieRatings)
+            IUserMovieRatings userMovieRatings,
+            IUserProfiles userProfiles)
         {
             SurveyAnswers = surveyAnswers;
             SurveyQuestions = surveyQuestions;
@@ -41,6 +43,7 @@ namespace DAL
             MovieSubscriptions = moviesSubscriptions;
             SeenMovies = seenMovies;
             UserMovieRatings = userMovieRatings;
+            UserProfiles = userProfiles;
         }
     }
 }

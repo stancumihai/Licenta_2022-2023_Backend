@@ -23,6 +23,7 @@ namespace DAL.Core
         public DbSet<MovieSubscription> MovieSubscriptions { get; set; }
         public DbSet<SeenMovie> SeenMovies { get; set; }
         public DbSet<UserMovieRating> UserMovieRatings { get; set; }
+        public DbSet<UserProfile> UserProfiles { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder dbContext)
            => dbContext.UseSqlServer(ConnectionString);
 

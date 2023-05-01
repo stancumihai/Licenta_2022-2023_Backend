@@ -14,5 +14,6 @@
         IMovieSubscriptions MovieSubscriptions { get; }
         ISeenMovies SeenMovies { get; }
         IUserMovieRatings UserMovieRatings { get; }
+        IUserProfiles UserProfiles { get; }
     }
 }

@@ -30,6 +30,7 @@ public static class ConfigureDAL
         services.AddScoped<IMovieSubscriptions, MovieSubscriptions>();
         services.AddScoped<ISeenMovies, SeenMovies>();
         services.AddScoped<IUserMovieRatings, UserMovieRatings>();
+        services.AddScoped<IUserProfiles, UserProfiles>();
         return services;
     }
 }

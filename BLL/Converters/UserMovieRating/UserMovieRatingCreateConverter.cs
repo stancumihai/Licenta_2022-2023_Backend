@@ -6,14 +6,14 @@ namespace BLL.Converters.UserMovieRating
     {
         public static UserMovieRatingCreate ToBLLModel(DAL.Models.UserMovieRating userMovieRatingDALModel)
         {
-            UserMovieRatingCreate userMovieRatingRead = new()
+            UserMovieRatingCreate userMovieRatingCreate = new()
             {
                 MovieUid = userMovieRatingDALModel.MovieGUID,
                 UserUid = userMovieRatingDALModel.UserGUID,
                 Rating = userMovieRatingDALModel.Rating
             };
 
-            return userMovieRatingRead;
+            return userMovieRatingCreate;
         }
 
         public static DAL.Models.UserMovieRating ToDALModel(UserMovieRatingCreate userMovieRatingBLLModel)
