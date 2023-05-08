@@ -1,4 +1,5 @@
-﻿using DAL.Core;
+﻿using DAL.Comparers;
+using DAL.Core;
 using DAL.Enums;
 using DAL.Interfaces;
 using DAL.Models;
@@ -73,7 +74,12 @@ namespace DAL.Implementation
 
         public List<Movie> GetMoviesHistoryPaginated(string userUid, int pageNumber, int pageSize)
         {
-            List<Guid> seenMoviesUids = _context.SeenMovies
+            List<SeenMovie> seenMovies = _context.SeenMovies
+                .ToList()
+                .Distinct(new SeenMovieComparer())
+                .ToList();
+
+            List<Guid> seenMoviesUids = seenMovies
                 .Where(sm => sm.UserGUID == userUid)
                 .Select(sm => sm.MovieGUID)
                 .Skip((pageNumber - 1) * pageSize)
@@ -87,7 +93,12 @@ namespace DAL.Implementation
 
         public List<Movie> GetMoviesSubscriptionPaginated(string userUid, int pageNumber, int pageSize)
         {
-            List<Guid> subscriptionsUids = _context.MovieSubscriptions
+            List<MovieSubscription> movieSubscriptions = _context.MovieSubscriptions
+                .ToList()
+                .Distinct()
+                .ToList();
+
+            List<Guid> subscriptionsUids = movieSubscriptions
                .Where(sm => sm.UserGUID == userUid)
                .Select(sm => sm.MovieGUID)
                .Skip((pageNumber - 1) * pageSize)
@@ -101,7 +112,12 @@ namespace DAL.Implementation
 
         public List<Movie> GetMoviesCollectionPaginated(string userUid, int pageNumber, int pageSize)
         {
-            List<Guid> likedMoviesUids = _context.LikedMovies
+            List<LikedMovie> likedMovies = _context.LikedMovies
+               .ToList()
+               .Distinct(new LikedMovieComparer())
+               .ToList();
+
+            List<Guid> likedMoviesUids = likedMovies
               .Where(sm => sm.UserGUID == userUid)
               .Select(sm => sm.MovieGUID)
               .Skip((pageNumber - 1) * pageSize)
@@ -116,7 +132,12 @@ namespace DAL.Implementation
 
         public List<Movie> GetMoviesHistory(string userUid)
         {
-            List<Guid> seenMoviesUids = _context.SeenMovies
+            List<SeenMovie> seenMovies = _context.SeenMovies
+              .ToList()
+              .Distinct(new SeenMovieComparer())
+              .ToList();
+
+            List<Guid> seenMoviesUids = seenMovies
                 .Where(sm => sm.UserGUID == userUid)
                 .Select(sm => sm.MovieGUID)
                 .ToList();
@@ -128,7 +149,13 @@ namespace DAL.Implementation
 
         public List<Movie> GetMoviesSubscription(string userUid)
         {
-            List<Guid> subscriptionsUids = _context.MovieSubscriptions
+            List<MovieSubscription> movieSubscriptions = _context.MovieSubscriptions
+               .ToList()
+               .Distinct(new MovieSubscriptionComparer())
+               .ToList();
+
+
+            List<Guid> subscriptionsUids = movieSubscriptions
                 .Where(sm => sm.UserGUID == userUid)
                 .Select(sm => sm.MovieGUID)
                 .ToList();
@@ -140,7 +167,12 @@ namespace DAL.Implementation
 
         public List<Movie> GetMoviesCollection(string userUid)
         {
-            List<Guid> likedMoviesUids = _context.LikedMovies
+            List<LikedMovie> likedMovies = _context.LikedMovies
+               .ToList()
+               .Distinct(new LikedMovieComparer())
+               .ToList();
+
+            List<Guid> likedMoviesUids = likedMovies
              .Where(sm => sm.UserGUID == userUid)
              .Select(sm => sm.MovieGUID)
              .ToList();

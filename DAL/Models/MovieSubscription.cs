@@ -14,5 +14,16 @@ namespace DAL.Models
         public string UserGUID { get; set; }
         public Movie Movie { get; set; }
         public ApplicationUser User { get; set; }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is MovieSubscription subscription &&
+                   MovieGUID.Equals(subscription.MovieGUID);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(MovieSubscriptionGUID, MovieGUID, UserGUID, Movie, User);
+        }
     }
 }
