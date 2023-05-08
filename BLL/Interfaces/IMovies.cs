@@ -1,4 +1,5 @@
-﻿using Library.Models.Movie;
+﻿using Library.Models;
+using Library.Models.Movie;
 
 namespace BLL.Interfaces
 {
@@ -19,5 +20,6 @@ namespace BLL.Interfaces
         List<MovieRead> GetMoviesSubscription();
         List<MovieRead> GetMoviesCollection();
         List<string> GetTopGenres();
+        List<MovieRead> GetAdvancedSearchMovies (SearchModel searcModel);
     }
 }

@@ -17,6 +17,7 @@ namespace BLL.Implementation.Mechanisms
         private Timer? _timer;
         private readonly IEmailSender _emailSender;
         private readonly IUsers _usersService;
+        private List<UserRead> _users;
         private readonly JobTimeFrame _jobTimeFrame;
         private readonly IHubContext<NotificationHub, INotificationHub> _notificationHubContext;
         public TimedHostedService(ILogger<TimedHostedService> logger,
@@ -30,6 +31,7 @@ namespace BLL.Implementation.Mechanisms
             _jobTimeFrame = configuration
                 .GetSection("JobTimeFrame")
                 .Get<JobTimeFrame>();
+            _users = _usersService.GetAll();
             _notificationHubContext = notificationHubContext;
         }
 
@@ -41,11 +43,11 @@ namespace BLL.Implementation.Mechanisms
             return Task.CompletedTask;
         }
 
-        private void SendEmail(object state)
+        private async void SendEmail(object state)
         {
             _logger.LogInformation("service is running.");
             string body = "<p>Here are the this month recommendations</p>";
-            foreach (UserRead user in _usersService.GetAll())
+            foreach (UserRead user in _users)
             {
                 string email = user.Email;
                 var message = new Message(new string[] { email },
@@ -56,7 +58,7 @@ namespace BLL.Implementation.Mechanisms
                 {
                     //_emailSender.SendEmail(message);
                     _logger.LogInformation($"Email sent to {email}");
-                    _notificationHubContext.Clients.All.ReceiveNotification("Yes");
+                    await _notificationHubContext.Clients.All.ReceiveNotification("Yes");
                 }
                 catch (Exception e)
                 {

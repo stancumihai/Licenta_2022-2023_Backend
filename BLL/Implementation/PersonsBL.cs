@@ -59,7 +59,7 @@ namespace BLL.Implementation
                                                                     .GetAll()
                                                                     .Select(s => s.Movie)
                                                                     .ToList()));
-            List<Person> persons = new List<Person>();
+            List<Person> persons = new();
             IDictionary<Person, int> artistsDictionary = new Dictionary<Person, int>();
             foreach (Movie movie in toSearchInMovies)
             {

@@ -21,7 +21,7 @@ namespace BLL.Implementation
         public List<KnownForRead> GetAll()
         {
             List<KnownFor> knowFors = _dalContext.KnownFor.GetAll();
-            List<KnownForRead> knownForReads = new List<KnownForRead>();
+            List<KnownForRead> knownForReads = new();
             foreach (KnownFor read in knowFors)
             {
                 read.Movie = _dalContext.Movies.GetByUid(read.MovieGUID)!;

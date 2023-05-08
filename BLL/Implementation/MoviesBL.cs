@@ -2,7 +2,9 @@
 using BLL.Core;
 using BLL.Interfaces;
 using DAL.Models;
+using Library.Models;
 using Library.Models.Movie;
+using Library.Models.MovieRating;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
@@ -195,6 +197,89 @@ namespace BLL.Implementation
                                                                      descending
                                                                      select genresDicEntry.Key;
             return mostappreciatedPersonsSortedGenres.Take(3).ToList();
+        }
+
+        private List<Movie> GetMoviesByOrderByStrategy(List<Movie> movies, string orderByStrategy, bool isAscending, int itemsPerPage)
+        {
+            if (orderByStrategy == "Release Date")
+            {
+                if (isAscending)
+                {
+                    return (from movie in movies orderby movie.YearOfRelease ascending select movie).Take(itemsPerPage).ToList();
+                }
+                return (from movie in movies orderby movie.YearOfRelease descending select movie).Take(itemsPerPage).ToList();
+            }
+
+            List<MovieRating> movieRatings = new();
+            if (isAscending)
+            {
+
+                movieRatings = (from moveRating in _dalContext.MovieRatings.GetAll() orderby moveRating.AverageRating ascending select moveRating).ToList();
+            }
+            else
+            {
+                movieRatings = (from moveRating in _dalContext.MovieRatings.GetAll() orderby moveRating.AverageRating descending select moveRating).ToList();
+            }
+            List<Movie> movieList = new();
+            foreach (MovieRating rating in movieRatings)
+            {
+                Movie? existingMovie = movies.FirstOrDefault(r => r.MovieGUID == rating.MovieGUID);
+                if (existingMovie != null)
+                {
+                    movieList.Add(existingMovie);
+                    if (movieList.Count == itemsPerPage)
+                    {
+                        break;
+                    }
+                }
+            }
+            return movieList;
+        }
+
+        public List<MovieRead> GetAdvancedSearchMovies(SearchModel searchModel)
+        {
+            List<Movie> filteredMovies = _dalContext
+                .Movies
+                .GetAll()
+                .Where(m => m.YearOfRelease >= searchModel.MinYear &&
+                       m.YearOfRelease <= searchModel.MaxYear)
+                .ToList();
+
+            if (searchModel.Genre != "")
+            {
+                filteredMovies = filteredMovies.Where(m => m.Genres.Split(',').Contains(searchModel.Genre)).ToList();
+            }
+            if (searchModel.Director == "" && searchModel.Actor == "")
+            {
+                filteredMovies = GetMoviesByOrderByStrategy(filteredMovies, searchModel.OrderBy, searchModel.Ordering == "A", searchModel.ItemsPerPage);
+                filteredMovies = filteredMovies
+                    .ToList();
+
+                return filteredMovies.Select(m => MovieReadConverter.ToBLLModel(m)).ToList();
+            }
+            List<Person> persons = new();
+            if (searchModel.Director != "")
+            {
+                persons = _dalContext.Persons.GetAll().Where(p =>
+                     (p.Name == searchModel.Actor && p.Professions.Split(",").Contains("actor"))).ToList();
+            }
+            if (searchModel.Actor != "")
+            {
+                persons.AddRange(_dalContext.Persons.GetAll().Where(p =>
+                    (p.Name == searchModel.Director && p.Professions.Split(",").Contains("director"))).ToList());
+            }
+
+            List<Movie> moviePersons = new();
+            foreach (Person person in persons)
+            {
+                moviePersons.AddRange(_dalContext.Movies.GetAllByPersonUid(person.PersonGUID).DistinctBy(m => m.MovieId));
+            }
+            filteredMovies = filteredMovies
+               .Intersect(moviePersons)
+               .ToList();
+            filteredMovies = GetMoviesByOrderByStrategy(filteredMovies, searchModel.OrderBy, searchModel.Ordering == "A", searchModel.ItemsPerPage);
+            
+            return filteredMovies.Select(e => MovieReadConverter.ToBLLModel(e)).ToList();
         }
     }
 }

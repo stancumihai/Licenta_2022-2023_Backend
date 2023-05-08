@@ -1,4 +1,5 @@
-﻿using Library.Models.Movie;
+﻿using Library.Models;
+using Library.Models.Movie;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -111,6 +112,13 @@ namespace Services.Controllers
         public IActionResult GetTopGenres()
         {
             return Ok(BusinessContext.Movies.GetTopGenres());
+        }
+
+        [HttpPost("advancedSearch")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<List<MovieRead>>))]
+        public IActionResult GetAdvancedSearchResult([FromBody] SearchModel searchModel)
+        {
+            return Ok(BusinessContext.Movies.GetAdvancedSearchMovies(searchModel));
         }
     }
 }

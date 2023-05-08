@@ -16,7 +16,7 @@ public static class ConfigureDAL
                 b => b.MigrationsAssembly(typeof(DatabaseContext).Assembly.FullName));
         });
 
-        services.AddScoped<DatabaseContext>();
+        services.AddTransient<DatabaseContext>();
         services.AddScoped<IDALContext, DALContext>();
         services.AddScoped<IUsers, Users>();
         services.AddScoped<ISurveyAnswers, SurveyAnswers>();

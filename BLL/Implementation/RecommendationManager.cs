@@ -22,7 +22,7 @@ namespace BLL.Implementation
 
         private List<string> GetQuestionValueByIdentifier(SurveyUserAnswerCreateBatch surveyUserAnswerCreateBatch, string identifier)
         {
-            List<string> surveyQuestionValues = new List<string>();
+            List<string> surveyQuestionValues = new();
             foreach (SurveyUserAnswerCreate surveyUserAnswer in surveyUserAnswerCreateBatch.surveyUserAnswers)
             {
                 SurveyQuestion? surveyQuestion = _dalContext.SurveyQuestions.GetByUid(surveyUserAnswer.SurveyQuestionUid);
@@ -132,7 +132,7 @@ namespace BLL.Implementation
 
         public List<MovieRead> GetInitialMovieRecommendations(SurveyUserAnswerCreateBatch surveyUserAnswerCreateBatch)
         {
-            List<MovieRead> recommendations = new List<MovieRead>();
+            List<MovieRead> recommendations = new();
             int movieRecommendationsCount = 0;
             foreach (SurveyUserAnswerCreate surveyUserAnswer in surveyUserAnswerCreateBatch.surveyUserAnswers)
             {
