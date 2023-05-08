@@ -6,8 +6,10 @@ using BLL.Interfaces.Mechanisms;
 using DAL.Models;
 using Library.Settings;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Services;
 
 namespace BLL;
@@ -37,6 +39,8 @@ public static class ConfigureBLL
         services.AddScoped<IRecommendationManager, RecommendationManager>();
         services.AddScoped<IUserProfiles, UserProfilesBL>();
         services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, MyUserClaimsPrincipalFactory>();
+        services.AddSingleton<Hub, NotificationHub>();
+        services.AddHostedService<TimedHostedService>();
 
         return services;
     }

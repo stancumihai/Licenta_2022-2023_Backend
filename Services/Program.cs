@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using Services.Filters;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
@@ -25,8 +26,18 @@ var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Services.BuildServiceProvider()
     .GetRequiredService<IConfiguration>();
 
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog();
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .WriteTo.File($"Logs/{String.Format("{0}", DateTime.Now.ToString("dd_MM_yyyy"))}.log")
+    .CreateLogger();
+
+builder.Services.AddSignalR();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
@@ -92,6 +103,7 @@ builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
                 }));
 #endregion
 
+#region Controllers BadRequestObjectResult
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
     {
@@ -106,8 +118,9 @@ builder.Services.AddControllers()
             };
     })
     .AddXmlSerializerFormatters();
+#endregion
 
-#region
+#region Controllers HttpResponseExceptionFilter
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<HttpResponseExceptionFilter>();
@@ -115,6 +128,14 @@ builder.Services.AddControllers(options =>
 #endregion
 
 var app = builder.Build();
+
+//var webSocketOptions = new WebSocketOptions
+//{
+//    KeepAliveInterval = TimeSpan.FromMinutes(int.Parse(configuration["JobTimeFrame:Time"]!.ToString()))
+//};
+
+//app.UseWebSockets(webSocketOptions);
+
 
 if (app.Environment.IsDevelopment())
 {
@@ -243,14 +264,19 @@ void CreatePersons(IServiceProvider serviceProvider)
 
 app.UseHttpsRedirection();
 app.UseCors("CorsPolicy");
-
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<NotificationHub>("/notification");
+});
+app.UseWebSockets();
 
-CreateRoles(app.Services).Wait();
+//CreateRoles(app.Services).Wait();
 //CreateMovies(app.Services);
 //CreateMovieRatings(app.Services);
-CreatePersons(app.Services);
+//CreatePersons(app.Services);
 app.Run();
