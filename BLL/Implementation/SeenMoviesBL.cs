@@ -2,6 +2,7 @@
 using BLL.Core;
 using BLL.Interfaces;
 using DAL.Models;
+using Library.Models;
 using Library.Models.SeenMovie;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
@@ -72,6 +73,82 @@ namespace BLL.Implementation
             }
             SeenMovieRead movieSubscriptionRead = SeenMovieReadConverter.ToBLLModel(seenMovie);
             return movieSubscriptionRead;
+        }
+
+        public List<MonthlyAppUsageModel> GetMonthlySeenMovies()
+        {
+            var email = _httpContextAccessor.HttpContext!.User?.FindFirstValue(ClaimTypes.Name);
+            ApplicationUser? userEntity = _dalContext.Users.GetByEmail(email!);
+            if (userEntity == null)
+            {
+                return null;
+            }
+            List<SeenMovie> seenMovies = _dalContext.SeenMovies
+                .GetAll()
+                .Where(s => s.UserGUID == userEntity.Id)
+                .ToList();
+            List<MonthlyAppUsageModel> monthlyAppUsage = new List<MonthlyAppUsageModel>();
+            foreach (SeenMovie seenMovie in seenMovies)
+            {
+                MonthlyAppUsageModel? existingUsage = monthlyAppUsage.FirstOrDefault(m => m.Year == seenMovie.CreatedAt.Year && m.Month == seenMovie.CreatedAt.Month);
+                if (existingUsage == null)
+                {
+                    MonthlyAppUsageModel monthlyAppUsageModel = new MonthlyAppUsageModel
+                    {
+                        Month = seenMovie.CreatedAt.Month,
+                        Year = seenMovie.CreatedAt.Year,
+                        SeenMovies = new List<SeenMovieRead>() { SeenMovieReadConverter.ToBLLModel(seenMovie) }
+                    };
+                    monthlyAppUsage.Add(monthlyAppUsageModel);
+                    continue;
+                }
+                existingUsage.SeenMovies.Add(SeenMovieReadConverter.ToBLLModel(seenMovie));
+            }
+            return monthlyAppUsage;
+        }
+
+        public List<TopGenreModel> GetTopSeenGenres()
+        {
+            var email = _httpContextAccessor.HttpContext!.User?.FindFirstValue(ClaimTypes.Name);
+            ApplicationUser? userEntity = _dalContext.Users.GetByEmail(email!);
+            if (userEntity == null)
+            {
+                return null;
+            }
+            List<SeenMovie> loggedInUserSeenMovies = new(_dalContext.SeenMovies
+                                                          .GetAll()
+                                                          .Where(s => s.UserGUID == userEntity.Id)
+                                                          .ToList());
+
+            List<string> genres = _dalContext.Movies.GetMovieGenres();
+            List<TopGenreModel> topMovieGenres = new List<TopGenreModel>();
+
+            foreach (SeenMovie seenMovie in loggedInUserSeenMovies)
+            {
+                string[] currentMovieGenres = seenMovie.Movie.Genres.Split(',');
+
+                foreach (string genre in currentMovieGenres)
+                {
+                    TopGenreModel? existingTopGenreModel = topMovieGenres.FirstOrDefault(t => t.Genre == genre);
+                    if (existingTopGenreModel == null)
+                    {
+                        TopGenreModel topGenreModel = new TopGenreModel
+                        {
+                            Genre = genre,
+                            SeenMovies = new List<SeenMovieRead>() { SeenMovieReadConverter.ToBLLModel(seenMovie) }
+                        };
+                        topMovieGenres.Add(topGenreModel);
+                        continue;
+                    }
+                    existingTopGenreModel.SeenMovies.Add(SeenMovieReadConverter.ToBLLModel(seenMovie));
+                }
+            }
+            topMovieGenres = (from topMovieGenre in topMovieGenres
+                              orderby topMovieGenre.SeenMovies.Count
+                              descending
+                              select topMovieGenre).ToList();
+
+            return topMovieGenres;
         }
     }
 }

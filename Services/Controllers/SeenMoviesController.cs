@@ -1,7 +1,7 @@
-﻿using Library.Models.SeenMovie;
+﻿using Library.Models;
+using Library.Models.SeenMovie;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Services.Controllers
 {
@@ -54,6 +54,24 @@ namespace Services.Controllers
                 return NotFound();
             }
             return Ok(seenMovie);
+        }
+
+        [HttpGet("monthlyMovies")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SeenMovieRead>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
+        public List<MonthlyAppUsageModel> GetMonthlySeenMovies()
+        {
+            return BusinessContext.SeenMovies.GetMonthlySeenMovies();
+        }
+
+        [HttpGet("topSeenGenres")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDictionary<string, int>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
+        public List<TopGenreModel> GetTopSeenGenres()
+        {
+            return BusinessContext.SeenMovies.GetTopSeenGenres();
         }
     }
 }

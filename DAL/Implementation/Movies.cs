@@ -124,10 +124,11 @@ namespace DAL.Implementation
               .Take(pageSize)
               .ToList();
 
-            return _context.UserMovieRatings
-               .Where(umr => likedMoviesUids.Contains(umr.MovieGUID) && umr.Rating > 8)
+            var userMovieRatingsList = _context.UserMovieRatings
+               .Where(umr => likedMoviesUids.Contains(umr.MovieGUID) && umr.Rating > (decimal)3.9)
                .Select(umr => umr.Movie)
                 .ToList();
+            return userMovieRatingsList;
         }
 
         public List<Movie> GetMoviesHistory(string userUid)
@@ -178,7 +179,7 @@ namespace DAL.Implementation
              .ToList();
 
             return _context.UserMovieRatings
-               .Where(umr => likedMoviesUids.Contains(umr.MovieGUID) && umr.Rating > 8)
+               .Where(umr => likedMoviesUids.Contains(umr.MovieGUID) && umr.Rating > (decimal)3.9)
                .Select(umr => umr.Movie)
                 .ToList();
         }

@@ -166,7 +166,7 @@ namespace BLL.Implementation
               .ToList();
         }
 
-        public List<string> GetTopGenres()
+        public List<string> GetTopLikedGenres()
         {
             List<Movie> toSearchInMovies = new(_dalContext
                                                     .LikedMovies
@@ -189,6 +189,12 @@ namespace BLL.Implementation
                 string[] movieGenres = movie.Genres.Split(',');
                 foreach (string genre in movieGenres)
                 {
+                    if(genre == "Sci-Fi")
+                    {
+                        string scifiGenre = "SciFi";
+                        genresDictionary[scifiGenre]++;
+                        continue;
+                    }
                     genresDictionary[genre]++;
                 }
             }

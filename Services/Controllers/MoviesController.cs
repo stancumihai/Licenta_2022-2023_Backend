@@ -109,9 +109,9 @@ namespace Services.Controllers
 
         [HttpGet("topGenres")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<List<string>>))]
-        public IActionResult GetTopGenres()
+        public IActionResult GetTopLikedGenres()
         {
-            return Ok(BusinessContext.Movies.GetTopGenres());
+            return Ok(BusinessContext.Movies.GetTopLikedGenres());
         }
 
         [HttpPost("advancedSearch")]
