@@ -202,7 +202,7 @@ namespace BLL.Implementation
                                                                      orderby genresDicEntry.Value
                                                                      descending
                                                                      select genresDicEntry.Key;
-            return mostappreciatedPersonsSortedGenres.Take(3).ToList();
+            return mostappreciatedPersonsSortedGenres.Take(4).ToList();
         }
 
         private List<Movie> GetMoviesByOrderByStrategy(List<Movie> movies, string orderByStrategy, bool isAscending, int itemsPerPage)

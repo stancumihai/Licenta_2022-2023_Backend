@@ -40,17 +40,68 @@ namespace BLL.Implementation
             _httpContextAccessor = httpContextAccessor;
         }
 
+        private static string EncodePasswordToBase64(string password)
+        {
+            try
+            {
+                byte[] encData_byte = new byte[password.Length];
+                encData_byte = Encoding.UTF8.GetBytes(password);
+                string encodedData = Convert.ToBase64String(encData_byte);
+                return encodedData;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in base64Encode" + ex.Message);
+            }
+        }
+
+        private static string DecodeFrom64(string encodedData)
+        {
+            UTF8Encoding encoder = new();
+            Decoder utf8Decode = encoder.GetDecoder();
+            byte[] todecode_byte = Convert.FromBase64String(encodedData);
+            int charCount = utf8Decode.GetCharCount(todecode_byte, 0, todecode_byte.Length);
+            char[] decoded_char = new char[charCount];
+            utf8Decode.GetChars(todecode_byte, 0, todecode_byte.Length, decoded_char, 0);
+            string result = new(decoded_char);
+            return result;
+        }
+
+        public async Task<string> GetUserDecodedPasswordByEmail(string email)
+        {
+            var userExists = await _userManager.FindByEmailAsync(email);
+            string decodedPassword = DecodeFrom64(userExists.Password);
+            return decodedPassword;
+        }
+
+        public async Task<IList<string>> GetUserRoles(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            IList<string> roles = await _userManager.GetRolesAsync(user);
+            return roles;
+        }
+
         public async Task<UserRegister> RegisterAdmin(UserRegister model)
         {
-            var userExists = await _userManager.FindByEmailAsync(model.Email);
+            ApplicationUser? userExists = await _userManager.FindByEmailAsync(model.Email);
             if (userExists != null)
+            {
                 return null;
-
+            }
+            List<ApplicationUser>? users = _dalContext.Users.GetAll();
+            foreach (ApplicationUser applicationUser in users!)
+            {
+                IList<string> roles = await GetUserRoles(applicationUser.Email);
+                if (roles.FirstOrDefault(r => r == "Administrator") != null)
+                {
+                    return null;
+                }
+            }
             Guid newUserGuid = Guid.NewGuid();
             ApplicationUser user = new()
             {
                 Id = newUserGuid.ToString(),
-                Password = model.Password,
+                Password = EncodePasswordToBase64(model.Password),
                 UserName = model.Email,
                 Email = model.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
@@ -59,9 +110,9 @@ namespace BLL.Implementation
             if (!result.Succeeded)
                 return null;
 
-            if (await _roleManager.RoleExistsAsync(Roles.Administrator.ToString()))
+            if (await _roleManager.RoleExistsAsync(UserRoles.Administrator))
             {
-                await _userManager.AddToRoleAsync(user, Roles.Administrator.ToString());
+                await _userManager.AddToRoleAsync(user, UserRoles.Administrator);
             }
             return model;
         }
@@ -75,7 +126,7 @@ namespace BLL.Implementation
             ApplicationUser user = new()
             {
                 Id = newUserGuid.ToString(),
-                Password = model.Password,
+                Password = EncodePasswordToBase64(model.Password),
                 UserName = model.Email,
                 Email = model.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
@@ -96,7 +147,7 @@ namespace BLL.Implementation
         public async Task<Tuple<JwtSecurityToken, string>> Login(UserLogin model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+            if (user != null && _dalContext.Users.GetByEmailAndPassword(model.Email, EncodePasswordToBase64(model.Password)) != null)
             {
                 var result = await _userManager.GetRolesAsync(user);
                 string role = result[0];
@@ -145,20 +196,17 @@ namespace BLL.Implementation
             string? accessToken = tokenModel.AccessToken;
             string? refreshToken = tokenModel.RefreshToken;
 
-            var principal = GetPrincipalFromExpiredToken(accessToken);
+            ClaimsPrincipal? principal = GetPrincipalFromExpiredToken(accessToken);
             if (principal == null)
             {
                 return null;
             }
-
-            #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-            #pragma warning disable CS8602 // Dereference of a possibly null reference.
-            string email = principal.Identity.Name;
-            #pragma warning restore CS8602 // Dereference of a possibly null reference.
-            #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-
-
-            var user = await _userManager.FindByEmailAsync(email);
+            string? email = principal.Identity?.Name;
+            if (email == null)
+            {
+                return null;
+            }
+            ApplicationUser? user = await _userManager.FindByEmailAsync(email);
 
             if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
             {

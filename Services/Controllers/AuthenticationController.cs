@@ -47,15 +47,23 @@ namespace Services.Controllers
             return Ok(message.ToString());
         }
 
-        [HttpPut("renew-password")]
-        public IActionResult RenewPassword([FromBody] RenewPasswordPasswordRequest request)
+        [HttpGet]
+        [Route("decoded/{email}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<string>> GetUserDecodedPasswordByEmail([FromRoute] string email)
         {
-            UserRead user = BusinessContext.Users!.GetByEmail(request.Email);
-            if (user == null)
+            var decodedPassword = await BusinessContext.Authentication!.GetUserDecodedPasswordByEmail(email);
+            return decodedPassword;
+        }
+
+        [HttpPut("renew-password")]
+        public IActionResult RenewPassword([FromBody] RenewPasswordRequest request)
+        {
+            UserRead userToUpdate = BusinessContext.Users!.GetByEmail(request.Email);
+            if (userToUpdate == null)
             {
                 return BadRequest("User does not exist");
             }
-            UserRead userToUpdate = user;
             userToUpdate.Password = request.Password;
             BusinessContext.Users.Update(userToUpdate);
             return Ok(userToUpdate);

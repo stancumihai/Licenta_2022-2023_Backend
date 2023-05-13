@@ -34,6 +34,14 @@ namespace DAL.Implementation
                 .FirstOrDefault(u => u.Email == email);
         }
 
+        public ApplicationUser? GetByEmailAndPassword(string email, string password)
+        {
+            return _context.Users
+                .Include(u => u.SurveyUserAnswers)
+                .FirstOrDefault(u => u.Email == email &&
+                u.Password == password);
+        }
+
         public void Update(ApplicationUser user)
         {
             ApplicationUser? oldUser = _context.Users.FirstOrDefault(u => u.Id.Equals(user.Id));

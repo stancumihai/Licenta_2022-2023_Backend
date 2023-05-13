@@ -15,6 +15,8 @@ namespace BLL.Implementation
         public static readonly string HOW_FREQUENTLY_QUESTION_IDENTIFIER = "How frequently";
         public static readonly string GENRES_QUESTION_IDENTIFIER = "top 3";
         public static readonly int MULTIPLY_MOVIE_RECOMMENDATIONS_CONSTANT = 3;
+        public static readonly int MAX_RECOMMENDATION_COUNT = 3;
+
 
         public RecommendationManager(IDALContext dalContext) : base(dalContext)
         {
@@ -84,7 +86,7 @@ namespace BLL.Implementation
             {
                 return MapMovieRecommendationsCount(surveyUserAnswer);
             }
-            return -1;
+            return MAX_RECOMMENDATION_COUNT;
         }
 
         public MovieRecommendationHelperModel BuildInitialRecommendationModel(SurveyUserAnswerCreateBatch surveyUserAnswerCreateBatch)

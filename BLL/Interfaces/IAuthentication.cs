@@ -14,5 +14,6 @@ namespace BLL.Interfaces
         Task<bool> RevokeAll();
         Task<bool> Logout();
         Task<UserRead> GetLoggedInUser();
+        Task<string> GetUserDecodedPasswordByEmail(string email);
     }
 }
