@@ -10,11 +10,12 @@ namespace BLL.Interfaces
         List<SeenMovieRead> GetAll();
         SeenMovieRead? GetByUid(Guid uid);
         SeenMovieRead Delete(Guid uid);
-        SeenMovieRead GetByUserAndMovie(Guid movieUid);
+        List<SeenMovieRead> GetByUserAndMovie(Guid movieUid);
         List<MonthlyAppUsageModel> GetMonthlySeenMoviesByUser();
         List<TopGenreModel> GetTopSeenGenresByUser();
         List<MonthlyAppUsageModel> GetMonthlySeenMovies();
         List<TopGenreModel> GetTopSeenGenres();
         List<MovieRead> GetAllByUser(string userGUID);
+        List<AgeViewershipModel> GetTopViewershipByAge();
     }
 }

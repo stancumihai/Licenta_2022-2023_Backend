@@ -8,7 +8,7 @@ namespace DAL.Interfaces
         List<SeenMovie> GetAll();
         SeenMovie? GetByUid(Guid uid);
         SeenMovie Delete(Guid uid);
-        SeenMovie GetByUserAndMovie(Guid movieUid, string userGUID);
+        List<SeenMovie> GetByUserAndMovie(Guid movieUid, string userGUID);
         List<SeenMovie> GetAllByUser(string userGUID);
     }
 }

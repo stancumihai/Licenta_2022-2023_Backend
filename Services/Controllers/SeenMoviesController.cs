@@ -44,12 +44,12 @@ namespace Services.Controllers
         }
 
         [HttpGet("movie/user/{movieUid}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SeenMovieRead))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SeenMovieRead>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize]
         public IActionResult GetByUserAndMovie([FromRoute] Guid movieUid)
         {
-            SeenMovieRead seenMovie = BusinessContext.SeenMovies!.GetByUserAndMovie(movieUid);
+            List<SeenMovieRead> seenMovie = BusinessContext.SeenMovies!.GetByUserAndMovie(movieUid);
             if (seenMovie == null)
             {
                 return NotFound();
@@ -64,7 +64,7 @@ namespace Services.Controllers
         public IActionResult GetAllByUser([FromRoute] string userUid)
         {
             List<MovieRead>? seenMovies = BusinessContext.SeenMovies.GetAllByUser(userUid);
-            if(seenMovies == null)
+            if (seenMovies == null)
             {
                 return NotFound();
             }
@@ -104,6 +104,14 @@ namespace Services.Controllers
         public List<TopGenreModel> GetTopSeenGenres()
         {
             return BusinessContext.SeenMovies.GetTopSeenGenres();
+        }
+
+        [HttpGet("topAgeViewership")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDictionary<string, int>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public  List<AgeViewershipModel> GetTopViewershipByAge()
+        {
+            return BusinessContext.SeenMovies.GetTopViewershipByAge();
         }
     }
 }

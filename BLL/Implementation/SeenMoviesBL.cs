@@ -71,7 +71,7 @@ namespace BLL.Implementation
                     .ToBLLModel(seenMovie);
         }
 
-        public SeenMovieRead GetByUserAndMovie(Guid movieUid)
+        public List<SeenMovieRead> GetByUserAndMovie(Guid movieUid)
         {
             var email = _httpContextAccessor.HttpContext!.User?.FindFirstValue(ClaimTypes.Name);
             ApplicationUser? userEntity = _dalContext.Users.GetByEmail(email!);
@@ -79,13 +79,10 @@ namespace BLL.Implementation
             {
                 return null;
             }
-            SeenMovie? seenMovie = _dalContext.SeenMovies.GetByUserAndMovie(movieUid, userEntity.Id);
-            if (seenMovie == null)
-            {
-                return null;
-            }
-            SeenMovieRead movieSubscriptionRead = SeenMovieReadConverter.ToBLLModel(seenMovie);
-            return movieSubscriptionRead;
+            List<SeenMovie> seenMovies = _dalContext.SeenMovies.GetByUserAndMovie(movieUid, userEntity.Id);
+            return seenMovies
+                .Select(seenMovie => SeenMovieReadConverter.ToBLLModel(seenMovie))
+                .ToList();
         }
 
         public List<MonthlyAppUsageModel> GetMonthlySeenMoviesByUser()
@@ -224,6 +221,50 @@ namespace BLL.Implementation
                               select topMovieGenre).ToList();
 
             return topMovieGenres;
+        }
+
+        private static int CalculateAge(DateTime dateOfBirth)
+        {
+            int age = DateTime.Now.Year - dateOfBirth.Year;
+            if (DateTime.Now.DayOfYear < dateOfBirth.DayOfYear)
+            {
+                age--;
+            }
+
+            return age;
+        }
+
+        public List<AgeViewershipModel> GetTopViewershipByAge()
+        {
+            List<UserProfile> userProfiles = _dalContext.UserProfiles
+               .GetAll()
+               .ToList();
+            List<AgeViewershipModel> ageViewerships = new();
+            foreach (UserProfile userProfile in userProfiles)
+            {
+                int seenMoviesCount = _dalContext.SeenMovies.GetAllByUser(userProfile.UserGUID).Count;
+                int age = CalculateAge(userProfile.DateOfBirth);
+                AgeViewershipModel? existingAgeViewershipModel = ageViewerships.FirstOrDefault(a => a.Age == age);
+                if (existingAgeViewershipModel == null)
+                {
+                    ageViewerships.Add(new AgeViewershipModel
+                    {
+                        Age = age,
+                        Count = seenMoviesCount
+                    });
+                    continue;
+                }
+                existingAgeViewershipModel.Count += seenMoviesCount;
+            }
+            ageViewerships = (from ageViewership in ageViewerships
+                              orderby ageViewership.Age
+                              ascending
+                              select ageViewership)
+                              .ToList();
+
+            return ageViewerships
+                .Take(5)
+                .ToList();
         }
     }
 }
