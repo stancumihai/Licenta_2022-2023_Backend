@@ -160,8 +160,17 @@ namespace BLL.Implementation
             {
                 return null;
             }
-            return _dalContext.Movies
+            List<MovieRead> moviesCollection = _dalContext.Movies
               .GetMoviesCollection(userEntity.Id)
+              .Select(movie => MovieReadConverter.ToBLLModel(movie))
+              .ToList();
+            return moviesCollection;
+        }
+
+        public List<MovieRead> GetAllMoviesCollectionByUser(string userUid)
+        {
+            return _dalContext.Movies
+              .GetMoviesCollection(userUid)
               .Select(movie => MovieReadConverter.ToBLLModel(movie))
               .ToList();
         }

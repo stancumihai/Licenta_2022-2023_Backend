@@ -14,7 +14,7 @@ namespace DAL.Implementation
         public LikedMovie? Add(LikedMovie likedMovie)
         {
             ApplicationUser? user = _context.Users.FirstOrDefault(u => u.Id == likedMovie.UserGUID);
-            if(user == null)
+            if (user == null)
             {
                 return null;
             }
@@ -58,7 +58,7 @@ namespace DAL.Implementation
             return likedMovie!;
         }
 
-        public List<LikedMovie> GetAllByLoggedUser(string userGUID)
+        public List<LikedMovie> GetAllByUser(string userGUID)
         {
             ApplicationUser? user = _context.Users.FirstOrDefault(u => u.Id == userGUID);
             if (user == null)
@@ -66,7 +66,8 @@ namespace DAL.Implementation
                 return null;
             }
             return _context.LikedMovies
-                .Include(l => l.Movie).Where(l => l.UserGUID == userGUID)
+                .Include(l => l.Movie)
+                .Where(l => l.UserGUID == userGUID)
                 .ToList();
         }
 

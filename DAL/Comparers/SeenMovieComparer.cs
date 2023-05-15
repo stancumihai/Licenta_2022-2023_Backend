@@ -6,7 +6,7 @@ namespace DAL.Comparers
     {
         public bool Equals(SeenMovie x, SeenMovie y)
         {
-            return x.MovieGUID == y.MovieGUID;
+            return x.MovieGUID == y.MovieGUID && x.UserGUID == y.UserGUID;
         }
 
         public int GetHashCode(SeenMovie obj)

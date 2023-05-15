@@ -1,7 +1,9 @@
-﻿using BLL.Converters.MovieSubscription;
+﻿using BLL.Converters.Movie;
+using BLL.Converters.MovieSubscription;
 using BLL.Core;
 using BLL.Interfaces;
 using DAL.Models;
+using Library.Models.Movie;
 using Library.Models.MovieSubscription;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
@@ -48,13 +50,24 @@ namespace BLL.Implementation
 
         public MovieSubscriptionRead? GetByUid(Guid uid)
         {
-            MovieSubscription movieSubscription = _dalContext.MovieSubscriptions.GetByUid(uid);
+            MovieSubscription? movieSubscription = _dalContext.MovieSubscriptions.GetByUid(uid);
             if (movieSubscription == null)
             {
                 return null;
             }
             return MovieSubscriptionReadConverter
                     .ToBLLModel(movieSubscription);
+        }
+
+        public List<MovieRead> GetAllByUser(string userUid)
+        {
+            List<MovieSubscription> movieSubscriptions = _dalContext
+                .MovieSubscriptions
+                .GetAllByUser(userUid);
+
+            return movieSubscriptions
+                .Select(movieSubscription => MovieReadConverter.ToBLLModel(movieSubscription.Movie))
+                .ToList();
         }
 
         public MovieSubscriptionRead GetByUserAndMovie(Guid movieUid)

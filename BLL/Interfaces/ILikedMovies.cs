@@ -1,4 +1,5 @@
 ﻿using Library.Models.LikedMovie;
+using Library.Models.Movie;
 
 namespace BLL.Interfaces
 {
@@ -10,5 +11,6 @@ namespace BLL.Interfaces
         void Delete(Guid uid);
         List<LikedMovieRead> GetAllByLoggedUser();
         LikedMovieRead GetByUserAndMovie(Guid movieUid);
+        List<MovieRead> GetAllByUser(string userUid);
     }
 }

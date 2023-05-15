@@ -20,6 +20,7 @@ namespace BLL.Interfaces
         List<MovieRead> GetMoviesSubscription();
         List<MovieRead> GetMoviesCollection();
         List<string> GetTopLikedGenres();
-        List<MovieRead> GetAdvancedSearchMovies (SearchModel searcModel);
+        List<MovieRead> GetAdvancedSearchMovies(SearchModel searcModel);
+        List<MovieRead> GetAllMoviesCollectionByUser(string userUid);
     }
 }

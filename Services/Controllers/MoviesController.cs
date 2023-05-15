@@ -98,13 +98,20 @@ namespace Services.Controllers
             return Ok(BusinessContext.Movies!.GetMoviesSubscription());
         }
 
-
         [HttpGet("collection")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<List<MovieRead>>))]
         [Authorize]
         public IActionResult GetMoviesCollection()
         {
             return Ok(BusinessContext.Movies!.GetMoviesCollection());
+        }
+
+        [HttpGet("collection/{userUid}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<List<MovieRead>>))]
+        [Authorize]
+        public IActionResult GetAllMoviesCollectionByUser(string userUid)
+        {
+            return Ok(BusinessContext.Movies!.GetAllMoviesCollectionByUser(userUid));
         }
 
         [HttpGet("topGenres")]

@@ -179,7 +179,7 @@ namespace DAL.Implementation
              .ToList();
 
             return _context.UserMovieRatings
-               .Where(umr => likedMoviesUids.Contains(umr.MovieGUID) && umr.Rating > (decimal)3.9)
+               .Where(umr => likedMoviesUids.Contains(umr.MovieGUID) && umr.Rating > (decimal)3.9 && umr.UserGUID == userUid)
                .Select(umr => umr.Movie)
                 .ToList();
         }

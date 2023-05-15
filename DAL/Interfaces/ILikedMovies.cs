@@ -8,7 +8,7 @@ namespace DAL.Interfaces
         List<LikedMovie> GetAll();
         LikedMovie? GetByUid(Guid uid);
         void Delete(Guid uid);
-        List<LikedMovie> GetAllByLoggedUser(string userGUID);
+        List<LikedMovie> GetAllByUser(string userGUID);
         LikedMovie GetByUserAndMovie(Guid movieUid, string userGUID);
     }
 }

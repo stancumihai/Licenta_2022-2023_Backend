@@ -1,4 +1,5 @@
-﻿using Library.Models.MovieSubscription;
+﻿using Library.Models.Movie;
+using Library.Models.MovieSubscription;
 using Library.Models.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -55,6 +56,20 @@ namespace Services.Controllers
                 return NotFound();
             }
             return Ok(movieSubscription);
+        }
+
+        [HttpGet("user/{userUid}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MovieSubscriptionRead>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize]
+        public IActionResult GetAllByUser([FromRoute] string userUid)
+        {
+            List<MovieRead> movieSubscriptions = BusinessContext.MovieSubscriptions!.GetAllByUser(userUid);
+            if (movieSubscriptions == null)
+            {
+                return NotFound();
+            }
+            return Ok(movieSubscriptions);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Library.Models;
+using Library.Models.Movie;
 using Library.Models.SeenMovie;
 
 namespace BLL.Interfaces
@@ -10,7 +11,10 @@ namespace BLL.Interfaces
         SeenMovieRead? GetByUid(Guid uid);
         SeenMovieRead Delete(Guid uid);
         SeenMovieRead GetByUserAndMovie(Guid movieUid);
+        List<MonthlyAppUsageModel> GetMonthlySeenMoviesByUser();
+        List<TopGenreModel> GetTopSeenGenresByUser();
         List<MonthlyAppUsageModel> GetMonthlySeenMovies();
         List<TopGenreModel> GetTopSeenGenres();
+        List<MovieRead> GetAllByUser(string userGUID);
     }
 }

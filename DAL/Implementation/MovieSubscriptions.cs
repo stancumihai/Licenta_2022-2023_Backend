@@ -44,7 +44,19 @@ namespace DAL.Implementation
 
         public List<MovieSubscription> GetAll()
         {
-            return _context.MovieSubscriptions.Include(ms => ms.Movie).ToList();
+            return _context
+                .MovieSubscriptions
+                .Include(ms => ms.Movie)
+                .ToList();
+        }
+
+        public List<MovieSubscription> GetAllByUser(string userUid)
+        {
+            return _context
+                .MovieSubscriptions
+                 .Include(ms => ms.Movie)
+                .Where(m => m.UserGUID == userUid)
+                .ToList();
         }
 
         public MovieSubscription? GetByUid(Guid uid)
@@ -61,12 +73,12 @@ namespace DAL.Implementation
 
         public MovieSubscription GetByUserAndMovie(Guid movieUid, string userGUID)
         {
-            ApplicationUser user = _context.Users.FirstOrDefault(u => u.Id == userGUID);
+            ApplicationUser? user = _context.Users.FirstOrDefault(u => u.Id == userGUID);
             if (user == null)
             {
                 return null;
             }
-            Movie movie = _context.Movies.FirstOrDefault(m => m.MovieGUID == movieUid);
+            Movie? movie = _context.Movies.FirstOrDefault(m => m.MovieGUID == movieUid);
             if (movie == null)
             {
                 return null;

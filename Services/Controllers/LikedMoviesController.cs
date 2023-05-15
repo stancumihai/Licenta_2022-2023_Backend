@@ -1,4 +1,5 @@
 ﻿using Library.Models.LikedMovie;
+using Library.Models.Movie;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,8 +37,8 @@ namespace Services.Controllers
 
 
         [HttpGet("movie/user/{movieUid}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<LikedMovieRead>))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(IEnumerable<LikedMovieRead>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LikedMovieRead))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize]
         public IActionResult GetByUserAndMovie([FromRoute] Guid movieUid)
         {
@@ -47,6 +48,18 @@ namespace Services.Controllers
                 return NotFound();
             }
             return Ok(likedMovie);
+        }
+
+        [HttpGet("user/{userUid}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MovieRead>))]
+        public IActionResult GetByAllByUser([FromRoute] string userUid)
+        {
+             List<MovieRead> likedMovies = BusinessContext.LikedMovies!.GetAllByUser(userUid);
+            if (likedMovies == null)
+            {
+                return NotFound();
+            }
+            return Ok(likedMovies);
         }
 
         [HttpPost]

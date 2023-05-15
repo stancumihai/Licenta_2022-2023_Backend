@@ -1,4 +1,5 @@
-﻿using Library.Models.MovieSubscription;
+﻿using Library.Models.Movie;
+using Library.Models.MovieSubscription;
 
 namespace BLL.Interfaces
 {
@@ -9,5 +10,6 @@ namespace BLL.Interfaces
         MovieSubscriptionRead? GetByUid(Guid uid);
         MovieSubscriptionRead Delete(Guid uid);
         MovieSubscriptionRead GetByUserAndMovie(Guid movieUid);
+        List<MovieRead> GetAllByUser(string userUid);
     }
 }

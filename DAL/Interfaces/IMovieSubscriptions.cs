@@ -9,5 +9,6 @@ namespace DAL.Interfaces
         MovieSubscription? GetByUid(Guid uid);
         MovieSubscription Delete(Guid uid);
         MovieSubscription GetByUserAndMovie(Guid movieUid, string userGUID);
+        List<MovieSubscription> GetAllByUser(string userUid);
     }
 }

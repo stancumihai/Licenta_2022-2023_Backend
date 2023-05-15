@@ -61,12 +61,12 @@ namespace DAL.Implementation
 
         public SeenMovie GetByUserAndMovie(Guid movieUid, string userGUID)
         {
-            ApplicationUser user = _context.Users.FirstOrDefault(u => u.Id == userGUID);
+            ApplicationUser? user = _context.Users.FirstOrDefault(u => u.Id == userGUID);
             if (user == null)
             {
                 return null;
             }
-            Movie movie = _context.Movies.FirstOrDefault(m => m.MovieGUID == movieUid);
+            Movie? movie = _context.Movies.FirstOrDefault(m => m.MovieGUID == movieUid);
             if (movie == null)
             {
                 return null;
@@ -74,6 +74,20 @@ namespace DAL.Implementation
             return _context.SeenMovies
                 .Include(sm => sm.Movie).Where(sm => sm.UserGUID == userGUID && sm.MovieGUID == movieUid)
                 .FirstOrDefault()!;
+        }
+
+        public List<SeenMovie> GetAllByUser(string userGUID)
+        {
+            ApplicationUser? user = _context.Users.FirstOrDefault(u => u.Id == userGUID);
+            if (user == null)
+            {
+                return null;
+            }
+
+            return _context.SeenMovies
+                .Include(sm => sm.Movie)
+                .Where(sm => sm.UserGUID == userGUID)
+                .ToList()!;
         }
     }
 }

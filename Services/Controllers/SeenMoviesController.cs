@@ -1,4 +1,5 @@
 ﻿using Library.Models;
+using Library.Models.Movie;
 using Library.Models.SeenMovie;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +44,7 @@ namespace Services.Controllers
         }
 
         [HttpGet("movie/user/{movieUid}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SeenMovieRead>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SeenMovieRead))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize]
         public IActionResult GetByUserAndMovie([FromRoute] Guid movieUid)
@@ -56,10 +57,41 @@ namespace Services.Controllers
             return Ok(seenMovie);
         }
 
-        [HttpGet("monthlyMovies")]
+        [HttpGet("user/{userUid}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SeenMovieRead>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize]
+        public IActionResult GetAllByUser([FromRoute] string userUid)
+        {
+            List<MovieRead>? seenMovies = BusinessContext.SeenMovies.GetAllByUser(userUid);
+            if(seenMovies == null)
+            {
+                return NotFound();
+            }
+            return Ok(seenMovies);
+        }
+
+        [HttpGet("user/monthlyMovies")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SeenMovieRead>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize]
+        public List<MonthlyAppUsageModel> GetMonthlySeenMoviesByUser()
+        {
+            return BusinessContext.SeenMovies.GetMonthlySeenMoviesByUser();
+        }
+
+        [HttpGet("user/topSeenGenres")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDictionary<string, int>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
+        public List<TopGenreModel> GetTopSeenGenresByUser()
+        {
+            return BusinessContext.SeenMovies.GetTopSeenGenresByUser();
+        }
+
+        [HttpGet("monthlyMovies")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SeenMovieRead>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public List<MonthlyAppUsageModel> GetMonthlySeenMovies()
         {
             return BusinessContext.SeenMovies.GetMonthlySeenMovies();

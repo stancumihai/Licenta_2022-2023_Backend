@@ -1,8 +1,10 @@
 ﻿using BLL.Converters.LikedMovie;
+using BLL.Converters.Movie;
 using BLL.Core;
 using BLL.Interfaces;
 using DAL.Models;
 using Library.Models.LikedMovie;
+using Library.Models.Movie;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
@@ -48,6 +50,20 @@ namespace BLL.Implementation
                     .GetByUid(uid)!);
         }
 
+        public List<MovieRead> GetAllByUser(string userUid)
+        {
+            List<LikedMovie> likedMovies = _dalContext.LikedMovies
+                .GetAllByUser(userUid);
+            if (likedMovies == null)
+            {
+                return null;
+            }
+            List<MovieRead> likedMoviesRead = likedMovies
+            .Select(likedMovie => MovieReadConverter.ToBLLModel(likedMovie.Movie))
+            .ToList();
+            return likedMoviesRead;
+        }
+
         public List<LikedMovieRead> GetAllByLoggedUser()
         {
             var email = _httpContextAccessor.HttpContext!.User?.FindFirstValue(ClaimTypes.Name);
@@ -57,7 +73,7 @@ namespace BLL.Implementation
                 return null;
             }
             List<LikedMovie> likedMovies = _dalContext.LikedMovies
-                .GetAllByLoggedUser(userEntity.Id);
+                .GetAllByUser(userEntity.Id);
             if (likedMovies == null)
             {
                 return null;
