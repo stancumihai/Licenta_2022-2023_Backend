@@ -19,7 +19,6 @@ namespace Services.Controllers
             return Ok(userProfile);
         }
 
-        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut]

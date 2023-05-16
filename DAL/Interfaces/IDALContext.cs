@@ -15,5 +15,6 @@
         ISeenMovies SeenMovies { get; }
         IUserMovieRatings UserMovieRatings { get; }
         IUserProfiles UserProfiles { get; }
+        IRecommendations Recommendations { get; }
     }
 }

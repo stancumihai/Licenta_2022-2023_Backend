@@ -166,7 +166,7 @@ namespace BLL.Implementation
             List<SeenMovie> seenMovies = _dalContext.SeenMovies
                 .GetAll()
                 .ToList();
-            List<MonthlyAppUsageModel> monthlyAppUsage = new List<MonthlyAppUsageModel>();
+            List<MonthlyAppUsageModel> monthlyAppUsage = new();
             foreach (SeenMovie seenMovie in seenMovies)
             {
                 MonthlyAppUsageModel? existingUsage = monthlyAppUsage.FirstOrDefault(m => m.Year == seenMovie.CreatedAt.Year && m.Month == seenMovie.CreatedAt.Month);

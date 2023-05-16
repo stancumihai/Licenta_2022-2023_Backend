@@ -21,6 +21,7 @@ public class BusinessContext
     public IUserMovieRatings UserMovieRatings { get; set; }
     public IRecommendationManager RecommendationManager { get; set; }
     public IUserProfiles UserProfiles { get; set; }
+    public IRecommendations Recommendations { get; set; }
     public readonly IHttpContextAccessor HttpContextAccessor;
 
     public BusinessContext(ISurveyQuestions surveyQuestions,
@@ -39,7 +40,8 @@ public class BusinessContext
                             IUserMovieRatings userMovieRatings,
                             IHttpContextAccessor httpContextAccessor,
                             IRecommendationManager recommendationManager,
-                            IUserProfiles userProfiles)
+                            IUserProfiles userProfiles,
+                            IRecommendations recommendations)
     {
         SurveyQuestions = surveyQuestions;
         SurveyAnswers = surveyAnswers;
@@ -55,8 +57,9 @@ public class BusinessContext
         MovieSubscriptions = movieSubscriptions;
         SeenMovies = seenMovies;
         UserMovieRatings = userMovieRatings;
-        HttpContextAccessor = httpContextAccessor;
         RecommendationManager = recommendationManager;
         UserProfiles = userProfiles;
+        Recommendations = recommendations;
+        HttpContextAccessor = httpContextAccessor;
     }
 }

@@ -38,6 +38,7 @@ public static class ConfigureBLL
         services.AddScoped<IEmailSender, EmailSender>();
         services.AddScoped<IRecommendationManager, RecommendationManager>();
         services.AddScoped<IUserProfiles, UserProfilesBL>();
+        services.AddScoped<IRecommendations, RecommendationsBL>();
         services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, MyUserClaimsPrincipalFactory>();
         services.AddSingleton<Hub, NotificationHub>();
         services.AddHostedService<TimedHostedService>();
