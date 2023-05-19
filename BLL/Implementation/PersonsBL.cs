@@ -79,7 +79,7 @@ namespace BLL.Implementation
                                                                          orderby artistDictionaryEntry.Value
                                                                          descending
                                                                          select artistDictionaryEntry.Key;
-            return mostappreciatedPersonsSortedDictionary
+            return mostappreciatedPersonsSortedDictionary.DistinctBy(d => d.Name)
                 .Select(p => PersonReadConverter.ToBLLModel(p))
                 .Take(10)
                 .ToList();

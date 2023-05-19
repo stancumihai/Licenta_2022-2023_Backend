@@ -32,6 +32,7 @@ public static class ConfigureDAL
         services.AddScoped<IUserMovieRatings, UserMovieRatings>();
         services.AddScoped<IUserProfiles, UserProfiles>();
         services.AddScoped<IRecommendations, Recommendations>();
+        services.AddScoped<IAlgorithmChanges, AlgorithmChanges>();
         return services;
     }
 }

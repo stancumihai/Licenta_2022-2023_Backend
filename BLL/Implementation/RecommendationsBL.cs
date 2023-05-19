@@ -53,7 +53,7 @@ namespace BLL.Implementation
         public List<RecommendationRead> GetAllByUserAndMonth(string userUid, DateTime date)
         {
             return _dalContext.Recommendations
-               .GetAllByUserAndMonth(userUid, date)
+               .GetAllByUserYearAndMonth(userUid, date)
                .Select(seenMovie => RecommendationReadConverter.ToBLLModel(seenMovie))
                .ToList();
         }
@@ -89,7 +89,6 @@ namespace BLL.Implementation
             return startAccuracy / recommendations.Count;
         }
 
-
         public float GetAccuracy_Strategy1(List<Recommendation> recommendations)
         {
             int startAccuracy = recommendations.Count;
@@ -102,42 +101,143 @@ namespace BLL.Implementation
                 }
                 startAccuracy--;
             }
-            return (float) startAccuracy / recommendations.Count;
+            return (float)startAccuracy / recommendations.Count;
         }
 
-        public void GetRecommendationsByMonthAndYear(List<Recommendation> recommendations, int month, int year)
+        public List<MonthlyRecommendationStatusModel> GetMonthlyRecommendationStatuses(int year, int month, string algorithmName)
         {
+            List<Recommendation> recommendations = _dalContext.Recommendations.GetAllByYearAndMonth(year, month);
+            int likedCount = 0;
+            int dislikeCount = 0;
+            int notSeenCount = 0;
+            List<AlgorithmChange> algorithmChanges = _dalContext.AlgorithmChanges.GetAllByAlgorithmName(algorithmName);
+            foreach (Recommendation recommendation in recommendations)
+            {
+                if (algorithmChanges.Any(a => a.StartDate.Year >= year && a.EndDate.Year <= year &&
+                                              a.StartDate.Month >= month && a.StartDate.Month <= month))
+                {
+                    switch (GetRecommendationStatus(recommendation))
+                    {
+                        case RecommendationStatus.Liked:
+                            {
+                                likedCount++;
+                                break;
+                            }
+                        case RecommendationStatus.Disliked:
+                            {
+                                dislikeCount++;
+                                break;
+                            }
+                        default:
+                            {
+                                notSeenCount++;
+                                break;
+                            }
+                    }
+                }
 
+            }
+            List<MonthlyRecommendationStatusModel> monthlyRecommendationStatusModels = new List<MonthlyRecommendationStatusModel>();
+            monthlyRecommendationStatusModels.Add(new MonthlyRecommendationStatusModel
+            {
+                RecommendationOutcome = "Liked",
+                Count = likedCount
+            });
+            monthlyRecommendationStatusModels.Add(new MonthlyRecommendationStatusModel
+            {
+                RecommendationOutcome = "Disliked",
+                Count = dislikeCount
+            });
+            monthlyRecommendationStatusModels.Add(new MonthlyRecommendationStatusModel
+            {
+                RecommendationOutcome = "NotSeen",
+                Count = notSeenCount
+            });
+            monthlyRecommendationStatusModels.Add(new MonthlyRecommendationStatusModel
+            {
+                RecommendationOutcome = "All",
+                Count = recommendations.Count
+            });
+            return monthlyRecommendationStatusModels;
         }
 
-        public List<AccuracyPeriodModel> GetAccuracyPerMonths()
+
+        public List<AccuracyPeriodModel> GetAccuracyPerMonthsByAlgorithm(string algorithmName)
         {
             List<Recommendation> recommendations = _dalContext.Recommendations.GetAll();
-            List<AccuracyPeriodModel> accuracyPeriods = new List<AccuracyPeriodModel>();
             recommendations = (from recommendation in recommendations
                                orderby recommendation.CreatedAt.Year, recommendation.CreatedAt.Month, recommendation.CreatedAt.Day
-                                ascending
-                               select recommendation).ToList();
+                               ascending
+                               select recommendation)
+                               .ToList();
+            List<AccuracyPeriodModel> accuracyPeriods = new();
+            List<AlgorithmChange> algorithmChanges = _dalContext.AlgorithmChanges.GetAllByAlgorithmName(algorithmName);
             foreach (Recommendation recommendation in recommendations)
             {
                 int month = recommendation.CreatedAt.Month;
                 int year = recommendation.CreatedAt.Year;
-                if (accuracyPeriods.FirstOrDefault(a => a.Year == year && a.Month == month) != null)
+                if (algorithmChanges.Any(a => a.StartDate.Year >= year && a.EndDate.Year <= year &&
+                                              a.StartDate.Month >= month && a.StartDate.Month <= month))
+                {
+                    if (accuracyPeriods.FirstOrDefault(a => a.Year == year && a.Month == month) != null)
+                    {
+                        continue;
+                    }
+                    List<Recommendation> periodRecommendations = recommendations
+                        .Where(r => r.CreatedAt.Year == year && r.CreatedAt.Month == month)
+                        .ToList();
+                    float accuracy = GetAccuracy_Strategy1(periodRecommendations);
+                    accuracyPeriods.Add(new AccuracyPeriodModel
+                    {
+                        Month = month,
+                        Year = year,
+                        Accuracy = accuracy
+                    });
+                }
+            }
+            return accuracyPeriods;
+        }
+
+        public List<SummaryMonthlyStatistics> GetMonthlySummaries()
+        {
+            List<Recommendation> recommendations = _dalContext.Recommendations.GetAll();
+            recommendations = (from recommendation in recommendations
+                               orderby recommendation.CreatedAt.Year, recommendation.CreatedAt.Month, recommendation.CreatedAt.Day
+                               ascending
+                               select recommendation)
+                              .ToList();
+            List<SummaryMonthlyStatistics> summaryMonthlyStatistics = new List<SummaryMonthlyStatistics>();
+            List<AlgorithmChange> algorithmChanges = _dalContext.AlgorithmChanges.GetAll();
+            algorithmChanges = (from algorithmChange in algorithmChanges
+                                orderby algorithmChange.StartDate
+                               ascending
+                               select algorithmChange)
+                              .ToList();
+            foreach (Recommendation recommendation in recommendations)
+            {
+                int year = recommendation.CreatedAt.Year;
+                int month = recommendation.CreatedAt.Month;
+                if (summaryMonthlyStatistics.Any(a => a.Year == year && a.Month == month))
                 {
                     continue;
                 }
-                List<Recommendation> periodRecommendations = recommendations
+                List<Recommendation> monthlyRecommendations = recommendations
                     .Where(r => r.CreatedAt.Year == year && r.CreatedAt.Month == month)
                     .ToList();
-                float accuracy = GetAccuracy_Strategy1(periodRecommendations);
-                accuracyPeriods.Add(new AccuracyPeriodModel
+
+                float accuracy = GetAccuracy_Strategy1(monthlyRecommendations);
+                AlgorithmChange? algorithmChange = algorithmChanges
+                    .FirstOrDefault(a => a.StartDate <= recommendation.CreatedAt && a.EndDate >= recommendation.CreatedAt);
+                summaryMonthlyStatistics.Add(new SummaryMonthlyStatistics
                 {
-                    Year = year,
                     Month = month,
-                    Accuracy = accuracy
+                    Year = year,
+                    Accuracy = accuracy,
+                    Algorithm = algorithmChange.AlgorithmName,
+                    Count = monthlyRecommendations.Count
                 });
             }
-            return accuracyPeriods;
+            return summaryMonthlyStatistics;
         }
 
         //public float GetAccuracy_Strategy2(List<Recommendation> recommendations)

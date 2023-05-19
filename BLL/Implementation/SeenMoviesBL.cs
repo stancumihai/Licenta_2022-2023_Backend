@@ -156,7 +156,8 @@ namespace BLL.Implementation
             topMovieGenres = (from topMovieGenre in topMovieGenres
                               orderby topMovieGenre.SeenMovies.Count
                               descending
-                              select topMovieGenre).ToList();
+                              select topMovieGenre)
+                              .ToList();
 
             return topMovieGenres;
         }
@@ -218,7 +219,8 @@ namespace BLL.Implementation
             topMovieGenres = (from topMovieGenre in topMovieGenres
                               orderby topMovieGenre.SeenMovies.Count
                               descending
-                              select topMovieGenre).ToList();
+                              select topMovieGenre)
+                              .ToList();
 
             return topMovieGenres;
         }

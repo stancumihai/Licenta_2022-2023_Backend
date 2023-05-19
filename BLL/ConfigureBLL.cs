@@ -39,6 +39,7 @@ public static class ConfigureBLL
         services.AddScoped<IRecommendationManager, RecommendationManager>();
         services.AddScoped<IUserProfiles, UserProfilesBL>();
         services.AddScoped<IRecommendations, RecommendationsBL>();
+        services.AddScoped<IAlgorithmChanges, AlgorithmChangesBL>();
         services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, MyUserClaimsPrincipalFactory>();
         services.AddSingleton<Hub, NotificationHub>();
         services.AddHostedService<TimedHostedService>();

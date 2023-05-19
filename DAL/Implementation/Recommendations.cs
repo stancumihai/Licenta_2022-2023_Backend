@@ -60,7 +60,7 @@ namespace DAL.Implementation
                .ToList();
         }
 
-        public List<Recommendation> GetAllByUserAndMonth(string userUid, DateTime date)
+        public List<Recommendation> GetAllByUserYearAndMonth(string userUid, DateTime date)
         {
             return _context
               .Recommendations
@@ -70,12 +70,12 @@ namespace DAL.Implementation
               .ToList();
         }
 
-        public List<Recommendation> GetAccuracyPerMonth(DateTime date)
+        public List<Recommendation> GetAllByYearAndMonth(int year, int month)
         {
             return _context
               .Recommendations
-              .Where(r => r.CreatedAt.Month == date.Month &&
-                          r.CreatedAt.Year == date.Year)
+              .Where(r => r.CreatedAt.Month == month &&
+                          r.CreatedAt.Year == year)
               .ToList();
         }
     }

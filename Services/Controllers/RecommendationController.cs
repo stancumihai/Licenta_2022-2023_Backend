@@ -35,10 +35,23 @@ namespace Services.Controllers
         }
 
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AccuracyPeriodModel>))]
-        [HttpGet("accuracy/perMonths")]
-        public IActionResult GetAccuracyPerMonths()
+        [HttpGet("accuracy/perMonths/{algorithmName}")]
+        public IActionResult GetAccuracyPerMonthsByAlgorithm([FromRoute] string algorithmName)
         {
-            return Ok(BusinessContext.Recommendations.GetAccuracyPerMonths());
+            return Ok(BusinessContext.Recommendations.GetAccuracyPerMonthsByAlgorithm(algorithmName));
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<MonthlyRecommendationStatusModel>))]
+        [HttpGet("accuracy/monthlyStatus/{year}/{month}/{algorithmName}")]
+        public IActionResult GetMonthlyRecommendationStatuses([FromRoute] int year, [FromRoute] int month, [FromRoute] string algorithmName)
+        {
+            return Ok(BusinessContext.Recommendations.GetMonthlyRecommendationStatuses(year, month, algorithmName));
+        }
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<MonthlyRecommendationStatusModel>))]
+        [HttpGet("monthlySummaries")]
+        public List<SummaryMonthlyStatistics> GetMonthlySummaries()
+        {
+            return BusinessContext.Recommendations.GetMonthlySummaries();
         }
     }
 }

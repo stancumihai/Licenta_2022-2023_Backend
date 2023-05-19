@@ -4,7 +4,6 @@ using BLL.Interfaces;
 using DAL.Models;
 using Library.Models;
 using Library.Models.Movie;
-using Library.Models.MovieRating;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 

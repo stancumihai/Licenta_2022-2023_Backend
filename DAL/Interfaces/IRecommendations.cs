@@ -9,6 +9,7 @@ namespace DAL.Interfaces
         Recommendation? GetByGuid(Guid guid);
         Recommendation Update(Recommendation recommendation);
         List<Recommendation> GetAllByUser(string userUid);
-        List<Recommendation> GetAllByUserAndMonth(string userUid, DateTime date);
+        List<Recommendation> GetAllByUserYearAndMonth(string userUid, DateTime date);
+        List<Recommendation> GetAllByYearAndMonth(int year, int month);
     }
 }

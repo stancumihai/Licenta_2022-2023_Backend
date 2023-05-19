@@ -25,6 +25,7 @@ namespace DAL.Core
         public DbSet<UserMovieRating> UserMovieRatings { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<Recommendation> Recommendations { get; set; }
+        public DbSet<AlgorithmChange> AlgorithmChanges { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder dbContext)
            => dbContext.UseSqlServer(ConnectionString);
 
