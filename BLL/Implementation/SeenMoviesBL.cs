@@ -97,7 +97,7 @@ namespace BLL.Implementation
                 .GetAll()
                 .Where(s => s.UserGUID == userEntity.Id)
                 .ToList();
-            List<MonthlyAppUsageModel> monthlyAppUsage = new List<MonthlyAppUsageModel>();
+            List<MonthlyAppUsageModel> monthlyAppUsage = new();
             foreach (SeenMovie seenMovie in seenMovies)
             {
                 MonthlyAppUsageModel? existingUsage = monthlyAppUsage.FirstOrDefault(m => m.Year == seenMovie.CreatedAt.Year && m.Month == seenMovie.CreatedAt.Month);
@@ -131,7 +131,7 @@ namespace BLL.Implementation
                                                           .ToList());
 
             List<string> genres = _dalContext.Movies.GetMovieGenres();
-            List<TopGenreModel> topMovieGenres = new List<TopGenreModel>();
+            List<TopGenreModel> topMovieGenres = new();
 
             foreach (SeenMovie seenMovie in loggedInUserSeenMovies)
             {
@@ -157,6 +157,7 @@ namespace BLL.Implementation
                               orderby topMovieGenre.SeenMovies.Count
                               descending
                               select topMovieGenre)
+                              .Take(10)
                               .ToList();
 
             return topMovieGenres;
@@ -194,7 +195,7 @@ namespace BLL.Implementation
                                                           .ToList());
 
             List<string> genres = _dalContext.Movies.GetMovieGenres();
-            List<TopGenreModel> topMovieGenres = new List<TopGenreModel>();
+            List<TopGenreModel> topMovieGenres = new();
 
             foreach (SeenMovie seenMovie in loggedInUserSeenMovies)
             {
@@ -220,6 +221,7 @@ namespace BLL.Implementation
                               orderby topMovieGenre.SeenMovies.Count
                               descending
                               select topMovieGenre)
+                              .Take(10)
                               .ToList();
 
             return topMovieGenres;
@@ -265,7 +267,6 @@ namespace BLL.Implementation
                               .ToList();
 
             return ageViewerships
-                .Take(5)
                 .ToList();
         }
     }

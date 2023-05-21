@@ -129,14 +129,6 @@ builder.Services.AddControllers(options =>
 
 var app = builder.Build();
 
-//var webSocketOptions = new WebSocketOptions
-//{
-//    KeepAliveInterval = TimeSpan.FromMinutes(int.Parse(configuration["JobTimeFrame:Time"]!.ToString()))
-//};
-
-//app.UseWebSockets(webSocketOptions);
-
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -262,6 +254,13 @@ void CreatePersons(IServiceProvider serviceProvider)
     }
 }
 
+async Task CreateUsers(IServiceProvider serviceProvider)
+{
+    using var scope = app!.Services.CreateScope();
+    DAL.Interfaces.IUserSeeder userSeeder = (DAL.Seeders.UserSeeder)scope.ServiceProvider.GetService(typeof(DAL.Interfaces.IUserSeeder))!;
+    await userSeeder.SeedUsers();
+}
+
 app.UseHttpsRedirection();
 app.UseCors("CorsPolicy");
 app.UseRouting();
@@ -274,9 +273,9 @@ app.UseEndpoints(endpoints =>
     endpoints.MapHub<NotificationHub>("/notification");
 });
 app.UseWebSockets();
-
 //CreateRoles(app.Services).Wait();
 //CreateMovies(app.Services);
 //CreateMovieRatings(app.Services);
 //CreatePersons(app.Services);
+await CreateUsers(app.Services);
 app.Run();

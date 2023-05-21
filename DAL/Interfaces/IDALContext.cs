@@ -17,5 +17,6 @@
         IUserProfiles UserProfiles { get; }
         IRecommendations Recommendations { get; }
         IAlgorithmChanges AlgorithmChanges { get; }
+        IUserMovieSearches UserMovieSearches { get; }
     }
 }

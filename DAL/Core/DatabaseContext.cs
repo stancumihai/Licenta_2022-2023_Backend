@@ -26,6 +26,7 @@ namespace DAL.Core
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<Recommendation> Recommendations { get; set; }
         public DbSet<AlgorithmChange> AlgorithmChanges { get; set; }
+        public DbSet<UserMovieSearch> UserMovieSearches { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder dbContext)
            => dbContext.UseSqlServer(ConnectionString);
 
@@ -109,11 +110,6 @@ namespace DAL.Core
             }
         }
 
-        private static void AddUserData(ModelBuilder modelBuilder)
-        {
-
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -144,7 +140,6 @@ namespace DAL.Core
                 .OnDelete(DeleteBehavior.Cascade);
 
             //AddSurveyRelatedData(modelBuilder);
-            AddUserData(modelBuilder);
         }
     }
 }

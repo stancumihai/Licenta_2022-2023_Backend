@@ -57,7 +57,7 @@ namespace DAL.Implementation
         public List<Movie> GetMoviesByGenre(string genre, int pageNumber, int pageSize)
         {
             List<Movie> movies = _context.Movies.ToList();
-            List<Movie> resultList = new List<Movie>();
+            List<Movie> resultList = new();
             foreach (Movie movie in movies)
             {
                 if (movie.Genres.Split(",").Contains(genre))
@@ -168,18 +168,9 @@ namespace DAL.Implementation
 
         public List<Movie> GetMoviesCollection(string userUid)
         {
-            List<LikedMovie> likedMovies = _context.LikedMovies
-               .ToList()
-               .Distinct(new LikedMovieComparer())
-               .ToList();
-
-            List<Guid> likedMoviesUids = likedMovies
-             .Where(sm => sm.UserGUID == userUid)
-             .Select(sm => sm.MovieGUID)
-             .ToList();
 
             return _context.UserMovieRatings
-               .Where(umr => likedMoviesUids.Contains(umr.MovieGUID) && umr.Rating > (decimal)3.9 && umr.UserGUID == userUid)
+               .Where(umr => umr.Rating > (decimal)3.9 && umr.UserGUID == userUid)
                .Select(umr => umr.Movie)
                 .ToList();
         }

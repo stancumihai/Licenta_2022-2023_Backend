@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Services;
 
 namespace BLL;
@@ -40,6 +39,7 @@ public static class ConfigureBLL
         services.AddScoped<IUserProfiles, UserProfilesBL>();
         services.AddScoped<IRecommendations, RecommendationsBL>();
         services.AddScoped<IAlgorithmChanges, AlgorithmChangesBL>();
+        services.AddScoped<IUserMovieSearches, UserMovieSearchesBL>();
         services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, MyUserClaimsPrincipalFactory>();
         services.AddSingleton<Hub, NotificationHub>();
         services.AddHostedService<TimedHostedService>();

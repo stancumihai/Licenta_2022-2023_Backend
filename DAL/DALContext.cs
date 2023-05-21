@@ -19,6 +19,7 @@ namespace DAL
         public IUserProfiles UserProfiles { get; }
         public IRecommendations Recommendations { get; }
         public IAlgorithmChanges AlgorithmChanges { get; }
+        public IUserMovieSearches UserMovieSearches { get; }
         public DALContext(ISurveyAnswers surveyAnswers,
             ISurveyQuestions surveyQuestions,
             IUsers users,
@@ -33,7 +34,8 @@ namespace DAL
             IUserMovieRatings userMovieRatings,
             IUserProfiles userProfiles,
             IRecommendations recommendations,
-            IAlgorithmChanges algorithmChanges)
+            IAlgorithmChanges algorithmChanges,
+            IUserMovieSearches userMovieSearches)
         {
             SurveyAnswers = surveyAnswers;
             SurveyQuestions = surveyQuestions;
@@ -50,6 +52,7 @@ namespace DAL
             UserProfiles = userProfiles;
             Recommendations = recommendations;
             AlgorithmChanges = algorithmChanges;
+            UserMovieSearches = userMovieSearches;
         }
     }
 }

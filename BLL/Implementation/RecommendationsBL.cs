@@ -137,7 +137,7 @@ namespace BLL.Implementation
                 }
 
             }
-            List<MonthlyRecommendationStatusModel> monthlyRecommendationStatusModels = new List<MonthlyRecommendationStatusModel>();
+            List<MonthlyRecommendationStatusModel> monthlyRecommendationStatusModels = new();
             monthlyRecommendationStatusModels.Add(new MonthlyRecommendationStatusModel
             {
                 RecommendationOutcome = "Liked",
@@ -206,7 +206,7 @@ namespace BLL.Implementation
                                ascending
                                select recommendation)
                               .ToList();
-            List<SummaryMonthlyStatistics> summaryMonthlyStatistics = new List<SummaryMonthlyStatistics>();
+            List<SummaryMonthlyStatistics> summaryMonthlyStatistics = new();
             List<AlgorithmChange> algorithmChanges = _dalContext.AlgorithmChanges.GetAll();
             algorithmChanges = (from algorithmChange in algorithmChanges
                                 orderby algorithmChange.StartDate

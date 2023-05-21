@@ -21,8 +21,15 @@ namespace BLL.Implementation
 
         public List<AlgorithmChangeRead> GetAll()
         {
-            return _dalContext.AlgorithmChanges
+            List<AlgorithmChange> algorithmChanges = _dalContext.AlgorithmChanges
                 .GetAll()
+                .ToList();
+            algorithmChanges = (from algorithmChange in algorithmChanges
+                                orderby algorithmChange.StartDate
+                               ascending
+                                select algorithmChange)
+                         .ToList();
+            return algorithmChanges
                 .Select(a => AlgorithmChangeReadConverter.ToBLLModel(a))
                 .ToList();
         }

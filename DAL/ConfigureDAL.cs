@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using DAL.Core;
 using DAL.Interfaces;
 using DAL.Implementation;
+using DAL.Seeders;
 
 namespace DAL;
 public static class ConfigureDAL
@@ -33,6 +34,8 @@ public static class ConfigureDAL
         services.AddScoped<IUserProfiles, UserProfiles>();
         services.AddScoped<IRecommendations, Recommendations>();
         services.AddScoped<IAlgorithmChanges, AlgorithmChanges>();
+        services.AddScoped<IUserMovieSearches, UserMovieSearches>();
+        services.AddScoped<IUserSeeder, UserSeeder>();
         return services;
     }
 }

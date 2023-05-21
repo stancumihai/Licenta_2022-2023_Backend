@@ -192,12 +192,21 @@ namespace BLL.Implementation
             {
                 genresDictionary.Add(genres[i], 0);
             }
+            genresDictionary.Add("Documentary", 0);
+            genresDictionary.Add("Animation", 0);
+            genresDictionary.Add("Musical", 0);
+            genresDictionary.Add("Western", 0);
+            genresDictionary.Add("Family", 0);
+            genresDictionary.Add("Sport", 0);
+            genresDictionary.Add("Music", 0);
+            genresDictionary.Add("Adult", 0);
+            genresDictionary.Add("Film-Noir", 0);
             foreach (Movie movie in toSearchInMovies)
             {
                 string[] movieGenres = movie.Genres.Split(',');
                 foreach (string genre in movieGenres)
                 {
-                    if(genre == "Sci-Fi")
+                    if (genre == "Sci-Fi")
                     {
                         string scifiGenre = "SciFi";
                         genresDictionary[scifiGenre]++;
@@ -292,7 +301,7 @@ namespace BLL.Implementation
                .Intersect(moviePersons)
                .ToList();
             filteredMovies = GetMoviesByOrderByStrategy(filteredMovies, searchModel.OrderBy, searchModel.Ordering == "A", searchModel.ItemsPerPage);
-            
+
             return filteredMovies.Select(e => MovieReadConverter.ToBLLModel(e)).ToList();
         }
     }
