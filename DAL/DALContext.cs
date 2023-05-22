@@ -1,4 +1,5 @@
 ﻿using DAL.Interfaces;
+using DAL.Interfaces.MachineLearning;
 
 namespace DAL
 {
@@ -20,6 +21,12 @@ namespace DAL
         public IRecommendations Recommendations { get; }
         public IAlgorithmChanges AlgorithmChanges { get; }
         public IUserMovieSearches UserMovieSearches { get; }
+        public IPredictedGenres PredictedGenres { get; }
+
+        public IPredictedMoviesCount PredictedMoviesCount { get; }
+
+        public IPredictedMoviesRuntime PredictedMoviesRuntime { get; }
+
         public DALContext(ISurveyAnswers surveyAnswers,
             ISurveyQuestions surveyQuestions,
             IUsers users,
@@ -35,7 +42,10 @@ namespace DAL
             IUserProfiles userProfiles,
             IRecommendations recommendations,
             IAlgorithmChanges algorithmChanges,
-            IUserMovieSearches userMovieSearches)
+            IUserMovieSearches userMovieSearches,
+            IPredictedGenres predictedGenres,
+            IPredictedMoviesCount predictedMoviesCount,
+            IPredictedMoviesRuntime predictedMoviesRuntime)
         {
             SurveyAnswers = surveyAnswers;
             SurveyQuestions = surveyQuestions;
@@ -53,6 +63,9 @@ namespace DAL
             Recommendations = recommendations;
             AlgorithmChanges = algorithmChanges;
             UserMovieSearches = userMovieSearches;
+            PredictedGenres = predictedGenres;
+            PredictedMoviesCount = predictedMoviesCount;
+            PredictedMoviesRuntime = predictedMoviesRuntime;
         }
     }
 }

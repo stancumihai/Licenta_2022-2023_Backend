@@ -5,6 +5,8 @@ using DAL.Core;
 using DAL.Interfaces;
 using DAL.Implementation;
 using DAL.Seeders;
+using DAL.Interfaces.MachineLearning;
+using DAL.Implementation.MachineLearning;
 
 namespace DAL;
 public static class ConfigureDAL
@@ -36,6 +38,9 @@ public static class ConfigureDAL
         services.AddScoped<IAlgorithmChanges, AlgorithmChanges>();
         services.AddScoped<IUserMovieSearches, UserMovieSearches>();
         services.AddScoped<IUserSeeder, UserSeeder>();
+        services.AddScoped<IPredictedGenres, PredictedGenres>();
+        services.AddScoped<IPredictedMoviesCount, PredictedMoviesCount>();
+        services.AddScoped<IPredictedMoviesRuntime, PredictedMoviesRuntime>();
         return services;
     }
 }

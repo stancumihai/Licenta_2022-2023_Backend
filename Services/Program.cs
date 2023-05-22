@@ -156,7 +156,7 @@ void CreateMovies(IServiceProvider serviceProvider)
     IMovies moviesBL = (MoviesBL)scope.ServiceProvider.GetService(typeof(IMovies))!;
     IMovieRatings movieRatingsBL = (MovieRatingsBL)scope.ServiceProvider.GetService(typeof(IMovieRatings))!;
 
-    Tuple<List<Movie>, List<Library.Models.Excel.MovieRating>> movieInformations = CSVReader.GetMovieInformation();
+    Tuple<List<Movie>, List<Library.Models.Excel.MovieRating>> movieInformations = CSVReaderService.GetMovieInformation();
     bool hasMovies = moviesBL.GetAll().Count != 0;
     bool hasMovieRatings = moviesBL.GetAll().Count != 0;
     if (!hasMovies)
@@ -174,7 +174,7 @@ void CreateMovieRatings(IServiceProvider serviceProvider)
     IMovies moviesBL = (MoviesBL)scope.ServiceProvider.GetService(typeof(IMovies))!;
     IMovieRatings movieRatingsBL = (MovieRatingsBL)scope.ServiceProvider.GetService(typeof(IMovieRatings))!;
 
-    Tuple<List<Movie>, List<Library.Models.Excel.MovieRating>> movieInformations = CSVReader.GetMovieInformation();
+    Tuple<List<Movie>, List<Library.Models.Excel.MovieRating>> movieInformations = CSVReaderService.GetMovieInformation();
     bool hasMovieRatings = movieRatingsBL.GetAll().Count != 0;
     if (!hasMovieRatings)
     {
@@ -199,7 +199,7 @@ void CreatePersons(IServiceProvider serviceProvider)
     IMovies movieBL = (MoviesBL)scope.ServiceProvider.GetService(typeof(IMovies))!;
     IKnownFor knownForBL = (KnownForBL)scope.ServiceProvider.GetService(typeof(IKnownFor))!;
     IPersons personsBL = (PersonsBL)scope.ServiceProvider.GetService(typeof(IPersons))!;
-    List<Library.Models.Excel.Person> persons = CSVReader.GetPersons();
+    List<Library.Models.Excel.Person> persons = CSVReaderService.GetPersons();
     bool hasData = personsBL.GetAll().Count != 0;
     if (!hasData)
     {
@@ -277,5 +277,5 @@ app.UseWebSockets();
 //CreateMovies(app.Services);
 //CreateMovieRatings(app.Services);
 //CreatePersons(app.Services);
-await CreateUsers(app.Services);
+//await CreateUsers(app.Services);
 app.Run();

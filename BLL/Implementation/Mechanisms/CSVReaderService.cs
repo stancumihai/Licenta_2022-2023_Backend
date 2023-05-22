@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BLL.Implementation.Mechanisms
 {
-    public class CSVReader
+    public class CSVReaderService
     {
         private readonly static string PERSON_DATA_PATH =
             "D:\\Munca\\Licenta\\backend\\DAL\\Datasets\\original\\data1.xlsx";

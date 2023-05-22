@@ -9,7 +9,8 @@ namespace BLL.Converters.MovieSubscription
             MovieSubscriptionCreate linkedMovieCreate = new()
             {
                 MovieUid = movieSubscriptionDALModel.MovieGUID,
-                UserUid = movieSubscriptionDALModel.UserGUID
+                UserUid = movieSubscriptionDALModel.UserGUID,
+                CreatedAt = movieSubscriptionDALModel.CreatedAt
             };
 
             return linkedMovieCreate;
@@ -20,7 +21,8 @@ namespace BLL.Converters.MovieSubscription
             DAL.Models.MovieSubscription movieSubscriptionEntity = new()
             {
                 MovieGUID = movieSubscriptionBLLModel.MovieUid,
-                UserGUID = movieSubscriptionBLLModel.UserUid
+                UserGUID = movieSubscriptionBLLModel.UserUid,
+                CreatedAt = movieSubscriptionBLLModel.CreatedAt
             };
 
             return movieSubscriptionEntity;

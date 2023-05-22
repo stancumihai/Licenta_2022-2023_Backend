@@ -9,9 +9,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace BLL.Implementation.Mechanisms
+namespace BLL.Implementation.Mechanisms.Jobs
 {
-    internal class TimedHostedService : IHostedService, IDisposable
+    internal class MovieRecommendationJob : IHostedService, IDisposable
     {
         private readonly ILogger _logger;
         private Timer? _timer;
@@ -20,7 +20,7 @@ namespace BLL.Implementation.Mechanisms
         private List<UserRead> _users;
         private readonly JobTimeFrame _jobTimeFrame;
         private readonly IHubContext<NotificationHub, INotificationHub> _notificationHubContext;
-        public TimedHostedService(ILogger<TimedHostedService> logger,
+        public MovieRecommendationJob(ILogger<MovieRecommendationJob> logger,
             IServiceScopeFactory factory,
             IConfiguration configuration,
            IHubContext<NotificationHub, INotificationHub> notificationHubContext)

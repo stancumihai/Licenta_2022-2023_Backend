@@ -9,8 +9,22 @@ namespace Services.Controllers
     {
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MovieRead>))]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
+            //BusinessContext.MachineLearningTraining.GenerateTrainingPredictedGenre();
+            List<Library.MachineLearningModels.PredictedGenre> predictedGenres = await BusinessContext.PredictedGenres.GetLastMonthData();
+            //ICSVWriterService writer = new CSVWriterService("test_genres_predicted.csv");
+            //writer.WriteCSV(predictedGenres);
+
+            //BusinessContext.MachineLearningTraining.GenerateTrainingPredictedMovieCount();
+            //List<Library.MachineLearningModels.PredictedMovieCount> predictedMovieCounts = await BusinessContext.PredictedMoviesCount.GetLastMonthData();
+            //ICSVWriterService writer = new CSVWriterService("test_movies_count_predicted.csv");
+            //writer.WriteCSV(predictedMovieCounts);
+
+            //BusinessContext.MachineLearningTraining.GenerateTrainingPredictedMovieRuntime();
+            //List<Library.MachineLearningModels.PredictedMovieRuntime> predictedMovieRuntimes = await BusinessContext.PredictedMoviesRuntime.GetLastMonthData();
+            //ICSVWriterService writer = new CSVWriterService("test_movies_runtimes_predicted.csv");
+            //writer.WriteCSV(predictedMovieRuntimes);
             return Ok(BusinessContext.Movies!.GetAll());
         }
 

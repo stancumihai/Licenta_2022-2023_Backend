@@ -9,5 +9,6 @@ namespace DAL.Interfaces
         Person? GetByUid(Guid uid);
         List<Person> GetAllByMovieUid(Guid movieGuid);
         List<Person> GetPaginatedPersonsByProfession(string profession, int pageNumber);
+        List<Person> GetAllPersonsByProfession(string profession);
     }
 }

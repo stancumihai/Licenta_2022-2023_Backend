@@ -1,4 +1,6 @@
-﻿namespace DAL.Interfaces
+﻿using DAL.Interfaces.MachineLearning;
+
+namespace DAL.Interfaces
 {
     public interface IDALContext
     {
@@ -18,5 +20,8 @@
         IRecommendations Recommendations { get; }
         IAlgorithmChanges AlgorithmChanges { get; }
         IUserMovieSearches UserMovieSearches { get; }
+        IPredictedGenres PredictedGenres { get; }
+        IPredictedMoviesCount PredictedMoviesCount { get; }
+        IPredictedMoviesRuntime PredictedMoviesRuntime { get; }
     }
 }

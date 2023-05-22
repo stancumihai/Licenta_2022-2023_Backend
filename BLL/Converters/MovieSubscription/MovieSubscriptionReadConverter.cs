@@ -11,7 +11,8 @@ namespace BLL.Converters.MovieSubscription
             {
                 Uid = movieSubscriptionDALModel.MovieSubscriptionGUID,
                 Movie = MovieReadConverter.ToBLLModel(movieSubscriptionDALModel.Movie),
-                UserGUID = movieSubscriptionDALModel.UserGUID
+                UserUid = movieSubscriptionDALModel.UserGUID,
+                CreatedAt = movieSubscriptionDALModel.CreatedAt
             };
 
             return movieSubscription;
@@ -23,7 +24,8 @@ namespace BLL.Converters.MovieSubscription
             {
                 MovieSubscriptionGUID = likedMovieBLLModel.Uid,
                 MovieGUID = likedMovieBLLModel.Movie.Uid,
-                UserGUID = likedMovieBLLModel.UserGUID
+                UserGUID = likedMovieBLLModel.UserUid,
+                CreatedAt = likedMovieBLLModel.CreatedAt
             };
 
             return linkedMovieEntity;

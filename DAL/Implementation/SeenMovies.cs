@@ -44,13 +44,16 @@ namespace DAL.Implementation
 
         public List<SeenMovie> GetAll()
         {
-            return _context.SeenMovies.Include(ms => ms.Movie).ToList();
+            return _context.SeenMovies.Include(ms => ms.Movie)
+                .ThenInclude(m => m.KnowFor)
+                .ToList();
         }
 
         public SeenMovie? GetByUid(Guid uid)
         {
             SeenMovie? seenMovie = _context.SeenMovies
                                    .Include(l => l.Movie)
+                                   .ThenInclude(m => m.KnowFor)
                                    .FirstOrDefault(sm => sm.SeenMovieGUID == uid);
             if (seenMovie == null)
             {

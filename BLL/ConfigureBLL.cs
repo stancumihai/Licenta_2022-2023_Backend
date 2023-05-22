@@ -1,7 +1,10 @@
 ﻿using BLL.Core;
 using BLL.Implementation;
+using BLL.Implementation.MachineLearning;
 using BLL.Implementation.Mechanisms;
+using BLL.Implementation.Mechanisms.Jobs;
 using BLL.Interfaces;
+using BLL.Interfaces.MachineLearning;
 using BLL.Interfaces.Mechanisms;
 using DAL.Models;
 using Library.Settings;
@@ -34,16 +37,22 @@ public static class ConfigureBLL
                 .GetSection("EmailConfiguration")
                 .Get<EmailConfiguration>();
         services.AddSingleton(emailConfig);
-        services.AddScoped<IEmailSender, EmailSender>();
+        services.AddScoped<IEmailSender, EmailService>();
         services.AddScoped<IRecommendationManager, RecommendationManager>();
         services.AddScoped<IUserProfiles, UserProfilesBL>();
         services.AddScoped<IRecommendations, RecommendationsBL>();
         services.AddScoped<IAlgorithmChanges, AlgorithmChangesBL>();
         services.AddScoped<IUserMovieSearches, UserMovieSearchesBL>();
+        services.AddScoped<IMachineLearningTraining, MachineLearningTrainingBL>();
+        services.AddScoped<IPredictedGenres, PredictedGenresBL>();
+        services.AddScoped<IPredictedMoviesCount, PredictedMoviesCountBL>();
+        services.AddScoped<IPredictedMoviesRuntime, PredictedMoviesRuntimeBL>();
         services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, MyUserClaimsPrincipalFactory>();
         services.AddSingleton<Hub, NotificationHub>();
-        services.AddHostedService<TimedHostedService>();
-
+        services.AddHostedService<MovieRecommendationJob>();
+        services.AddHostedService<PredictedGenreJob>();
+        services.AddHostedService<PredictedMoviesCountJob>();
+        services.AddHostedService<PredictedMoviesRuntimeJob>();
         return services;
     }
 }

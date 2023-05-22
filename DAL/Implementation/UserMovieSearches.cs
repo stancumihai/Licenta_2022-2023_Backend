@@ -26,5 +26,10 @@ namespace DAL.Implementation
             _context.SaveChanges();
             return addedUserMovieSearch;
         }
+
+        public List<UserMovieSearch> GetAll()
+        {
+            return _context.UserMovieSearches.ToList();
+        }
     }
 }

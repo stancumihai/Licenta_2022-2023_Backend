@@ -164,6 +164,78 @@ namespace DAL.Migrations
                     b.ToTable("LikedMovies");
                 });
 
+            modelBuilder.Entity("DAL.Models.MachineLearning.PredictedGenre", b =>
+                {
+                    b.Property<Guid>("PredictedGenreGUID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Genre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserGUID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("PredictedGenreGUID");
+
+                    b.HasIndex("UserGUID");
+
+                    b.ToTable("PredictedGenres");
+                });
+
+            modelBuilder.Entity("DAL.Models.MachineLearning.PredictedMovieCount", b =>
+                {
+                    b.Property<Guid>("PredictedMovieCountGUID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("MovieCount")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserGUID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("PredictedMovieCountGUID");
+
+                    b.HasIndex("UserGUID");
+
+                    b.ToTable("PredictedMoviesCount");
+                });
+
+            modelBuilder.Entity("DAL.Models.MachineLearning.PredictedMovieRuntime", b =>
+                {
+                    b.Property<Guid>("PredictedMovieRuntimeGUID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("MovieRuntime")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserGUID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("PredictedMovieRuntimeGUID");
+
+                    b.HasIndex("UserGUID");
+
+                    b.ToTable("PredictedMoviesRuntime");
+                });
+
             modelBuilder.Entity("DAL.Models.Movie", b =>
                 {
                     b.Property<Guid>("MovieGUID")
@@ -220,6 +292,9 @@ namespace DAL.Migrations
                     b.Property<Guid>("MovieSubscriptionGUID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("MovieGUID")
                         .HasColumnType("uniqueidentifier");
@@ -632,6 +707,39 @@ namespace DAL.Migrations
                         .IsRequired();
 
                     b.Navigation("Movie");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DAL.Models.MachineLearning.PredictedGenre", b =>
+                {
+                    b.HasOne("DAL.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserGUID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DAL.Models.MachineLearning.PredictedMovieCount", b =>
+                {
+                    b.HasOne("DAL.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserGUID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DAL.Models.MachineLearning.PredictedMovieRuntime", b =>
+                {
+                    b.HasOne("DAL.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserGUID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

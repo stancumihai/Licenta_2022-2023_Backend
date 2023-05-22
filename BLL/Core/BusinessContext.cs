@@ -1,4 +1,5 @@
 ﻿using BLL.Interfaces;
+using BLL.Interfaces.MachineLearning;
 using BLL.Interfaces.Mechanisms;
 using Microsoft.AspNetCore.Http;
 
@@ -24,6 +25,10 @@ public class BusinessContext
     public IAlgorithmChanges AlgorithmChanges { get; set; }
     public IRecommendations Recommendations { get; set; }
     public IUserMovieSearches UserMovieSearches { get; set; }
+    public IMachineLearningTraining MachineLearningTraining { get; set; }
+    public IPredictedGenres PredictedGenres { get; set; }
+    public IPredictedMoviesCount PredictedMoviesCount { get; set; }
+    public IPredictedMoviesRuntime PredictedMoviesRuntime { get; set; }
     public readonly IHttpContextAccessor HttpContextAccessor;
 
     public BusinessContext(ISurveyQuestions surveyQuestions,
@@ -45,7 +50,11 @@ public class BusinessContext
                             IUserProfiles userProfiles,
                             IRecommendations recommendations,
                             IAlgorithmChanges algorithmChanges,
-                            IUserMovieSearches userMovieSearches)
+                            IUserMovieSearches userMovieSearches,
+                            IMachineLearningTraining machineLearningTraining,
+                            IPredictedGenres predictedGenres,
+                            IPredictedMoviesCount predictedMoviesCount,
+                            IPredictedMoviesRuntime predictedMoviesRuntime)
     {
         SurveyQuestions = surveyQuestions;
         SurveyAnswers = surveyAnswers;
@@ -67,5 +76,9 @@ public class BusinessContext
         HttpContextAccessor = httpContextAccessor;
         AlgorithmChanges = algorithmChanges;
         UserMovieSearches = userMovieSearches;
+        MachineLearningTraining = machineLearningTraining;
+        PredictedGenres = predictedGenres;
+        PredictedMoviesCount = predictedMoviesCount;
+        PredictedMoviesRuntime = predictedMoviesRuntime;
     }
 }

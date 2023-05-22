@@ -15,6 +15,15 @@
         Fantasy,
         History,
         Horror,
-        Comedy
+        Comedy,
+        Documentary,
+        Animation,
+        Musical,
+        Western,
+        Family,
+        Sport,
+        Music,
+        Adult,
+        FilmNoir
     }
 }

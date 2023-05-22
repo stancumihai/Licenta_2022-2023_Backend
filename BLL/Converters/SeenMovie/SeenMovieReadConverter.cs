@@ -20,7 +20,7 @@ namespace BLL.Converters.SeenMovie
 
         public static DAL.Models.SeenMovie ToDALModel(SeenMovieRead seenMovieBLLModel)
         {
-            DAL.Models.SeenMovie seenMovieEnttiy = new()
+            DAL.Models.SeenMovie seenMovieEntity = new()
             {
                 SeenMovieGUID = seenMovieBLLModel.Uid,
                 MovieGUID = seenMovieBLLModel.Movie.Uid,
@@ -28,7 +28,7 @@ namespace BLL.Converters.SeenMovie
                 CreatedAt = seenMovieBLLModel.CreatedAt
             };
 
-            return seenMovieEnttiy;
+            return seenMovieEntity;
         }
     }
 }

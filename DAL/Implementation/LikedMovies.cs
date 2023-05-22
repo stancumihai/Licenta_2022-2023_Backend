@@ -43,13 +43,17 @@ namespace DAL.Implementation
 
         public List<LikedMovie> GetAll()
         {
-            return _context.LikedMovies.Include(l => l.Movie).ToList();
+            return _context.LikedMovies
+                .Include(l => l.Movie)
+                .ThenInclude(m => m.KnowFor)
+                .ToList();
         }
 
         public LikedMovie? GetByUid(Guid uid)
         {
             LikedMovie? likedMovie = _context.LikedMovies
                .Include(l => l.Movie)
+               .ThenInclude(m => m.KnowFor)
                .FirstOrDefault(l => l.LikedMovieGUID == uid);
             if (likedMovie == null)
             {
@@ -67,6 +71,7 @@ namespace DAL.Implementation
             }
             return _context.LikedMovies
                 .Include(l => l.Movie)
+                .ThenInclude(m => m.KnowFor)
                 .Where(l => l.UserGUID == userGUID)
                 .ToList();
         }
@@ -84,7 +89,9 @@ namespace DAL.Implementation
                 return null;
             }
             return _context.LikedMovies
-                .Include(l => l.Movie).Where(l => l.UserGUID == userGUID && l.MovieGUID == movieUid)
+                .Include(l => l.Movie)
+                .ThenInclude(m => m.KnowFor)
+                .Where(l => l.UserGUID == userGUID && l.MovieGUID == movieUid)
                 .FirstOrDefault()!;
         }
     }

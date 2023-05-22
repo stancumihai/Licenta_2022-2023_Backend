@@ -5,11 +5,11 @@ using MimeKit;
 
 namespace BLL.Implementation.Mechanisms
 {
-    public class EmailSender : IEmailSender
+    public class EmailService : IEmailSender
     {
         private readonly EmailConfiguration _emailConfig;
 
-        public EmailSender(EmailConfiguration emailConfig)
+        public EmailService(EmailConfiguration emailConfig)
         {
             _emailConfig = emailConfig;
         }

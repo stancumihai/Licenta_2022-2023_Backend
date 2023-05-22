@@ -1,5 +1,6 @@
 ﻿using DAL.Enums;
 using DAL.Models;
+using DAL.Models.MachineLearning;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +28,10 @@ namespace DAL.Core
         public DbSet<Recommendation> Recommendations { get; set; }
         public DbSet<AlgorithmChange> AlgorithmChanges { get; set; }
         public DbSet<UserMovieSearch> UserMovieSearches { get; set; }
+        public DbSet<PredictedGenre> PredictedGenres { get; set; }
+        public DbSet<PredictedMovieCount> PredictedMoviesCount { get; set; }
+        public DbSet<PredictedMovieRuntime> PredictedMoviesRuntime { get; set; }
+       
         protected override void OnConfiguring(DbContextOptionsBuilder dbContext)
            => dbContext.UseSqlServer(ConnectionString);
 

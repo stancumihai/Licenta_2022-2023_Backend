@@ -47,6 +47,7 @@ namespace DAL.Implementation
             return _context
                 .MovieSubscriptions
                 .Include(ms => ms.Movie)
+                .ThenInclude(m => m.KnowFor)
                 .ToList();
         }
 
@@ -55,6 +56,7 @@ namespace DAL.Implementation
             return _context
                 .MovieSubscriptions
                  .Include(ms => ms.Movie)
+                 .ThenInclude(m => m.KnowFor)
                 .Where(m => m.UserGUID == userUid)
                 .ToList();
         }
@@ -63,6 +65,7 @@ namespace DAL.Implementation
         {
             MovieSubscription? movieSubscription = _context.MovieSubscriptions
                        .Include(l => l.Movie)
+                       .ThenInclude(m => m.KnowFor)
                        .FirstOrDefault(ms => ms.MovieSubscriptionGUID == uid);
             if (movieSubscription == null)
             {
@@ -84,7 +87,9 @@ namespace DAL.Implementation
                 return null;
             }
             return _context.MovieSubscriptions
-                .Include(l => l.Movie).Where(l => l.UserGUID == userGUID && l.MovieGUID == movieUid)
+                .Include(l => l.Movie)
+                .ThenInclude(m => m.KnowFor)
+                .Where(l => l.UserGUID == userGUID && l.MovieGUID == movieUid)
                 .FirstOrDefault()!;
         }
     }
