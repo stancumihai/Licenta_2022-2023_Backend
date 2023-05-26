@@ -1,5 +1,5 @@
 ﻿using BLL.Core;
-using Library.Models;
+using Library.Models._UI;
 using Library.Models.Recommendation;
 using Microsoft.AspNetCore.Mvc;
 

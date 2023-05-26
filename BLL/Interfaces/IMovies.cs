@@ -1,4 +1,4 @@
-﻿using Library.Models;
+﻿using Library.Models._UI;
 using Library.Models.Movie;
 
 namespace BLL.Interfaces

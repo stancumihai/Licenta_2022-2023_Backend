@@ -6,7 +6,8 @@ namespace BLL.Interfaces.MachineLearning
     {
         PredictedGenreCreate Add(PredictedGenreCreate predictedGenre);
         List<PredictedGenreRead> GetAll();
-        List<PredictedGenreRead> GetAllByDate(int year, int month);
-        Task<List<Library.MachineLearningModels.PredictedGenre>> GetLastMonthData();
+        List<Library.Models._UI.MachineLearning.PredictedGenre> GetEachMonthByUser(string userUid);
+        List<Library.Models._UI.MachineLearning.PredictedGenre> GetEachMonth();
+        Task ProcessPredictedGenreJobAction(int year, int month);
     }
 }

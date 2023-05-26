@@ -47,12 +47,11 @@ public static class ConfigureBLL
         services.AddScoped<IPredictedGenres, PredictedGenresBL>();
         services.AddScoped<IPredictedMoviesCount, PredictedMoviesCountBL>();
         services.AddScoped<IPredictedMoviesRuntime, PredictedMoviesRuntimeBL>();
+        services.AddScoped<IPredictedAgesViewership, PredictedAgesViewershipBL>();
         services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, MyUserClaimsPrincipalFactory>();
         services.AddSingleton<Hub, NotificationHub>();
         services.AddHostedService<MovieRecommendationJob>();
-        services.AddHostedService<PredictedGenreJob>();
-        services.AddHostedService<PredictedMoviesCountJob>();
-        services.AddHostedService<PredictedMoviesRuntimeJob>();
+        services.AddHostedService<PredictedData>();
         return services;
     }
 }

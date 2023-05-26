@@ -23,5 +23,6 @@ namespace DAL.Interfaces
         IPredictedGenres PredictedGenres { get; }
         IPredictedMoviesCount PredictedMoviesCount { get; }
         IPredictedMoviesRuntime PredictedMoviesRuntime { get; }
+        IPredictedAgesViewership PredictedAgesViewership { get; }
     }
 }

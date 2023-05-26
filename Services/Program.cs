@@ -261,6 +261,13 @@ async Task CreateUsers(IServiceProvider serviceProvider)
     await userSeeder.SeedUsers();
 }
 
+async Task AddAdditionalDataToUsers(IServiceProvider serviceProvider)
+{
+    using var scope = app!.Services.CreateScope();
+    DAL.Interfaces.IUserSeeder userSeeder = (DAL.Seeders.UserSeeder)scope.ServiceProvider.GetService(typeof(DAL.Interfaces.IUserSeeder))!;
+    await userSeeder.SeedAdditionalData(2023, 7);
+}
+
 app.UseHttpsRedirection();
 app.UseCors("CorsPolicy");
 app.UseRouting();
@@ -277,5 +284,5 @@ app.UseWebSockets();
 //CreateMovies(app.Services);
 //CreateMovieRatings(app.Services);
 //CreatePersons(app.Services);
-//await CreateUsers(app.Services);
+//await AddAdditionalDataToUsers(app.Services);
 app.Run();

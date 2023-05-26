@@ -3,7 +3,7 @@ using BLL.Core;
 using BLL.Interfaces;
 using DAL.Models;
 using Library.Enums;
-using Library.Models;
+using Library.Models._UI;
 using Library.Models.Recommendation;
 
 namespace BLL.Implementation

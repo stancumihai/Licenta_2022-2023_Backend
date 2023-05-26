@@ -6,7 +6,8 @@ namespace BLL.Interfaces.MachineLearning
     {
         PredictedMovieRuntimeCreate Add(PredictedMovieRuntimeCreate predictedMovieRuntime);
         List<PredictedMovieRuntimeRead> GetAll();
-        List<PredictedMovieRuntimeRead> GetAllByDate(int year, int month);
-        Task<List<Library.MachineLearningModels.PredictedMovieRuntime>> GetLastMonthData();
+        List<Library.Models._UI.MachineLearning.PredictedMovieRuntime> GetEachMonthByUser(string userUid);
+        List<Library.Models._UI.MachineLearning.PredictedMovieRuntime> GetEachMonth();
+        Task ProcessPredictedMovieRuntimeJobAction(int year, int month);
     }
 }

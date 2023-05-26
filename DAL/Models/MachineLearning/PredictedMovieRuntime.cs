@@ -11,6 +11,6 @@ namespace DAL.Models.MachineLearning
         public string UserGUID { get; set; }
         public ApplicationUser User { get; set; }
         public DateTime CreatedAt { get; set; }
-        public string MovieRuntime { get; set; }
+        public float MovieRuntime { get; set; }
     }
 }

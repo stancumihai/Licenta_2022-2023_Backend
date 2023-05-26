@@ -93,7 +93,6 @@ namespace DAL.Implementation
 
             return _context.Movies
                 .Where(m => seenMoviesUids.Contains(m.MovieGUID))
-                .Include(m => m.KnowFor)
                 .ToList();
         }
 
@@ -113,7 +112,6 @@ namespace DAL.Implementation
 
             return _context.Movies
                 .Where(m => subscriptionsUids.Contains(m.MovieGUID))
-                .Include(m => m.KnowFor)
                 .ToList();
         }
 
@@ -134,7 +132,6 @@ namespace DAL.Implementation
             var userMovieRatingsList = _context.UserMovieRatings
                .Where(umr => likedMoviesUids.Contains(umr.MovieGUID) && umr.Rating > (decimal)3.9)
                .Select(umr => umr.Movie)
-               .Include(m => m.KnowFor)
                .ToList();
             return userMovieRatingsList;
         }
@@ -153,7 +150,6 @@ namespace DAL.Implementation
 
             return _context.Movies
                 .Where(m => seenMoviesUids.Contains(m.MovieGUID))
-                .Include(m => m.KnowFor)
                 .ToList();
         }
 
@@ -172,7 +168,6 @@ namespace DAL.Implementation
 
             return _context.Movies
                 .Where(m => subscriptionsUids.Contains(m.MovieGUID))
-                .Include(m => m.KnowFor)
                 .ToList();
         }
 
@@ -182,7 +177,6 @@ namespace DAL.Implementation
             return _context.UserMovieRatings
                .Where(umr => umr.Rating > (decimal)3.9 && umr.UserGUID == userUid)
                .Select(umr => umr.Movie)
-               .Include(m => m.KnowFor)
                .ToList();
         }
     }

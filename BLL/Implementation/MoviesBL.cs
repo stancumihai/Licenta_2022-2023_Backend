@@ -2,7 +2,7 @@
 using BLL.Core;
 using BLL.Interfaces;
 using DAL.Models;
-using Library.Models;
+using Library.Models._UI;
 using Library.Models.Movie;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;

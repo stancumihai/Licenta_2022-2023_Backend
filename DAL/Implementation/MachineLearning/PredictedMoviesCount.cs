@@ -31,13 +31,5 @@ namespace DAL.Implementation.MachineLearning
              .Include(p => p.User)
              .ToList();
         }
-
-        public List<PredictedMovieCount> GetAllByDate(int year, int month)
-        {
-            return _context.PredictedMoviesCount
-               .Include(p => p.User)
-               .Where(p => p.CreatedAt.Year == year && p.CreatedAt.Millisecond == month)
-               .ToList();
-        }
     }
 }

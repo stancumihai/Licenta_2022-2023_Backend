@@ -6,6 +6,5 @@ namespace DAL.Interfaces.MachineLearning
     {
         PredictedGenre Add(PredictedGenre predictedGenre);
         List<PredictedGenre> GetAll();
-        List<PredictedGenre> GetAllByDate(int year, int month);
     }
 }

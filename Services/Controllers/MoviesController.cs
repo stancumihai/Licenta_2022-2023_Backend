@@ -1,4 +1,4 @@
-﻿using Library.Models;
+﻿using Library.Models._UI;
 using Library.Models.Movie;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,8 +11,8 @@ namespace Services.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MovieRead>))]
         public async Task<IActionResult> GetAll()
         {
-            //BusinessContext.MachineLearningTraining.GenerateTrainingPredictedGenre();
-            List<Library.MachineLearningModels.PredictedGenre> predictedGenres = await BusinessContext.PredictedGenres.GetLastMonthData();
+            //BusinessContext.MachineLearningTraining.GenerateTrainingPredictedAgesViewership();
+            //List<Library.MachineLearningModels.PredictedGenre> predictedGenres = await BusinessContext.PredictedGenres.GetLastMonthData();
             //ICSVWriterService writer = new CSVWriterService("test_genres_predicted.csv");
             //writer.WriteCSV(predictedGenres);
 

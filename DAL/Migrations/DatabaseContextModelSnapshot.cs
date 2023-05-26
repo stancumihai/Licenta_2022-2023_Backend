@@ -164,6 +164,26 @@ namespace DAL.Migrations
                     b.ToTable("LikedMovies");
                 });
 
+            modelBuilder.Entity("DAL.Models.MachineLearning.PredictedAgeViewership", b =>
+                {
+                    b.Property<Guid>("PredictedAgeViewershipGUID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MovieCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("PredictedAgeViewershipGUID");
+
+                    b.ToTable("PredictedAgeViewerships");
+                });
+
             modelBuilder.Entity("DAL.Models.MachineLearning.PredictedGenre", b =>
                 {
                     b.Property<Guid>("PredictedGenreGUID")
@@ -197,9 +217,8 @@ namespace DAL.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("MovieCount")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<float>("MovieCount")
+                        .HasColumnType("real");
 
                     b.Property<string>("UserGUID")
                         .IsRequired()
@@ -221,9 +240,8 @@ namespace DAL.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("MovieRuntime")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<float>("MovieRuntime")
+                        .HasColumnType("real");
 
                     b.Property<string>("UserGUID")
                         .IsRequired()

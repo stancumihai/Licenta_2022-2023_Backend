@@ -24,6 +24,8 @@
         Sport,
         Music,
         Adult,
-        FilmNoir
+        FilmNoir,
+        RealityTv,
+        News
     }
 }

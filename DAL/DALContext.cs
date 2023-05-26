@@ -26,6 +26,7 @@ namespace DAL
         public IPredictedMoviesCount PredictedMoviesCount { get; }
 
         public IPredictedMoviesRuntime PredictedMoviesRuntime { get; }
+        public IPredictedAgesViewership PredictedAgesViewership { get; }
 
         public DALContext(ISurveyAnswers surveyAnswers,
             ISurveyQuestions surveyQuestions,
@@ -45,7 +46,8 @@ namespace DAL
             IUserMovieSearches userMovieSearches,
             IPredictedGenres predictedGenres,
             IPredictedMoviesCount predictedMoviesCount,
-            IPredictedMoviesRuntime predictedMoviesRuntime)
+            IPredictedMoviesRuntime predictedMoviesRuntime,
+            IPredictedAgesViewership predictedAgesViewership)
         {
             SurveyAnswers = surveyAnswers;
             SurveyQuestions = surveyQuestions;
@@ -66,6 +68,7 @@ namespace DAL
             PredictedGenres = predictedGenres;
             PredictedMoviesCount = predictedMoviesCount;
             PredictedMoviesRuntime = predictedMoviesRuntime;
+            PredictedAgesViewership = predictedAgesViewership;
         }
     }
 }

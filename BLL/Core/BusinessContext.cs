@@ -29,6 +29,7 @@ public class BusinessContext
     public IPredictedGenres PredictedGenres { get; set; }
     public IPredictedMoviesCount PredictedMoviesCount { get; set; }
     public IPredictedMoviesRuntime PredictedMoviesRuntime { get; set; }
+    public IPredictedAgesViewership PredictedAgesViewership { get; set; }
     public readonly IHttpContextAccessor HttpContextAccessor;
 
     public BusinessContext(ISurveyQuestions surveyQuestions,
@@ -54,7 +55,8 @@ public class BusinessContext
                             IMachineLearningTraining machineLearningTraining,
                             IPredictedGenres predictedGenres,
                             IPredictedMoviesCount predictedMoviesCount,
-                            IPredictedMoviesRuntime predictedMoviesRuntime)
+                            IPredictedMoviesRuntime predictedMoviesRuntime,
+                            IPredictedAgesViewership predictedAgesViewership)
     {
         SurveyQuestions = surveyQuestions;
         SurveyAnswers = surveyAnswers;
@@ -80,5 +82,6 @@ public class BusinessContext
         PredictedGenres = predictedGenres;
         PredictedMoviesCount = predictedMoviesCount;
         PredictedMoviesRuntime = predictedMoviesRuntime;
+        PredictedAgesViewership = predictedAgesViewership;
     }
 }

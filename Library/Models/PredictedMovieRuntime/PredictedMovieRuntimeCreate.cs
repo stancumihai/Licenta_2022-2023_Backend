@@ -4,6 +4,6 @@
     {
         public string UserUid { get; set; }
         public DateTime CreatedAt { get; set; }
-        public string MovieRuntime { get; set; }
+        public float MovieRuntime { get; set; }
     }
 }

@@ -41,6 +41,7 @@ public static class ConfigureDAL
         services.AddScoped<IPredictedGenres, PredictedGenres>();
         services.AddScoped<IPredictedMoviesCount, PredictedMoviesCount>();
         services.AddScoped<IPredictedMoviesRuntime, PredictedMoviesRuntime>();
+        services.AddScoped<IPredictedAgesViewership, PredictedAgesViewership>();
         return services;
     }
 }

@@ -3,20 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Services.Controllers
 {
-    public class PredictedMovieRuntimeController : ApiControllerBase
+    public class PredictedMoviesRuntimeController : ApiControllerBase
     {
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PredictedMovieRuntimeRead>))]
         public IActionResult GetAll()
         {
             return Ok(BusinessContext.PredictedMoviesRuntime!.GetAll());
-        }
-
-        [HttpGet("{year}/{month}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PredictedMovieRuntimeRead>))]
-        public IActionResult GetAllByDate([FromRoute] int year, [FromRoute] int month)
-        {
-            return Ok(BusinessContext.PredictedMoviesRuntime!.GetAllByDate(year, month));
         }
 
         [HttpPost]
@@ -26,6 +19,20 @@ namespace Services.Controllers
         public IActionResult Add([FromBody] PredictedMovieRuntimeCreate predictedMovieRuntime)
         {
             return Ok(BusinessContext.PredictedMoviesRuntime!.Add(predictedMovieRuntime));
+        }
+
+        [HttpGet("eachMonth/{userUid}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Library.Models._UI.MachineLearning.PredictedMovieRuntime>))]
+        public IActionResult GetEachMonthByUser([FromRoute] string userUid)
+        {
+            return Ok(BusinessContext.PredictedMoviesRuntime.GetEachMonthByUser(userUid));
+        }
+
+        [HttpGet("eachMonth")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Library.Models._UI.MachineLearning.PredictedMovieRuntime>))]
+        public IActionResult GetEachMonth()
+        {
+            return Ok(BusinessContext.PredictedMoviesRuntime.GetEachMonth());
         }
     }
 }

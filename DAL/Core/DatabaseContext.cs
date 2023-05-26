@@ -31,7 +31,8 @@ namespace DAL.Core
         public DbSet<PredictedGenre> PredictedGenres { get; set; }
         public DbSet<PredictedMovieCount> PredictedMoviesCount { get; set; }
         public DbSet<PredictedMovieRuntime> PredictedMoviesRuntime { get; set; }
-       
+        public DbSet<PredictedAgeViewership> PredictedAgeViewerships { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder dbContext)
            => dbContext.UseSqlServer(ConnectionString);
 

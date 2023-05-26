@@ -1,4 +1,4 @@
-﻿using Library.Models;
+﻿using Library.Models._UI;
 using Library.Models.Movie;
 using Library.Models.SeenMovie;
 using Microsoft.AspNetCore.Authorization;
@@ -97,6 +97,15 @@ namespace Services.Controllers
             return BusinessContext.SeenMovies.GetMonthlySeenMovies();
         }
 
+        [HttpGet("monthlyMovies/{startYear}/{endYear}/{startMonth}/{endMonth}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MonthlyAppUsageModel>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public List<MonthlyAppUsageModel> GetMonthlySeenMoviesRange([FromRoute] int startYear, [FromRoute] int endYear, [FromRoute] int startMonth, [FromRoute] int endMonth)
+        {
+            //return BusinessContext.SeenMovies.GetMonthlySeenMoviesRange(start, end);
+            return BusinessContext.SeenMovies.GetMonthlySeenMoviesRange(startYear, endYear, startMonth, endMonth);
+        }
+
         [HttpGet("topSeenGenres")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDictionary<string, int>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -106,12 +115,12 @@ namespace Services.Controllers
             return BusinessContext.SeenMovies.GetTopSeenGenres();
         }
 
-        [HttpGet("topAgeViewership")]
+        [HttpGet("ageViewership/{year}/{month}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDictionary<string, int>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public  List<AgeViewershipModel> GetTopViewershipByAge()
+        public List<AgeViewershipModel> GetAgeViewershipByMonth([FromRoute] int year, [FromRoute] int month)
         {
-            return BusinessContext.SeenMovies.GetTopViewershipByAge();
+            return BusinessContext.SeenMovies.GetAgeViewershipByMonth(year, month);
         }
     }
 }

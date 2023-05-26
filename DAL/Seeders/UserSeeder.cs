@@ -27,6 +27,26 @@ namespace DAL.Seeders
                                     "matthewMccormick" };
 
 
+
+        public async Task SeedAdditionalData(int year, int month)
+        {
+            List<ApplicationUser> applicationUsers = _context.Users.ToList();
+            foreach (ApplicationUser user in applicationUsers)
+            {
+                IList<string> roles = await _userManager.GetRolesAsync(user);
+                if (roles.FirstOrDefault(r => r == "Administrator") != null)
+                {
+                    return;
+                }
+                DateTime dateTime = new(year, month, 1);
+                CreateUserSeenMovies(user.Id, dateTime);
+                CreateMovieSubscriptions(user.Id, dateTime);
+                CreateLikedMovies(user.Id, dateTime);
+                CreateUserMovieSearches(user.Id, dateTime);
+            }
+
+        }
+
         public async Task SeedUsers()
         {
             foreach (string userName in userNames)
@@ -159,7 +179,7 @@ namespace DAL.Seeders
             _context.UserMovieRatings.Add(userMovieRating);
         }
 
-        private void CreateUserSeenMovies(string userId)
+        private void CreateUserSeenMovies(string userId, DateTime dateTime = default)
         {
             int count = 0;
             List<Movie> movies = _context.Movies.ToList();
@@ -169,11 +189,17 @@ namespace DAL.Seeders
                 Random random = new();
                 int movieIndex = random.Next(movies.Count);
                 DateTime createdAt = DateTime.Now;
-                int module = (count - 1) % 5;
-                if (module == 0)
+                if (dateTime != default)
                 {
-                    int addedMonths = count / 5;
-                    createdAt = createdAt.AddMonths(addedMonths);
+                    createdAt = dateTime;
+                }
+                else
+                {
+                    if ((count - 1) % 5 == 0)
+                    {
+                        int addedMonths = count / 5;
+                        createdAt = createdAt.AddMonths(addedMonths);
+                    }
                 }
                 SeenMovie seenMovie = new()
                 {
@@ -188,7 +214,7 @@ namespace DAL.Seeders
             }
         }
 
-        private void CreateMovieSubscriptions(string userId)
+        private void CreateMovieSubscriptions(string userId, DateTime dateTime = default)
         {
             int count = 0;
             List<Movie> movies = _context.Movies.ToList();
@@ -198,22 +224,30 @@ namespace DAL.Seeders
                 Random random = new();
                 int movieIndex = random.Next(movies.Count);
                 DateTime createdAt = DateTime.Now;
-                if ((count - 1) % 3 == 0)
+                if (dateTime != default)
                 {
-                    createdAt = createdAt.AddMonths(count / 3);
+                    createdAt = dateTime;
+                }
+                else
+                {
+                    if ((count - 1) % 3 == 0)
+                    {
+                        createdAt = createdAt.AddMonths(count / 3);
+                    }
                 }
                 MovieSubscription movieSubscription = new()
                 {
                     MovieSubscriptionGUID = new Guid(),
                     MovieGUID = movies[movieIndex].MovieGUID,
-                    UserGUID = userId
+                    UserGUID = userId,
+                    CreatedAt = createdAt
                 };
                 _context.MovieSubscriptions.Add(movieSubscription);
                 _context.SaveChanges();
             }
         }
 
-        private void CreateLikedMovies(string userId)
+        private void CreateLikedMovies(string userId, DateTime dateTime = default)
         {
             int count = 0;
             List<Movie> movies = _context.Movies.ToList();
@@ -223,11 +257,17 @@ namespace DAL.Seeders
                 Random random = new();
                 int movieIndex = random.Next(movies.Count);
                 DateTime createdAt = DateTime.Now;
-                int module = (count - 1) % 5;
-                if (module == 0)
+                if (dateTime != default)
                 {
-                    int addedMonths = count / 5;
-                    createdAt = createdAt.AddMonths(addedMonths);
+                    createdAt = dateTime;
+                }
+                else
+                {
+                    if ((count - 1) % 5 == 0)
+                    {
+                        int addedMonths = count / 5;
+                        createdAt = createdAt.AddMonths(addedMonths);
+                    }
                 }
                 LikedMovie likedMovie = new()
                 {
@@ -241,7 +281,7 @@ namespace DAL.Seeders
             }
         }
 
-        private void CreateUserMovieSearches(string userId)
+        private void CreateUserMovieSearches(string userId, DateTime dateTime = default)
         {
             int count = 0;
             List<Movie> movies = _context.Movies.ToList();
@@ -250,12 +290,18 @@ namespace DAL.Seeders
                 count++;
                 Random random = new();
                 int movieIndex = random.Next(movies.Count);
-                DateTime createdAt = new();
-                int module = (count - 1) % 5;
-                if (module == 0)
+                DateTime createdAt = DateTime.Now;
+                if (dateTime != default)
                 {
-                    int addedMonths = count / 5;
-                    createdAt = createdAt.AddMonths(addedMonths);
+                    createdAt = dateTime;
+                }
+                else
+                {
+                    if ((count - 1) % 5 == 0)
+                    {
+                        int addedMonths = count / 5;
+                        createdAt = createdAt.AddMonths(addedMonths);
+                    }
                 }
                 UserMovieSearch userMovieSearch = new()
                 {

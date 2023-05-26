@@ -7,13 +7,13 @@ namespace BLL.Implementation.Mechanisms
         public static readonly string INTERPRETER_PATH = "D:\\Munca\\Licenta\\machineLearning\\newvenv\\Scripts\\python.exe";
         public static readonly string BASE_SCRIPT_PATH = "D:\\Munca\\Licenta\\machineLearning\\";
 
-        public static string GetPredictedData(string dataType, string fileExtension, string algorithmName)
+        public static List<string> GetPredictedData(string dataType, string fileExtension)
         {
             string scriptPath = BASE_SCRIPT_PATH + dataType + "\\" + fileExtension + ".py";
             var processStartInfo = new ProcessStartInfo
             {
                 FileName = INTERPRETER_PATH,
-                Arguments = $"\"{scriptPath}\" \"{algorithmName}\"",
+                Arguments = $"\"{scriptPath}\"",
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
@@ -23,15 +23,18 @@ namespace BLL.Implementation.Mechanisms
             process.StartInfo = processStartInfo;
             process.Start();
             process.WaitForExit();
-            string output = process.StandardOutput.ReadToEnd();
+            List<string> lines = new();
+            while (!process.StandardOutput.EndOfStream)
+            {
+                lines.Add(process.StandardOutput.ReadLine());
+            }
             string errorOutput = process.StandardError.ReadToEnd();
-            int exitCode = process.ExitCode;
-            return output;
+            return lines;
         }
 
         public static void TrainToPredictModel(string dataType, string fileExtension, string algorithmName)
         {
-            string scriptPath = BASE_SCRIPT_PATH + dataType;
+            string scriptPath = BASE_SCRIPT_PATH + dataType + "\\" + fileExtension + ".py";
             var processStartInfo = new ProcessStartInfo
             {
                 FileName = INTERPRETER_PATH,

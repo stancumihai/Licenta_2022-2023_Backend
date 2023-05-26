@@ -6,6 +6,5 @@ namespace DAL.Interfaces.MachineLearning
     {
         PredictedMovieCount Add(PredictedMovieCount predictedMovieCount);
         List<PredictedMovieCount> GetAll();
-        List<PredictedMovieCount> GetAllByDate(int year, int month);
     }
 }

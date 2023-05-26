@@ -1,4 +1,4 @@
-﻿using Library.Models;
+﻿using Library.Models._UI;
 using Library.Models.Movie;
 using Library.Models.SeenMovie;
 
@@ -16,6 +16,9 @@ namespace BLL.Interfaces
         List<MonthlyAppUsageModel> GetMonthlySeenMovies();
         List<TopGenreModel> GetTopSeenGenres();
         List<MovieRead> GetAllByUser(string userGUID);
-        List<AgeViewershipModel> GetTopViewershipByAge();
+        List<AgeViewershipModel> GetAgeViewershipByMonth(int year, int month);
+        //List<MonthlyAppUsageModel> GetMonthlySeenMoviesRange(DateTime start, DateTime end);
+        List<MonthlyAppUsageModel> GetMonthlySeenMoviesRange(int startYear, int endYear, int startMonth, int endMonth);
+
     }
 }

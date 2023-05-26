@@ -48,7 +48,7 @@ namespace BLL.Implementation
                 };
                 predictedGenres.Add(predictedGenre);
             }
-            ICSVWriterService cSVWriterService = new CSVWriterService("genres.csv");
+            ICSVHandlerService cSVWriterService = new CSVHandlerServiceService("Files\\Training\\genres.csv");
             cSVWriterService.WriteCSV(predictedGenres);
         }
 
@@ -72,14 +72,13 @@ namespace BLL.Implementation
                 };
                 predictingMovieCounts.Add(predictingMovieCount);
             }
-            ICSVWriterService cSVWriterService = new CSVWriterService("movieCount.csv");
+            ICSVHandlerService cSVWriterService = new CSVHandlerServiceService("Files\\Training\\movieCount.csv");
             cSVWriterService.WriteCSV(predictingMovieCounts);
         }
 
         public void GenerateTrainingPredictedMovieRuntime()
         {
             List<ApplicationUser> users = _dalContext.Users.GetAll();
-            List<Movie> movies = _dalContext.Movies.GetAll();
             Random random = new();
             List<PredictedMovieRuntime> predictingMovieRuntimes = new();
             for (int i = 0; i < MAX_TRAINING_RECORDS; i++)
@@ -87,8 +86,8 @@ namespace BLL.Implementation
                 PredictedMovieRuntime predictingMovieRuntime = new()
                 {
                     UserId = users[random.Next(users.Count)].Id,
-                    AverageRuntime = movies[random.Next(movies.Count)].Runtime,
-                    MyAverageRuntime = movies[random.Next(movies.Count)].Runtime,
+                    AverageRuntime = random.Next(1000),
+                    MyAverageRuntime = random.Next(1000),
                     AverageMovieClicks = random.Next(100),
                     MyMovieClicks = random.Next(100),
                     AverageWatchLaterMoviesRuntime = random.Next(1000),
@@ -97,8 +96,28 @@ namespace BLL.Implementation
                 };
                 predictingMovieRuntimes.Add(predictingMovieRuntime);
             }
-            ICSVWriterService cSVWriterService = new CSVWriterService("movieRuntimes.csv");
+            ICSVHandlerService cSVWriterService = new CSVHandlerServiceService("Files\\Training\\movieRuntime.csv");
             cSVWriterService.WriteCSV(predictingMovieRuntimes);
+        }
+        public void GenerateTrainingPredictedAgesViewership()
+        {
+            Random random = new();
+            List<PredictedAgeViewership> predictedAgeViewerships = new();
+            for (int i = 0; i < MAX_TRAINING_RECORDS; i++)
+            {
+                int seenMoviesByAgeCount = random.Next(200, 500);
+                PredictedAgeViewership predictedAgeViewership = new()
+                {
+                    Age = random.Next(15, 60),
+                    WatchLaterMoviesByAge = seenMoviesByAgeCount - 100,
+                    SeenMoviesByAge = seenMoviesByAgeCount,
+                    ClicksByAge = random.Next(seenMoviesByAgeCount, seenMoviesByAgeCount + 200),
+                    FuturePredictedMoviesCount = random.Next(250, 550),
+                };
+                predictedAgeViewerships.Add(predictedAgeViewership);
+            }
+            ICSVHandlerService cSVWriterService = new CSVHandlerServiceService("Files\\Training\\ageViewership.csv");
+            cSVWriterService.WriteCSV(predictedAgeViewerships);
         }
     }
 }

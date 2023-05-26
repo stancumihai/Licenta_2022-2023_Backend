@@ -1,6 +1,6 @@
 ﻿using Library.Models.SeenMovie;
 
-namespace Library.Models
+namespace Library.Models._UI
 {
     public class MonthlyAppUsageModel
     {

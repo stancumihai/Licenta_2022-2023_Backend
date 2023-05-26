@@ -1,11 +1,12 @@
 ﻿using BLL.Converters.PredictedMovieRuntime;
 using BLL.Converters.User;
 using BLL.Core;
+using BLL.Implementation.Mechanisms;
+using BLL.Implementation.Mechanisms.Interfaces;
 using BLL.Interfaces.MachineLearning;
 using DAL.Interfaces;
 using DAL.Models;
 using DAL.Models.MachineLearning;
-using Library.Enums;
 using Library.Models.PredictedMovieRuntime;
 using Library.Models.Users;
 using Microsoft.AspNetCore.Identity;
@@ -104,36 +105,28 @@ namespace BLL.Implementation.MachineLearning
             return (float)movieCount / usersWithSeenMovies;
         }
 
-        public async Task<List<Library.MachineLearningModels.PredictedMovieRuntime>> GetLastMonthData()
+        private async Task<List<Library.MachineLearningModels.PredictedMovieRuntime>> GetDataByMonth(int year, int month)
         {
-            int currentMonth = DateTime.Now.Month;
-            int currentYear = DateTime.Now.Year;
-            //currentMonth--;
-            //if (currentMonth == 0)
-            //{
-            //    currentYear--;
-            //    currentMonth = 12;
-            //}
             List<UserRead> users = _dalContext.Users.GetAll()
                 .Select(u => UserReadConverter.ToBLLModel(u))
                 .ToList();
             List<SeenMovie> seenMovies = _dalContext.SeenMovies.GetAll()
-                .Where(s => s.CreatedAt.Year == currentYear && s.CreatedAt.Month == currentMonth)
+                .Where(s => s.CreatedAt.Year == year && s.CreatedAt.Month == month)
                 .ToList();
             List<MovieSubscription> movieSubscriptions = _dalContext.MovieSubscriptions
                 .GetAll()
-                .Where(s => s.CreatedAt.Year == currentYear &&
-                            s.CreatedAt.Month == currentMonth)
+                .Where(s => s.CreatedAt.Year == year &&
+                            s.CreatedAt.Month == month)
                 .ToList();
             List<LikedMovie> likedMovies = _dalContext.LikedMovies.GetAll()
-              .Where(s => s.CreatedAt.Year == currentYear &&
-                          s.CreatedAt.Month == currentMonth)
+              .Where(s => s.CreatedAt.Year == year &&
+                          s.CreatedAt.Month == month)
               .ToList();
             float averageMovieRuntime = GetAverageMovieRuntime(users, seenMovies);
             int lastMonthClicksCount = _dalContext.UserMovieSearches
                 .GetAll()
-                .Where(u => u.CreatedAt.Year == currentYear &&
-                            u.CreatedAt.Month == currentMonth)
+                .Where(u => u.CreatedAt.Year == year &&
+                            u.CreatedAt.Month == month)
                 .ToList().Count;
             List<UserMovieSearch> userMovieSearches = _dalContext.UserMovieSearches.GetAll();
             List<Library.MachineLearningModels.PredictedMovieRuntime> predictedMoviesRuntime = new();
@@ -163,6 +156,98 @@ namespace BLL.Implementation.MachineLearning
                 predictedMoviesRuntime.Add(predictedMovieRuntime);
             }
             return predictedMoviesRuntime;
+        }
+
+        public List<Library.Models._UI.MachineLearning.PredictedMovieRuntime> GetEachMonthByUser(string userUid)
+        {
+            List<PredictedMovieRuntime> predictingMovieRuntimes = _dalContext.PredictedMoviesRuntime.GetAll()
+                                       .Where(u => u.UserGUID == userUid)
+                                       .ToList();
+            List<Library.Models._UI.MachineLearning.PredictedMovieRuntime> predictingMovieRuntimeMLModels = new();
+            foreach (PredictedMovieRuntime predictingMovieRuntime in predictingMovieRuntimes)
+            {
+                int year = predictingMovieRuntime.CreatedAt.Year;
+                int month = predictingMovieRuntime.CreatedAt.Month;
+
+                if (predictingMovieRuntimeMLModels.Any(p => p.Year == year && p.Month == month))
+                {
+                    continue;
+                }
+                Library.Models._UI.MachineLearning.PredictedMovieRuntime predictingMovieRuntimeMLModel = new()
+                {
+                    Year = year,
+                    Month = month,
+                    Runtime = predictingMovieRuntime.MovieRuntime
+                };
+                predictingMovieRuntimeMLModels.Add(predictingMovieRuntimeMLModel);
+            }
+            return predictingMovieRuntimeMLModels;
+        }
+
+
+        public async Task ProcessPredictedMovieRuntimeJobAction(int year, int month)
+        {
+            List<AlgorithmChange> algorithmChanges = _dalContext.AlgorithmChanges.GetAll();
+            string currentAlgorithmName = algorithmChanges[^1].AlgorithmName;
+            List<Library.MachineLearningModels.PredictedMovieRuntime> predictedMoviesRuntime = await GetDataByMonth(year, month);
+            ICSVHandlerService csvHandler = new CSVHandlerServiceService("Files\\Predicting\\test_movies_runtimes_predicted.csv");
+            csvHandler.WriteCSV(predictedMoviesRuntime);
+            List<string> predictedData = ScriptEngine.GetPredictedData("movieRuntime", "predict");
+            csvHandler.RemoveLastColumn();
+            csvHandler.UpdateCsvFile(predictedData, "FuturePredictedMovieRuntime");
+            List<List<string>> predictedMoviesRuntimeCSV = csvHandler.ReadCsvFile();
+            predictedMoviesRuntimeCSV = predictedMoviesRuntimeCSV.Skip(1).ToList();
+            List<string> userUids = predictedMoviesRuntimeCSV.Select(s => s[0]).ToList();
+            for (int i = 0; i < userUids.Count; i++)
+            {
+                string userUid = userUids[i];
+                float predictedMovieRuntime = float.Parse(predictedData[i]);
+                PredictedMovieRuntime predictedMovieRuntimeModel = new()
+                {
+                    PredictedMovieRuntimeGUID = Guid.NewGuid(),
+                    CreatedAt = new DateTime(year, month, 1),
+                    UserGUID = userUid,
+                    MovieRuntime = predictedMovieRuntime
+                };
+                _dalContext.PredictedMoviesRuntime.Add(predictedMovieRuntimeModel);
+            }
+            csvHandler.AppendRowsToCsv("movieRuntime.csv", predictedMoviesRuntimeCSV);
+            ScriptEngine.TrainToPredictModel("movieRuntime", "training", currentAlgorithmName);
+        }
+
+        public List<Library.Models._UI.MachineLearning.PredictedMovieRuntime> GetEachMonth()
+        {
+            List<PredictedMovieRuntime> predictingMoviesRuntime = _dalContext.PredictedMoviesRuntime.GetAll().ToList();
+            List<Library.Models._UI.MachineLearning.PredictedMovieRuntime> predictingMoviesRuntimeMLModels = new();
+            IDictionary<Tuple<int, int>, List<float>> dictionary = new Dictionary<Tuple<int, int>, List<float>>();
+            foreach (PredictedMovieRuntime predictingMovieRuntime in predictingMoviesRuntime)
+            {
+                if (predictingMovieRuntime.MovieRuntime == 0)
+                {
+                    continue;
+                }
+                int year = predictingMovieRuntime.CreatedAt.Year;
+                int month = predictingMovieRuntime.CreatedAt.Month;
+                Tuple<int, int> dateTuple = Tuple.Create(year, month);
+                if (dictionary.ContainsKey(dateTuple))
+                {
+                    dictionary[dateTuple].Add(predictingMovieRuntime.MovieRuntime);
+                    continue;
+                }
+                dictionary.Add(dateTuple, new List<float>() { predictingMovieRuntime.MovieRuntime });
+            }
+            foreach (KeyValuePair<Tuple<int, int>, List<float>> keyValuePair in dictionary)
+            {
+                List<float> movieRuntimes = keyValuePair.Value;
+                float averageMovieRuntime = movieRuntimes.Sum();
+                predictingMoviesRuntimeMLModels.Add(new()
+                {
+                    Year = keyValuePair.Key.Item1,
+                    Month = keyValuePair.Key.Item2,
+                    Runtime = float.Parse(String.Format("{0:0.00}", averageMovieRuntime))
+                });
+            }
+            return predictingMoviesRuntimeMLModels;
         }
     }
 }

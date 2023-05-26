@@ -3,7 +3,7 @@ using BLL.Converters.SeenMovie;
 using BLL.Core;
 using BLL.Interfaces;
 using DAL.Models;
-using Library.Models;
+using Library.Models._UI;
 using Library.Models.Movie;
 using Library.Models.SeenMovie;
 using Microsoft.AspNetCore.Http;
@@ -163,6 +163,35 @@ namespace BLL.Implementation
             return topMovieGenres;
         }
 
+        public List<MonthlyAppUsageModel> GetMonthlySeenMoviesRange(int startYear, int endYear, int startMonth, int endMonth)
+        {
+            DateTime start = new(startYear, startMonth, 1);
+            DateTime end = new(endYear, endMonth, 28);
+            List<SeenMovie> seenMovies = _dalContext.SeenMovies
+                .GetAll()
+                .Where(s => s.CreatedAt >= start && s.CreatedAt <= end)
+                .ToList();
+
+            List<MonthlyAppUsageModel> monthlyAppUsage = new();
+            foreach (SeenMovie seenMovie in seenMovies)
+            {
+                MonthlyAppUsageModel? existingUsage = monthlyAppUsage.FirstOrDefault(m => m.Year == seenMovie.CreatedAt.Year && m.Month == seenMovie.CreatedAt.Month);
+                if (existingUsage == null)
+                {
+                    MonthlyAppUsageModel monthlyAppUsageModel = new()
+                    {
+                        Month = seenMovie.CreatedAt.Month,
+                        Year = seenMovie.CreatedAt.Year,
+                        SeenMovies = new List<SeenMovieRead>() { SeenMovieReadConverter.ToBLLModel(seenMovie) }
+                    };
+                    monthlyAppUsage.Add(monthlyAppUsageModel);
+                    continue;
+                }
+                existingUsage.SeenMovies!.Add(SeenMovieReadConverter.ToBLLModel(seenMovie));
+            }
+            return monthlyAppUsage;
+        }
+
         public List<MonthlyAppUsageModel> GetMonthlySeenMovies()
         {
             List<SeenMovie> seenMovies = _dalContext.SeenMovies
@@ -238,7 +267,7 @@ namespace BLL.Implementation
             return age;
         }
 
-        public List<AgeViewershipModel> GetTopViewershipByAge()
+        public List<AgeViewershipModel> GetAgeViewershipByMonth(int year, int month)
         {
             List<UserProfile> userProfiles = _dalContext.UserProfiles
                .GetAll()
@@ -246,7 +275,12 @@ namespace BLL.Implementation
             List<AgeViewershipModel> ageViewerships = new();
             foreach (UserProfile userProfile in userProfiles)
             {
-                int seenMoviesCount = _dalContext.SeenMovies.GetAllByUser(userProfile.UserGUID).Count;
+                int seenMoviesCount = _dalContext
+                        .SeenMovies
+                        .GetAllByUser(userProfile.UserGUID)
+                        .Where(s => s.CreatedAt.Year == year && s.CreatedAt.Month == month)
+                        .ToList()
+                        .Count;
                 int age = CalculateAge(userProfile.DateOfBirth);
                 AgeViewershipModel? existingAgeViewershipModel = ageViewerships.FirstOrDefault(a => a.Age == age);
                 if (existingAgeViewershipModel == null)

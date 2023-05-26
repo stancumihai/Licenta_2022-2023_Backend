@@ -12,12 +12,6 @@ namespace Services.Controllers
             return Ok(BusinessContext.PredictedGenres!.GetAll());
         }
 
-        [HttpGet("{year}/{month}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PredictedGenreRead>))]
-        public IActionResult GetAllByDate([FromRoute] int year, [FromRoute] int month)
-        {
-            return Ok(BusinessContext.PredictedGenres!.GetAllByDate(year, month));
-        }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PredictedGenreCreate))]
@@ -26,6 +20,20 @@ namespace Services.Controllers
         public IActionResult Add([FromBody] PredictedGenreCreate predictedGenres)
         {
             return Ok(BusinessContext.PredictedGenres!.Add(predictedGenres));
+        }
+
+        [HttpGet("eachMonth/{userUid}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Library.Models._UI.MachineLearning.PredictedGenre>))]
+        public IActionResult GetEachMonthByUser([FromRoute] string userUid)
+        {
+            return Ok(BusinessContext.PredictedGenres!.GetEachMonthByUser(userUid));
+        }
+
+        [HttpGet("eachMonth")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Library.Models._UI.MachineLearning.PredictedGenre>))]
+        public IActionResult GetEachMonth()
+        {
+            return Ok(BusinessContext.PredictedGenres!.GetEachMonth());
         }
     }
 }

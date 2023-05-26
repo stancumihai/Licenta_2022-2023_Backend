@@ -4,7 +4,7 @@ using BLL.Interfaces;
 using DAL.Interfaces;
 using DAL.Models;
 using Library.Enums;
-using Library.Models;
+using Library.Models._UI;
 using Library.Models.Movie;
 using Library.Models.SurveyUserAnswer;
 

@@ -1,11 +1,12 @@
 ﻿using BLL.Converters.PredictedGenre;
 using BLL.Converters.User;
 using BLL.Core;
+using BLL.Implementation.Mechanisms;
+using BLL.Implementation.Mechanisms.Interfaces;
 using BLL.Interfaces.MachineLearning;
 using DAL.Interfaces;
 using DAL.Models;
 using DAL.Models.MachineLearning;
-using Library.Enums;
 using Library.Models.PredictedGenre;
 using Library.Models.Users;
 using Microsoft.AspNetCore.Identity;
@@ -41,14 +42,6 @@ namespace BLL.Implementation.MachineLearning
 
         }
 
-        public List<PredictedGenreRead> GetAllByDate(int year, int month)
-        {
-            return _dalContext.PredictedGenres
-                    .GetAllByDate(year, month)
-                    .Select(p => PredictedGenreReadConverter.ToBLLModel(p))
-                    .ToList();
-        }
-
         private Tuple<string, string> GetAverageGenres(List<Movie> movies)
         {
             IDictionary<string, int> genresDictionary = new Dictionary<string, int>();
@@ -74,6 +67,12 @@ namespace BLL.Implementation.MachineLearning
                         genresDictionary[filNoirGenre]++;
                         continue;
                     }
+                    if (genre == "Reality-TV")
+                    {
+                        string realityTvGenre = "RealityTv";
+                        genresDictionary[realityTvGenre]++;
+                        continue;
+                    }
                     genresDictionary[genre]++;
                 }
             }
@@ -92,12 +91,6 @@ namespace BLL.Implementation.MachineLearning
         {
             int currentMonth = DateTime.Now.Month;
             int currentYear = DateTime.Now.Year;
-            //currentMonth--;
-            //if (currentMonth == 0)
-            //{
-            //    currentYear--;
-            //    currentMonth = 12;
-            //}
             seenMovies = seenMovies
                .Where(s => s.CreatedAt.Year == currentYear &&
                            s.CreatedAt.Month == currentMonth)
@@ -187,11 +180,8 @@ namespace BLL.Implementation.MachineLearning
                                 mostWatchedirectors.ToList()[1]);
         }
 
-        public async Task<List<Library.MachineLearningModels.PredictedGenre>> GetLastMonthData()
+        private async Task<List<Library.MachineLearningModels.PredictedGenre>> GetDataByMonth(int year, int month)
         {
-            int currentMonth = DateTime.Now.Month;
-            int currentYear = DateTime.Now.Year;
-
             List<SeenMovie> seenMovies = _dalContext.SeenMovies.GetAll();
             List<MovieSubscription> movieSubscriptions = _dalContext.MovieSubscriptions.GetAll();
             List<LikedMovie> likedMovies = _dalContext.LikedMovies.GetAll();
@@ -203,7 +193,7 @@ namespace BLL.Implementation.MachineLearning
                 .ToList();
             int lastMonthClicksCount = _dalContext.UserMovieSearches
                 .GetAll()
-                .Where(u => u.CreatedAt.Year == currentYear && u.CreatedAt.Month == currentMonth)
+                .Where(u => u.CreatedAt.Year == year && u.CreatedAt.Month == month)
                 .ToList().Count;
             List<Library.MachineLearningModels.PredictedGenre> predictedGenres = new();
 
@@ -241,6 +231,108 @@ namespace BLL.Implementation.MachineLearning
                 predictedGenres.Add(predictedGenre);
             }
             return predictedGenres;
+        }
+
+        private List<Library.Models._UI.MachineLearning.PredictedGenre> GetPredictedGenresUIData(List<PredictedGenre> predictingGenres)
+        {
+            List<Library.Models._UI.MachineLearning.PredictedGenre> predictingGenresMLModels = new();
+            IDictionary<Tuple<int, int>, List<string>> dictionary = new Dictionary<Tuple<int, int>, List<string>>();
+            foreach (PredictedGenre predictedGenre in predictingGenres)
+            {
+                int year = predictedGenre.CreatedAt.Year;
+                int month = predictedGenre.CreatedAt.Month;
+                Tuple<int, int> dateTuple = Tuple.Create(year, month);
+                if (dictionary.ContainsKey(dateTuple))
+                {
+                    dictionary[dateTuple].Add(predictedGenre.Genre);
+                    continue;
+                }
+                dictionary.Add(dateTuple, new List<string>() { predictedGenre.Genre });
+            }
+            foreach (KeyValuePair<Tuple<int, int>, List<string>> keyValuePair in dictionary)
+            {
+                List<string> genres = keyValuePair.Value;
+                genres.Sort();
+                IDictionary<string, int> genresSortedDictionary = new Dictionary<string, int>();
+                foreach (string genre in genres)
+                {
+                    if (genresSortedDictionary.ContainsKey(genre))
+                    {
+                        genresSortedDictionary[genre]++;
+                        continue;
+                    }
+                    genresSortedDictionary.Add(genre, 1);
+                }
+                List<Library.Models._UI.MachineLearning.GenreMonthlyCount> genreMonthlyCounts = new();
+                foreach (KeyValuePair<string, int> genresSortedDictionaryKeyValuePair in genresSortedDictionary)
+                {
+                    genreMonthlyCounts.Add(new()
+                    {
+                        Genre = genresSortedDictionaryKeyValuePair.Key,
+                        Count = genresSortedDictionaryKeyValuePair.Value
+                    });
+                }
+                genreMonthlyCounts = (from genreMonthlyCount in genreMonthlyCounts orderby genreMonthlyCount.Count descending select genreMonthlyCount).ToList();
+                var mostPredictedGenresCurrentMonth = from genresDicEntry in genresSortedDictionary
+                                                      orderby genresDicEntry.Value
+                                                      descending
+                                                      select genresDicEntry.Key;
+                predictingGenresMLModels.Add(new()
+                {
+                    Year = keyValuePair.Key.Item1,
+                    Month = keyValuePair.Key.Item2,
+                    GenreMonthlyCounts = genreMonthlyCounts
+                });
+            }
+            return predictingGenresMLModels;
+        }
+
+        public List<Library.Models._UI.MachineLearning.PredictedGenre> GetEachMonthByUser(string userUid)
+        {
+            List<PredictedGenre> predictingGenres = _dalContext.PredictedGenres.GetAll()
+                                        .Where(u => u.UserGUID == userUid)
+                                        .ToList();
+            List<Library.Models._UI.MachineLearning.PredictedGenre> predictingGenresMLModels = GetPredictedGenresUIData(predictingGenres);
+            return predictingGenresMLModels;
+        }
+
+        public List<Library.Models._UI.MachineLearning.PredictedGenre> GetEachMonth()
+        {
+            List<PredictedGenre> predictingGenres = _dalContext.PredictedGenres
+                .GetAll()
+                .ToList();
+            List<Library.Models._UI.MachineLearning.PredictedGenre> predictingGenresMLModels = GetPredictedGenresUIData(predictingGenres);
+            return predictingGenresMLModels;
+        }
+
+        public async Task ProcessPredictedGenreJobAction(int year, int month)
+        {
+            List<AlgorithmChange> algorithmChanges = _dalContext.AlgorithmChanges.GetAll();
+            string currentAlgorithmName = algorithmChanges[^1].AlgorithmName;
+            List<Library.MachineLearningModels.PredictedGenre> predictedGenres = await GetDataByMonth(year, month);
+            ICSVHandlerService csvHandler = new CSVHandlerServiceService("Files\\Predicting\\test_genres_predicted.csv");
+            csvHandler.WriteCSV(predictedGenres);
+            List<string> predictedData = ScriptEngine.GetPredictedData("genres", "predict");
+            csvHandler.RemoveLastColumn();
+            csvHandler.UpdateCsvFile(predictedData, "FuturePredictedGenre");
+            List<List<string>> predictedGenreData = csvHandler.ReadCsvFile();
+            predictedGenreData = predictedGenreData.Skip(1).ToList();
+            csvHandler.AppendRowsToCsv("genres.csv", predictedGenreData);
+            List<string> userUids = predictedGenreData.Select(s => s[0]).ToList();
+            for (int i = 0; i < userUids.Count; i++)
+            {
+                string userUid = userUids[i];
+                string predictedGenre = predictedData[i];
+                PredictedGenre predictedGenreModel = new()
+                {
+                    PredictedGenreGUID = Guid.NewGuid(),
+                    CreatedAt = new DateTime(year, month, 1),
+                    UserGUID = userUid,
+                    Genre = predictedGenre
+                };
+                _dalContext.PredictedGenres.Add(predictedGenreModel);
+            }
+            ScriptEngine.TrainToPredictModel("genres", "training", currentAlgorithmName);
         }
     }
 }
