@@ -216,7 +216,7 @@ namespace BLL.Implementation.MachineLearning
             csvHandler.UpdateCsvFile(predictedData, "FuturePredictedMovieCount");
             List<List<string>> predictedMoviesCountCsv = csvHandler.ReadCsvFile();
             predictedMoviesCountCsv = predictedMoviesCountCsv.Skip(1).ToList();
-            csvHandler.AppendRowsToCsv("movieCount.csv", predictedMoviesCountCsv);
+            csvHandler.AppendRowsToCsv("Files\\Training\\movieCount.csv", predictedMoviesCountCsv);
             List<string> userUids = predictedMoviesCountCsv.Select(s => s[0]).ToList();
             for (int i = 0; i < userUids.Count; i++)
             {

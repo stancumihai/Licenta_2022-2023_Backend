@@ -211,7 +211,7 @@ namespace BLL.Implementation.MachineLearning
                 };
                 _dalContext.PredictedMoviesRuntime.Add(predictedMovieRuntimeModel);
             }
-            csvHandler.AppendRowsToCsv("movieRuntime.csv", predictedMoviesRuntimeCSV);
+            csvHandler.AppendRowsToCsv("Files\\Training\\movieRuntime.csv", predictedMoviesRuntimeCSV);
             ScriptEngine.TrainToPredictModel("movieRuntime", "training", currentAlgorithmName);
         }
 

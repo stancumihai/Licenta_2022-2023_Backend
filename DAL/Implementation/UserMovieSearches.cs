@@ -1,6 +1,7 @@
 ﻿using DAL.Core;
 using DAL.Interfaces;
 using DAL.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Implementation
 {
@@ -29,7 +30,10 @@ namespace DAL.Implementation
 
         public List<UserMovieSearch> GetAll()
         {
-            return _context.UserMovieSearches.ToList();
+            return _context.UserMovieSearches
+                .Include(u => u.User)
+                .Include(u => u.Movie)
+                .ToList();
         }
     }
 }

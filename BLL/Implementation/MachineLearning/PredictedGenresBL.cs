@@ -318,7 +318,7 @@ namespace BLL.Implementation.MachineLearning
             csvHandler.UpdateCsvFile(predictedData, "FuturePredictedGenre");
             List<List<string>> predictedGenreData = csvHandler.ReadCsvFile();
             predictedGenreData = predictedGenreData.Skip(1).ToList();
-            csvHandler.AppendRowsToCsv("genres.csv", predictedGenreData);
+            csvHandler.AppendRowsToCsv("Files\\Training\\genres.csv", predictedGenreData);
             List<string> userUids = predictedGenreData.Select(s => s[0]).ToList();
             for (int i = 0; i < userUids.Count; i++)
             {

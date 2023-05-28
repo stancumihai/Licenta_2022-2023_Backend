@@ -28,8 +28,8 @@ namespace BLL.Implementation.Mechanisms.Jobs
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Service is starting.");
-            _timer = new Timer(ProcessPredictedMovieRuntimesJob, null, TimeSpan.Zero,
-                TimeSpan.FromSeconds(_jobTimeFrame.Time));
+            //_timer = new Timer(ProcessPredictedMovieRuntimesJob, null, TimeSpan.Zero,
+            //    TimeSpan.FromSeconds(_jobTimeFrame.Time));
             return Task.CompletedTask;
         }
 
