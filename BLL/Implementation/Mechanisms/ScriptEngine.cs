@@ -17,7 +17,6 @@ namespace BLL.Implementation.Mechanisms
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
-                CreateNoWindow = true,
             };
             using var process = new Process();
             process.StartInfo = processStartInfo;

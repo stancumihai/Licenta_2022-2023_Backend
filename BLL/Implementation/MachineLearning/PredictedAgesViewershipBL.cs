@@ -45,7 +45,6 @@ namespace BLL.Implementation.MachineLearning
             return age;
         }
 
-
         public List<Library.MachineLearningModels.PredictedAgeViewership> GetDataByMonth(int year, int month)
         {
 
@@ -98,7 +97,7 @@ namespace BLL.Implementation.MachineLearning
             List<AlgorithmChange> algorithmChanges = _dalContext.AlgorithmChanges.GetAll();
             string currentAlgorithmName = algorithmChanges[^1].AlgorithmName;
             List<Library.MachineLearningModels.PredictedAgeViewership> predictedAgesViewership = GetDataByMonth(year, month);
-            ICSVHandlerService csvHandler = new CSVHandlerServiceService("Files\\Predicting\\test_age_viewership_predicted.csv");
+            ICSVHandlerService csvHandler = new CSVHandlerService("Files\\Predicting\\test_age_viewership_predicted.csv");
             csvHandler.WriteCSV(predictedAgesViewership);
             List<string> predictedData = ScriptEngine.GetPredictedData("ageViewership", "predict");
             csvHandler.RemoveLastColumn();

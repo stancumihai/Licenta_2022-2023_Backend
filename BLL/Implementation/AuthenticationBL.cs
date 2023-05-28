@@ -195,8 +195,11 @@ namespace BLL.Implementation
 
             string? accessToken = tokenModel.AccessToken;
             string? refreshToken = tokenModel.RefreshToken;
-
-            ClaimsPrincipal? principal = GetPrincipalFromExpiredToken(accessToken);
+            ClaimsPrincipal? principal = null;
+            if (accessToken == null)
+            {
+                principal = GetPrincipalFromExpiredToken(accessToken);
+            }
             if (principal == null)
             {
                 return null;

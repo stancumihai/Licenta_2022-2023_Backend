@@ -41,17 +41,33 @@ namespace Services.Controllers
             return Ok(BusinessContext.Recommendations.GetAccuracyPerMonthsByAlgorithm(algorithmName));
         }
 
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<MonthlyRecommendationStatusModel>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MonthlyRecommendationStatusModel>))]
         [HttpGet("accuracy/monthlyStatus/{year}/{month}/{algorithmName}")]
         public IActionResult GetMonthlyRecommendationStatuses([FromRoute] int year, [FromRoute] int month, [FromRoute] string algorithmName)
         {
             return Ok(BusinessContext.Recommendations.GetMonthlyRecommendationStatuses(year, month, algorithmName));
         }
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<MonthlyRecommendationStatusModel>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MonthlyRecommendationStatusModel>))]
         [HttpGet("monthlySummaries")]
         public List<SummaryMonthlyStatistics> GetMonthlySummaries()
         {
             return BusinessContext.Recommendations.GetMonthlySummaries();
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<RecommendationRead>))]
+        [HttpGet("{userUid}/{year}/{month}")]
+        public IActionResult GetAllByUserAndMonth([FromRoute] string userUid, [FromRoute] int year, int month)
+        {
+            return Ok(BusinessContext.Recommendations.GetAllByUserAndMonth(userUid, year, month));
+
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<RecommendationRead>))]
+        [HttpGet("{year}/{month}")]
+        public IActionResult GetAllByMonth([FromRoute] int year, int month)
+        {
+            return Ok(BusinessContext.Recommendations.GetAllByMonth(year, month));
+
         }
     }
 }

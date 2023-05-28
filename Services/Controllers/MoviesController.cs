@@ -11,7 +11,7 @@ namespace Services.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MovieRead>))]
         public async Task<IActionResult> GetAll()
         {
-            //BusinessContext.MachineLearningTraining.GenerateTrainingPredictedAgesViewership();
+            //BusinessContext.MachineLearningTraining.GenerateTrainingPredictedMovies();
             //List<Library.MachineLearningModels.PredictedGenre> predictedGenres = await BusinessContext.PredictedGenres.GetLastMonthData();
             //ICSVWriterService writer = new CSVWriterService("test_genres_predicted.csv");
             //writer.WriteCSV(predictedGenres);
@@ -25,7 +25,7 @@ namespace Services.Controllers
             //List<Library.MachineLearningModels.PredictedMovieRuntime> predictedMovieRuntimes = await BusinessContext.PredictedMoviesRuntime.GetLastMonthData();
             //ICSVWriterService writer = new CSVWriterService("test_movies_runtimes_predicted.csv");
             //writer.WriteCSV(predictedMovieRuntimes);
-            return Ok(BusinessContext.Movies!.GetAll());
+             return Ok(BusinessContext.Movies!.GetAll());
         }
 
         [HttpGet("{pageNumber}/{pageSize}")]

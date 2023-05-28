@@ -190,7 +190,7 @@ namespace BLL.Implementation.MachineLearning
             List<AlgorithmChange> algorithmChanges = _dalContext.AlgorithmChanges.GetAll();
             string currentAlgorithmName = algorithmChanges[^1].AlgorithmName;
             List<Library.MachineLearningModels.PredictedMovieRuntime> predictedMoviesRuntime = await GetDataByMonth(year, month);
-            ICSVHandlerService csvHandler = new CSVHandlerServiceService("Files\\Predicting\\test_movies_runtimes_predicted.csv");
+            ICSVHandlerService csvHandler = new CSVHandlerService("Files\\Predicting\\test_movies_runtimes_predicted.csv");
             csvHandler.WriteCSV(predictedMoviesRuntime);
             List<string> predictedData = ScriptEngine.GetPredictedData("movieRuntime", "predict");
             csvHandler.RemoveLastColumn();

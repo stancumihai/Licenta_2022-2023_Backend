@@ -6,5 +6,6 @@
         void GenerateTrainingPredictedMovieCount();
         void GenerateTrainingPredictedMovieRuntime();
         void GenerateTrainingPredictedAgesViewership();
+        void GenerateTrainingPredictedMovies();
     }
 }

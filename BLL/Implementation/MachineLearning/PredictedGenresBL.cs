@@ -310,7 +310,7 @@ namespace BLL.Implementation.MachineLearning
             List<AlgorithmChange> algorithmChanges = _dalContext.AlgorithmChanges.GetAll();
             string currentAlgorithmName = algorithmChanges[^1].AlgorithmName;
             List<Library.MachineLearningModels.PredictedGenre> predictedGenres = await GetDataByMonth(year, month);
-            ICSVHandlerService csvHandler = new CSVHandlerServiceService("Files\\Predicting\\test_genres_predicted.csv");
+            ICSVHandlerService csvHandler = new CSVHandlerService("Files\\Predicting\\test_genres_predicted.csv");
             csvHandler.WriteCSV(predictedGenres);
             List<string> predictedData = ScriptEngine.GetPredictedData("genres", "predict");
             csvHandler.RemoveLastColumn();

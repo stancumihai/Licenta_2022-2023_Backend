@@ -4,10 +4,10 @@ using System.Globalization;
 
 namespace BLL.Implementation.Mechanisms
 {
-    public class CSVHandlerServiceService : ICSVHandlerService
+    public class CSVHandlerService : ICSVHandlerService
     {
         public string FileName { get; set; }
-        public CSVHandlerServiceService(string fileName)
+        public CSVHandlerService(string fileName)
         {
             FileName = fileName;
         }

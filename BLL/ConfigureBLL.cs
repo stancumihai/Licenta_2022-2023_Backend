@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Services;
 
 namespace BLL;
@@ -50,8 +51,18 @@ public static class ConfigureBLL
         services.AddScoped<IPredictedAgesViewership, PredictedAgesViewershipBL>();
         services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, MyUserClaimsPrincipalFactory>();
         services.AddSingleton<Hub, NotificationHub>();
+       
+        services.AddHostedService<PredictedMoviesCountJob>();
+        services.AddSingleton(p => p.GetServices<IHostedService>().OfType<PredictedMoviesCountJob>().Single());
+
+        services.AddHostedService<PredictedMoviesRuntimeJob>();
+        services.AddSingleton(p => p.GetServices<IHostedService>().OfType<PredictedMoviesRuntimeJob>().Single());
+
+        services.AddHostedService<PredicedAgeViewershipJob>();
+        services.AddSingleton(p => p.GetServices<IHostedService>().OfType<PredicedAgeViewershipJob>().Single());
+
         services.AddHostedService<MovieRecommendationJob>();
-        services.AddHostedService<PredictedData>();
+        services.AddSingleton(p => p.GetServices<IHostedService>().OfType<MovieRecommendationJob>().Single());
         return services;
     }
 }

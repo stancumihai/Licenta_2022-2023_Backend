@@ -39,6 +39,12 @@ namespace DAL.Implementation
                     .FirstOrDefault(movie => movie.MovieGUID == movieUid);
         }
 
+        public Movie? GetByName(string movieName)
+        {
+            return _context.Movies
+                    .FirstOrDefault(movie => movie.Title == movieName);
+        }
+
         public Movie? GetByMovieId(string movieId)
         {
             Movie? movie = _context.Movies

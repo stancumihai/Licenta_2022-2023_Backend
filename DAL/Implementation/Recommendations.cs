@@ -1,4 +1,5 @@
-﻿using DAL.Core;
+﻿using DAL.Comparers;
+using DAL.Core;
 using DAL.Interfaces;
 using DAL.Models;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +29,10 @@ namespace DAL.Implementation
 
         public Recommendation Update(Recommendation newRecommendation)
         {
-            Recommendation? oldRecommendation = _context.Recommendations.FirstOrDefault(r => r.RecommendationGUID == newRecommendation.RecommendationGUID);
+            Recommendation? oldRecommendation = _context.Recommendations
+                .Include(r => r.User)
+                .Include(r => r.Movie)
+                .FirstOrDefault(r => r.RecommendationGUID == newRecommendation.RecommendationGUID);
             if (oldRecommendation == null)
             {
                 return null;
@@ -43,12 +47,17 @@ namespace DAL.Implementation
         {
             oldRecommendation.LikedDecisionDate = newRecommendation.LikedDecisionDate;
             oldRecommendation.IsLiked = newRecommendation.IsLiked;
+            oldRecommendation.MovieGUID = newRecommendation.MovieGUID;
+            oldRecommendation.UserGUID = newRecommendation.UserGUID;
+            oldRecommendation.CreatedAt = newRecommendation.CreatedAt;
         }
 
         public Recommendation? GetByGuid(Guid guid)
         {
             return _context
                 .Recommendations
+                .Include(r => r.User)
+                .Include(r => r.Movie)
                 .FirstOrDefault(r => r.RecommendationGUID == guid);
         }
 
@@ -60,23 +69,39 @@ namespace DAL.Implementation
                .ToList();
         }
 
-        public List<Recommendation> GetAllByUserYearAndMonth(string userUid, DateTime date)
+        public List<Recommendation> GetAllByUserYearAndMonth(string userUid, int year, int month)
         {
-            return _context
-              .Recommendations
-              .Where(r => r.UserGUID == userUid &&
-                          r.CreatedAt.Month == date.Month &&
-                          r.CreatedAt.Year == date.Year)
-              .ToList();
+            List<Recommendation> recommendations = _context.Recommendations
+            .Include(r => r.Movie)
+            .Include(r => r.User)
+            .AsEnumerable()
+            .Distinct(new RecommendationComparer())
+            .ToList();
+
+            recommendations = recommendations
+           .Where(r => r.UserGUID == userUid &&
+                       r.CreatedAt.Month == month &&
+                       r.CreatedAt.Year == year)
+           .ToList();
+
+            return recommendations;
         }
 
         public List<Recommendation> GetAllByYearAndMonth(int year, int month)
         {
-            return _context
-              .Recommendations
-              .Where(r => r.CreatedAt.Month == month &&
-                          r.CreatedAt.Year == year)
-              .ToList();
+            List<Recommendation> recommendations = _context.Recommendations
+             .Include(r => r.Movie)
+             .Include(r => r.User)
+             .AsEnumerable()
+             .Distinct(new RecommendationComparer())
+             .ToList();
+
+            recommendations = recommendations
+             .Where(r => r.CreatedAt.Month == month &&
+                         r.CreatedAt.Year == year)
+             .ToList();
+
+            return recommendations;
         }
     }
 }

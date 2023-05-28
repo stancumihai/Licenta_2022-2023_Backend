@@ -18,5 +18,6 @@ namespace DAL.Interfaces
         List<Movie> GetMoviesHistory(string userUid);
         List<Movie> GetMoviesSubscription(string userUid);
         List<Movie> GetMoviesCollection(string userUid);
+        Movie? GetByName(string movieName);
     }
 }

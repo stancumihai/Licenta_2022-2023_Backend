@@ -1,4 +1,5 @@
-﻿using Library.Models.Recommendation;
+﻿using BLL.Converters.Movie;
+using Library.Models.Recommendation;
 
 namespace BLL.Converters.Recommendation
 {
@@ -9,7 +10,7 @@ namespace BLL.Converters.Recommendation
             RecommendationRead recommendationRead = new()
             {
                 Uid = recommendationDALModel.RecommendationGUID,
-                MovieUid = recommendationDALModel.MovieGUID,
+                Movie = MovieReadConverter.ToBLLModel(recommendationDALModel.Movie),
                 UserUid = recommendationDALModel.UserGUID,
                 CreatedAt = recommendationDALModel.CreatedAt,
                 LikedDecisionDate = recommendationDALModel.LikedDecisionDate,
@@ -24,7 +25,7 @@ namespace BLL.Converters.Recommendation
             DAL.Models.Recommendation recommendationEntity = new()
             {
                 RecommendationGUID = recommendationBLLModel.Uid,
-                MovieGUID = recommendationBLLModel.MovieUid,
+                MovieGUID = recommendationBLLModel.Movie.Uid,
                 UserGUID = recommendationBLLModel.UserUid,
                 CreatedAt = recommendationBLLModel.CreatedAt,
                 LikedDecisionDate = recommendationBLLModel.LikedDecisionDate,
