@@ -507,7 +507,7 @@ namespace BLL.Implementation
                     UserGUID = _dalContext.Users.GetByEmail(userEmails[i])!.Id,
                     CreatedAt = DateTime.Now
                 };
-                _dalContext.Recommendations.Add(recommendation);
+                //_dalContext.Recommendations.Add(recommendation);
             }
             ScriptEngine.TrainToPredictModel("predictedMovies", "training", currentAlgorithmName);
         }

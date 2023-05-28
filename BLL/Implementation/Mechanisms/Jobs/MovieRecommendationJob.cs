@@ -54,7 +54,7 @@ namespace BLL.Implementation.Mechanisms.Jobs
             _logger.LogInformation("service is running.");
             int year = DateTime.Now.Year;
             int month = DateTime.Now.Month;
-            await _predictedGenresService.ProcessPredictedGenreJobAction(year, month);
+            //await _predictedGenresService.ProcessPredictedGenreJobAction(year, month);
             await _recommendationService.ProcessPredictedMoviesJobAction(DateTime.Now.Year, DateTime.Now.Month);
             foreach (UserRead user in _usersService.GetAll())
             {

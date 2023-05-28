@@ -312,6 +312,7 @@ namespace BLL.Implementation.MachineLearning
             List<Library.MachineLearningModels.PredictedGenre> predictedGenres = await GetDataByMonth(year, month);
             ICSVHandlerService csvHandler = new CSVHandlerService("Files\\Predicting\\test_genres_predicted.csv");
             csvHandler.WriteCSV(predictedGenres);
+            List<string> genres = _dalContext.Movies.GetMovieGenres();
             List<string> predictedData = ScriptEngine.GetPredictedData("genres", "predict");
             csvHandler.RemoveLastColumn();
             csvHandler.UpdateCsvFile(predictedData, "FuturePredictedGenre");
@@ -323,6 +324,18 @@ namespace BLL.Implementation.MachineLearning
             {
                 string userUid = userUids[i];
                 string predictedGenre = predictedData[i];
+                if (predictedGenre == "SciFi")
+                {
+                    predictedGenre = "Sci-Fi";
+                }
+                if (predictedGenre == "FilmNoir")
+                {
+                    predictedGenre = "Film-Noir";
+                }
+                if (!genres.Contains(predictedGenre))
+                {
+                    continue;
+                }
                 PredictedGenre predictedGenreModel = new()
                 {
                     PredictedGenreGUID = Guid.NewGuid(),
