@@ -106,20 +106,20 @@ namespace BLL.Implementation
             return startAccuracy / recommendations.Count;
         }
 
-        public static float GetAccuracyStrategy1(List<Recommendation> recommendations)
-        {
-            int startAccuracy = recommendations.Count;
-            foreach (Recommendation recommendation in recommendations)
-            {
-                RecommendationStatus recommendationStatus = GetRecommendationStatus(recommendation);
-                if (recommendationStatus == RecommendationStatus.Liked || recommendationStatus == RecommendationStatus.NotSeen)
-                {
-                    continue;
-                }
-                startAccuracy--;
-            }
-            return (float)startAccuracy / recommendations.Count;
-        }
+        //public static float GetAccuracyStrategy1(List<Recommendation> recommendations)
+        //{
+        //    int startAccuracy = recommendations.Count;
+        //    foreach (Recommendation recommendation in recommendations)
+        //    {
+        //        RecommendationStatus recommendationStatus = GetRecommendationStatus(recommendation);
+        //        if (recommendationStatus == RecommendationStatus.Liked || recommendationStatus == RecommendationStatus.NotSeen)
+        //        {
+        //            continue;
+        //        }
+        //        startAccuracy--;
+        //    }
+        //    return (float)startAccuracy / recommendations.Count;
+        //}
 
         public List<MonthlyRecommendationStatusModel> GetMonthlyRecommendationStatuses(int year, int month, string algorithmName)
         {
@@ -133,7 +133,8 @@ namespace BLL.Implementation
                 if (algorithmChanges.Any(a => a.StartDate.Year >= year && a.EndDate.Year <= year &&
                                               a.StartDate.Month >= month && a.StartDate.Month <= month))
                 {
-                    switch (GetRecommendationStatus(recommendation))
+                    var recommendationStatus = GetRecommendationStatus(recommendation);
+                    switch (recommendationStatus)
                     {
                         case RecommendationStatus.Liked:
                             {
@@ -170,11 +171,11 @@ namespace BLL.Implementation
                 RecommendationOutcome = "NotSeen",
                 Count = notSeenCount
             });
-            monthlyRecommendationStatusModels.Add(new MonthlyRecommendationStatusModel
-            {
-                RecommendationOutcome = "All",
-                Count = recommendations.Count
-            });
+            //monthlyRecommendationStatusModels.Add(new MonthlyRecommendationStatusModel
+            //{
+            //    RecommendationOutcome = "All",
+            //    Count = recommendations.Count
+            //});
             return monthlyRecommendationStatusModels;
         }
 
@@ -242,7 +243,7 @@ namespace BLL.Implementation
                     .Where(r => r.CreatedAt.Year == year && r.CreatedAt.Month == month)
                     .ToList();
 
-                float accuracy = GetAccuracyStrategy1(monthlyRecommendations);
+                float accuracy = GetAccuracyStrategy3(monthlyRecommendations);
                 AlgorithmChange? algorithmChange = algorithmChanges
                     .FirstOrDefault(a => a.StartDate <= recommendation.CreatedAt && a.EndDate >= recommendation.CreatedAt);
                 summaryMonthlyStatistics.Add(new SummaryMonthlyStatistics

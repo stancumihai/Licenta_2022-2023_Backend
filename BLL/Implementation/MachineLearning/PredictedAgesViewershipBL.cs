@@ -133,11 +133,17 @@ namespace BLL.Implementation.MachineLearning
             List<AgeViewershipModel> ageViewershipModels = new();
             foreach (PredictedAgeViewership predictedAgeViewership in predictedAgeViewerships)
             {
-                ageViewershipModels.Add(new AgeViewershipModel
+                AgeViewershipModel? existingAge = ageViewershipModels.FirstOrDefault(a => a.Age == predictedAgeViewership.Age);
+                if (existingAge == null)
                 {
-                    Age = predictedAgeViewership.Age,
-                    Count = predictedAgeViewership.MovieCount
-                });
+                    ageViewershipModels.Add(new AgeViewershipModel
+                    {
+                        Age = predictedAgeViewership.Age,
+                        Count = predictedAgeViewership.MovieCount
+                    });
+                    continue;
+                }
+                existingAge.Count += predictedAgeViewership.MovieCount;
             }
             ageViewershipModels = (from ageViewershipModel in ageViewershipModels
                                    orderby ageViewershipModel.Age
