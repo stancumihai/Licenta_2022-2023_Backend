@@ -1,9 +1,7 @@
 ﻿using Library.Models.Movie;
 using Library.Models.MovieSubscription;
-using Library.Models.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Services.Controllers
 {

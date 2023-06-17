@@ -9,6 +9,8 @@
         public int MyAverageWatchLaterMoviesRuntime { get; set; }
         public float AverageMovieClicks { get; set; }
         public int MyMovieClicks { get; set; }
+        public decimal AverageRating { get; set; }
+        public decimal MyAverageRating { get; set; }
         public decimal FuturePredictedRuntime { get; set; }
     }
 }

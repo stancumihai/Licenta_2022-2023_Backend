@@ -10,6 +10,8 @@
         public string AverageDirector { get; set; }
         public string MyAverageDirector { get; set; }
         public int Clicks { get; set; }
+        public decimal AverageRating { get; set; }
+        public decimal MyAverageRating { get; set; }
         public string FuturePredictedGenre { get; set; }
     }
 }

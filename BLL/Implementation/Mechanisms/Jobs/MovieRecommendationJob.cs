@@ -27,7 +27,7 @@ namespace BLL.Implementation.Mechanisms.Jobs
         public MovieRecommendationJob(ILogger<MovieRecommendationJob> logger,
             IServiceScopeFactory factory,
             IConfiguration configuration,
-           IHubContext<NotificationHub, INotificationHub> notificationHubContext)
+            IHubContext<NotificationHub, INotificationHub> notificationHubContext)
         {
             _logger = logger;
             _emailSender = factory.CreateScope().ServiceProvider.GetRequiredService<IEmailSender>();
@@ -53,9 +53,9 @@ namespace BLL.Implementation.Mechanisms.Jobs
             Console.WriteLine("Predicted Genres and Recommendations job");
             _logger.LogInformation("service is running.");
             int year = DateTime.Now.Year;
-            int month = DateTime.Now.Month;
-            await _predictedGenresService.ProcessPredictedGenreJobAction(year, month);
-            await _recommendationService.ProcessPredictedMoviesJobAction(DateTime.Now.Year, DateTime.Now.Month);
+            int month = 7;
+            //await _predictedGenresService.ProcessPredictedGenreJobAction(year, month);
+            await _recommendationService.ProcessPredictedMoviesJobAction(year, month);
             foreach (UserRead user in _usersService.GetAll())
             {
                 string body = "<p>Here are the this month recommendations:</p>";

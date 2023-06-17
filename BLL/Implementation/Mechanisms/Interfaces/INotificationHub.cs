@@ -1,6 +1,4 @@
-﻿using Library.Models.Socket;
-
-namespace BLL.Implementation.Mechanisms.Interfaces
+﻿namespace BLL.Implementation.Mechanisms.Interfaces
 {
     public interface INotificationHub
     {

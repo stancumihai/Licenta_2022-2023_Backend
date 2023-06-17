@@ -11,7 +11,8 @@ namespace BLL.Converters.UserMovieRating
                 Uid = userMovieRatingDALModel.UserMovieRatingGUID,
                 MovieUid = userMovieRatingDALModel.MovieGUID,
                 UserUid = userMovieRatingDALModel.UserGUID,
-                Rating = userMovieRatingDALModel.Rating
+                Rating = userMovieRatingDALModel.Rating,
+                CreatedAt = userMovieRatingDALModel.CreatedAt
             };
 
             return userMovieRatingRead;
@@ -24,7 +25,8 @@ namespace BLL.Converters.UserMovieRating
                 UserMovieRatingGUID = userMovieRatingBLLModel.Uid,
                 MovieGUID = userMovieRatingBLLModel.MovieUid,
                 UserGUID = userMovieRatingBLLModel.UserUid,
-                Rating = userMovieRatingBLLModel.Rating
+                Rating = userMovieRatingBLLModel.Rating,
+                CreatedAt = userMovieRatingBLLModel.CreatedAt
             };
 
             return userMovieRatingEntity;

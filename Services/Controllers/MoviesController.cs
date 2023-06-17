@@ -11,8 +11,8 @@ namespace Services.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MovieRead>))]
         public async Task<IActionResult> GetAll()
         {
-            //BusinessContext.MachineLearningTraining.GenerateTrainingPredictedAgesViewership();
             //BusinessContext.MachineLearningTraining.GenerateTrainingPredictedMovies();
+            //BusinessContext.MachineLearningTraining.GenerateTrainingPredictedAgesViewership();
             //List<Library.MachineLearningModels.PredictedGenre> predictedGenres = await BusinessContext.PredictedGenres.GetLastMonthData();
             //ICSVWriterService writer = new CSVWriterService("test_genres_predicted.csv");
             //writer.WriteCSV(predictedGenres);

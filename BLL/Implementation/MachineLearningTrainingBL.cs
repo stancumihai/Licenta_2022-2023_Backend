@@ -16,7 +16,7 @@ namespace BLL.Implementation
         {
         }
 
-        private Tuple<string, string> GetAverageGenres(List<Movie> movies, List<string> genres)
+        private static Tuple<string, string> GetAverageGenres(List<Movie> movies, List<string> genres)
         {
             IDictionary<string, int> genresDictionary = new Dictionary<string, int>();
             for (int i = 0; i < genres.Count; i++)
@@ -60,18 +60,19 @@ namespace BLL.Implementation
 
         public void GenerateTrainingPredictedGenre()
         {
-            List<ApplicationUser> users = _dalContext.Users.GetAll();
+            List<ApplicationUser> users = _dalContext.Users.GetAll()!;
             List<Person> directors = _dalContext.Persons.GetAllPersonsByProfession("director");
             List<string> genres = _dalContext.Movies.GetMovieGenres();
             Random random = new();
             List<PredictedGenre> predictedGenres = new();
             List<UserProfile> userProfiles = _dalContext.UserProfiles.GetAll();
-            List<PredictedAgeViewership> predictedAgeViewerships = new();
             List<SeenMovie> seenMovies = _dalContext.SeenMovies.GetAll();
             List<MovieSubscription> watchLaterMovies = _dalContext.MovieSubscriptions.GetAll();
             List<UserMovieSearch> movieSearches = _dalContext.UserMovieSearches.GetAll();
+            decimal averageUsersRating = Math.Round(GetAverageUsersRating(), 2);
             foreach (UserProfile userProfile in userProfiles)
             {
+                decimal averageUserRating = Math.Round(GetAverageUserRating(userProfile.UserGUID), 2);
                 List<SeenMovie> userSeenMovies = seenMovies
                     .Where(w => w.UserGUID == userProfile.UserGUID)
                     .ToList();
@@ -149,11 +150,13 @@ namespace BLL.Implementation
                             AverageDirector = directors[random.Next(directors.Count)].Name,
                             MyAverageDirector = directors[random.Next(directors.Count)].Name,
                             Clicks = userMovieSearches.Count + random.Next(50, 100),
+                            AverageRating = averageUsersRating,
+                            MyAverageRating = averageUserRating,
                             FuturePredictedGenre = genres[(averageGenreIndex + random.Next(genres.Count)) % genres.Count]
                         };
                         predictedGenres.Add(predictedGenre);
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         continue;
                     }
@@ -163,22 +166,37 @@ namespace BLL.Implementation
             cSVWriterService.WriteCSV(predictedGenres);
         }
 
+        public decimal GetAverageUsersRating()
+        {
+            List<UserMovieRating> userMovieRatings = _dalContext.UserMovieRatings.GetAll();
+            decimal summedRating = userMovieRatings.Sum(f => f.Rating);
+            return summedRating / userMovieRatings.Count;
+        }
+
+        public decimal GetAverageUserRating(string userUid)
+        {
+            List<UserMovieRating> userMovieRatings = _dalContext.UserMovieRatings.GetAll().Where(u => u.UserGUID == userUid).ToList();
+            decimal summedRating = userMovieRatings.Sum(f => f.Rating);
+            return summedRating / userMovieRatings.Count;
+        }
+
         public void GenerateTrainingPredictedMovieCount()
         {
             List<ApplicationUser> users = _dalContext.Users.GetAll()!;
             List<UserProfile> userProfiles = _dalContext.UserProfiles.GetAll();
-            List<PredictedAgeViewership> predictedAgeViewerships = new();
             List<SeenMovie> seenMovies = _dalContext.SeenMovies.GetAll();
             List<MovieSubscription> watchLaterMovies = _dalContext.MovieSubscriptions.GetAll();
             List<UserMovieSearch> movieSearches = _dalContext.UserMovieSearches.GetAll();
             Random random = new();
             List<PredictedMovieCount> predictedMovieCounts = new();
             int k = 0;
+            decimal averageUsersRating = Math.Round(GetAverageUsersRating(), 2);
             foreach (UserProfile userProfile in userProfiles)
             {
                 List<MovieSubscription> userWatchLaterMovies = watchLaterMovies.Where(w => w.UserGUID == userProfile.UserGUID).ToList();
                 List<SeenMovie> userSeenMovies = seenMovies.Where(w => w.UserGUID == userProfile.UserGUID).ToList();
                 List<UserMovieSearch> userMovieSearches = movieSearches.Where(w => w.UserGUID == userProfile.UserGUID).ToList();
+                decimal averageUserRating = Math.Round(GetAverageUserRating(userProfile.UserGUID), 2);
                 for (int i = 0; i < 400; i++)
                 {
                     try
@@ -194,13 +212,15 @@ namespace BLL.Implementation
                             MyAverageWatchLaterMovies = myAverageWatchLaterMoviesCount,
                             AverageMovieClicks = movieSearches.Count / userProfiles.Count + random.Next(0, 100),
                             MyMovieClicks = userMovieSearches.Count + random.Next(0, 100),
+                            AverageRating = averageUsersRating,
+                            MyAverageRating = averageUserRating,
                             FuturePredictedMovieCount = (myAverageWatchLaterMoviesCount + myAverageSeenMoviesCount) / 2 + random.Next(0, 100)
                         };
                         predictedMovieCounts.Add(predictedMovieCount);
                         Console.WriteLine(k);
                         k++;
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         continue;
                     }
@@ -214,16 +234,17 @@ namespace BLL.Implementation
         {
             List<ApplicationUser> users = _dalContext.Users.GetAll()!;
             List<UserProfile> userProfiles = _dalContext.UserProfiles.GetAll();
-            List<PredictedAgeViewership> predictedAgeViewerships = new();
             List<SeenMovie> seenMovies = _dalContext.SeenMovies.GetAll();
             List<MovieSubscription> watchLaterMovies = _dalContext.MovieSubscriptions.GetAll();
             List<UserMovieSearch> movieSearches = _dalContext.UserMovieSearches.GetAll();
             Random random = new();
+            decimal averageUsersRating = Math.Round(GetAverageUsersRating(), 2);
             List<PredictedMovieRuntime> predictingMovieRuntimes = new();
             foreach (UserProfile userProfile in userProfiles)
             {
                 try
                 {
+                    decimal averageUserRating = Math.Round(GetAverageUserRating(userProfile.UserGUID), 2);
                     List<MovieSubscription> userWatchLaterMovies = watchLaterMovies.Where(w => w.UserGUID == userProfile.UserGUID).ToList();
                     List<SeenMovie> userSeenMovies = seenMovies.Where(w => w.UserGUID == userProfile.UserGUID).ToList();
                     List<UserMovieSearch> userMovieSearches = movieSearches.Where(w => w.UserGUID == userProfile.UserGUID).ToList();
@@ -240,12 +261,14 @@ namespace BLL.Implementation
                             MyMovieClicks = userMovieSearches.Count + random.Next(0, 100),
                             AverageWatchLaterMoviesRuntime = watchLaterMovies.Select(u => u.Movie.Runtime).Sum() / userProfiles.Count + random.Next(0, 100),
                             MyAverageWatchLaterMoviesRuntime = myAverageWatchLaterMovieRuntime,
+                            AverageRating = averageUsersRating,
+                            MyAverageRating = averageUserRating,
                             FuturePredictedRuntime = (myAverageWatchLaterMovieRuntime + myAverageSeenMoviesRuntime) / 2 + random.Next(0, 100)
                         };
                         predictingMovieRuntimes.Add(predictingMovieRuntime);
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     continue;
                 }
@@ -309,7 +332,7 @@ namespace BLL.Implementation
                             FuturePredictedMoviesCount = (averageSeenMoviesNow + averageWatchLaterMoviesNow) / 2 + random.Next(50, 100),
                         });
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         continue;
                     }
@@ -424,6 +447,8 @@ namespace BLL.Implementation
                     {
                         continue;
                     }
+                    decimal averageUsersRating = Math.Round(GetAverageUsersRating(), 2);
+                    decimal averageUserRating = Math.Round(GetAverageUserRating(userProfile.UserGUID), 2);
                     int age = CalculateAge(userProfile.DateOfBirth);
                     List<Movie> intialSeenMovies = _dalContext.SeenMovies.GetAllByUser(user.Id).Select(s => s.Movie).ToList();
                     List<Movie> concatedSeenMovies = _dalContext.SeenMovies.GetAllByUser(user.Id).Select(s => s.Movie).Concat(randomGeneratedMovies).ToList();
@@ -438,27 +463,8 @@ namespace BLL.Implementation
 
                     for (int j = 0; j < numberOfRecommendationsPerMonth; j++)
                     {
-                        //string seenMoviesList = "";
-                        //string watchLaterMoviesList = "";
-                        //string likedMoviesList = "";
-                        //string collectionMoviesList = "";
-                        //for (int k = 0; k < numberOfIterationsPerRecommendation; k++)
-                        //{
-                        //    int currentIndex = i * numberOfRecommendationsPerMonth * numberOfIterationsPerRecommendation + j * numberOfIterationsPerRecommendation + k;
-                        //    seenMoviesList += concatedSeenMovies[currentIndex % concatedSeenMovies.Count].Title;
-                        //    watchLaterMoviesList += watchLaterMovies[currentIndex % watchLaterMovies.Count].Title;
-                        //    likedMoviesList += likedMovies[currentIndex % likedMovies.Count].Title;
-                        //    collectionMoviesList += collectionMovies[currentIndex % collectionMovies.Count].Title;
-                        //    if (k != numberOfIterationsPerRecommendation - 1)
-                        //    {
-                        //        seenMoviesList += ";";
-                        //        watchLaterMoviesList += ";";
-                        //        likedMoviesList += ";";
-                        //        collectionMoviesList += ";";
-                        //    }
-                        //}
+                        Console.WriteLine(j);
                         int currentIndex = i * numberOfRecommendationsPerMonth + j;
-                        //string predictedGenre = userPredictedGenres.Last().Genre;
                         string predictedGenre = userPredictedGenres[random.Next(0, userPredictedGenres.Count)].Genre;
                         if (predictedGenre == "SciFi")
                         {
@@ -468,36 +474,70 @@ namespace BLL.Implementation
                         {
                             predictedGenre = "Film-Noir";
                         }
-                        List<Movie> futurePredictedMovies = movies.Where(m => m.Genres.Split(',').Contains(predictedGenre)).ToList();
-                        string futurePredictedMovie = futurePredictedMovies[random.Next(0, futurePredictedMovies.Count)].Title;
-                        //predictedMovies.Add(new()
-                        //{
-                        //    UserId = user.Id,
-                        //    SeenMovie = seenMoviesList,
-                        //    WatchLaterMovie = watchLaterMoviesList,
-                        //    LikedMovie = likedMoviesList,
-                        //    CollectionMovie = collectionMoviesList,
-                        //    Age = age,
-                        //    City = userProfile.City,
-                        //    MostWatchedGenre = mostWatchedGenre,
-                        //    MostWatchedMovie = mostWatchedMovie,
-                        //    PredictedGenre = predictedGenre,
-                        //    FuturePredictedMovie = futurePredictedMovie
-                        //});
-
-                        predictedMovies.Add(new()
+                        try
                         {
-                            UserEmail = user.Email,
-                            WatchLaterMovie = watchLaterMovies[currentIndex].Title,
-                            LikedMovie = likedMovies[currentIndex].Title,
-                            CollectionMovie = collectionMovies[currentIndex].Title,
-                            Age = age,
-                            City = userProfile.City,
-                            MostWatchedGenre = mostWatchedGenre,
-                            MostWatchedMovie = mostWatchedMovie,
-                            PredictedGenre = predictedGenre,
-                            FuturePredictedMovie = futurePredictedMovie
-                        });
+                            List<Movie> futurePredictedMovies = movies.Where(m => m.Genres.Split(',').Contains(predictedGenre)).ToList();
+                            string futurePredictedMovie = futurePredictedMovies[random.Next(0, futurePredictedMovies.Count) % futurePredictedMovies.Count].Title;
+                            if (j % 3 == 0)
+                            {
+                                try
+                                {
+                                    predictedMovies.Add(new()
+                                    {
+                                        UserEmail = user.Email,
+                                        WatchLaterMovie = watchLaterMovies[currentIndex].Title,
+                                        LikedMovie = likedMovies[currentIndex].Title,
+                                        CollectionMovie = collectionMovies[currentIndex].Title,
+                                        Age = age,
+                                        City = userProfile.City,
+                                        MostWatchedGenre = mostWatchedGenre,
+                                        MostWatchedMovie = mostWatchedMovie,
+                                        AverageRating = averageUsersRating,
+                                        MyAverageRating = averageUserRating,
+                                        PredictedGenre = predictedGenre,
+                                        FuturePredictedMovie = futurePredictedMovie
+                                    });
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine(2);
+                                    Console.WriteLine(e);
+                                    continue;
+                                }
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    predictedMovies.Add(new()
+                                    {
+                                        UserEmail = user.Email,
+                                        WatchLaterMovie = watchLaterMovies[currentIndex].Title,
+                                        LikedMovie = concatedSeenMovies[random.Next(concatedSeenMovies.Count)].Title,
+                                        CollectionMovie = concatedSeenMovies[random.Next(concatedSeenMovies.Count)].Title,
+                                        Age = age,
+                                        City = userProfile.City,
+                                        MostWatchedGenre = concatedSeenMovies[random.Next(concatedSeenMovies.Count)].Title,
+                                        MostWatchedMovie = concatedSeenMovies[random.Next(concatedSeenMovies.Count)].Title,
+                                        AverageRating = averageUsersRating,
+                                        MyAverageRating = averageUserRating,
+                                        PredictedGenre = predictedGenre,
+                                        FuturePredictedMovie = concatedSeenMovies[random.Next(concatedSeenMovies.Count)].Title
+                                    });
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine(3);
+                                    Console.WriteLine(e);
+                                    continue;
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(1);
+                            Console.WriteLine(ex);
+                        }
                     }
                 }
             }

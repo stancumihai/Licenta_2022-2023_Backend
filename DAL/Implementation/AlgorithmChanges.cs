@@ -15,7 +15,7 @@ namespace DAL.Implementation
             List<AlgorithmChange> algorithmChanges = _context.AlgorithmChanges.ToList();
             if (algorithmChanges.Count != 0)
             {
-                AlgorithmChange previousAlgorithmChange = algorithmChanges[algorithmChanges.Count - 1];
+                AlgorithmChange previousAlgorithmChange = algorithmChanges[^1];
                 previousAlgorithmChange.EndDate = algorithmChange.StartDate;
                 _context.Update(previousAlgorithmChange);
             }

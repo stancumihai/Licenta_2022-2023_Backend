@@ -39,7 +39,6 @@ namespace BLL.Implementation.MachineLearning
                    .GetAll()
                    .Select(p => PredictedGenreReadConverter.ToBLLModel(p))
                    .ToList();
-
         }
 
         private Tuple<string, string> GetAverageGenres(List<Movie> movies)
@@ -180,6 +179,37 @@ namespace BLL.Implementation.MachineLearning
                                 mostWatchedirectors.ToList()[1]);
         }
 
+        public decimal GetAverageUsersRating(int year, int month)
+        {
+            List<UserMovieRating> userMovieRatings = _dalContext.UserMovieRatings
+                .GetAll()
+                .Where(u => u.CreatedAt.Year == year &&
+                            u.CreatedAt.Month == month)
+                .ToList();
+            if (userMovieRatings.Count == 0)
+            {
+                return 0;
+            }
+            decimal summedRating = userMovieRatings.Sum(f => f.Rating);
+            return summedRating / userMovieRatings.Count;
+        }
+
+        public decimal GetAverageUserRating(string userUid, int year, int month)
+        {
+            List<UserMovieRating> userMovieRatings = _dalContext.UserMovieRatings
+                .GetAll()
+                .Where(u => u.UserGUID == userUid &&
+                            u.CreatedAt.Year == year &&
+                            u.CreatedAt.Month == month)
+                .ToList();
+            if (userMovieRatings.Count == 0)
+            {
+                return 0;
+            }
+            decimal summedRating = userMovieRatings.Sum(f => f.Rating);
+            return summedRating / userMovieRatings.Count;
+        }
+
         private async Task<List<Library.MachineLearningModels.PredictedGenre>> GetDataByMonth(int year, int month)
         {
             List<SeenMovie> seenMovies = _dalContext.SeenMovies.GetAll();
@@ -188,7 +218,7 @@ namespace BLL.Implementation.MachineLearning
             List<Movie> movies = GetLastMonthMovies(seenMovies, movieSubscriptions, likedMovies);
             Tuple<string, string> topGlobalGenres = GetAverageGenres(movies);
             Tuple<string, string> topGlobalDirectors = GetAverageDirectors(movies);
-            List<UserRead> users = _dalContext.Users.GetAll()
+            List<UserRead> users = _dalContext.Users.GetAll()!
                 .Select(u => UserReadConverter.ToBLLModel(u))
                 .ToList();
             int lastMonthClicksCount = _dalContext.UserMovieSearches
@@ -197,14 +227,17 @@ namespace BLL.Implementation.MachineLearning
                 .ToList().Count;
             List<Library.MachineLearningModels.PredictedGenre> predictedGenres = new();
 
+            decimal averageUsersRating = Math.Round(GetAverageUsersRating(year, month), 2);
+
             foreach (UserRead user in users)
             {
-                ApplicationUser applicationUser = _dalContext.Users.GetByUid(user.Uid);
+                ApplicationUser applicationUser = _dalContext.Users.GetByUid(user.Uid)!;
                 IList<string> roles = await _userManager.GetRolesAsync(applicationUser);
                 if (roles.FirstOrDefault(r => r == "Administrator") != null)
                 {
                     continue;
                 }
+                decimal averageUserRating = Math.Round(GetAverageUserRating(user.Uid.ToString(), year, month), 2);
                 List<Movie> userMovies = GetLastMonthMoviesByUser(user.Uid.ToString(),
                     seenMovies, movieSubscriptions, likedMovies);
                 if (userMovies.Count == 0)
@@ -226,6 +259,8 @@ namespace BLL.Implementation.MachineLearning
                     MyAverageGenre2 = topPersonalGenres.Item2,
                     AverageDirector = topGlobalDirectors.Item1,
                     MyAverageDirector = topPersonalDirectors.Item1,
+                    MyAverageRating = averageUsersRating,
+                    AverageRating = averageUserRating,
                     Clicks = lastMonthClicksCount
                 };
                 predictedGenres.Add(predictedGenre);
@@ -233,7 +268,7 @@ namespace BLL.Implementation.MachineLearning
             return predictedGenres;
         }
 
-        private List<Library.Models._UI.MachineLearning.PredictedGenre> GetPredictedGenresUIData(List<PredictedGenre> predictingGenres)
+        private static List<Library.Models._UI.MachineLearning.PredictedGenre> GetPredictedGenresUIData(List<PredictedGenre> predictingGenres)
         {
             List<Library.Models._UI.MachineLearning.PredictedGenre> predictingGenresMLModels = new();
             IDictionary<Tuple<int, int>, List<string>> dictionary = new Dictionary<Tuple<int, int>, List<string>>();

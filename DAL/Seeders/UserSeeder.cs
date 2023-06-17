@@ -26,8 +26,6 @@ namespace DAL.Seeders
                                     "dannyHopkins", "russellAlvarez", "wandaDoyle", "albertAllen", "cesarCooper",
                                     "matthewMccormick" };
 
-
-
         public async Task SeedAdditionalData(int year, int month)
         {
             List<ApplicationUser> applicationUsers = _context.Users.ToList();
@@ -39,12 +37,12 @@ namespace DAL.Seeders
                     return;
                 }
                 DateTime dateTime = new(year, month, 1);
-                CreateUserSeenMovies(user.Id, dateTime);
-                CreateMovieSubscriptions(user.Id, dateTime);
-                CreateLikedMovies(user.Id, dateTime);
-                CreateUserMovieSearches(user.Id, dateTime);
+                CreateUserProfile(user.Id, _context.Users.FirstOrDefault(u => u.Id == user.Id)!.UserName);
+                //CreateUserSeenMovies(user.Id, dateTime);
+                //CreateUserMovieSearches(user.Id, dateTime);
+                //CreateMovieSubscriptions(user.Id, dateTime);
+                //CreateLikedMovies(user.Id, dateTime);
             }
-
         }
 
         public async Task SeedUsers()
@@ -68,10 +66,10 @@ namespace DAL.Seeders
                 if (user != null)
                 {
                     CreateUserProfile(user.Id, userName);
-                    CreateUserSeenMovies(user.Id);
-                    CreateMovieSubscriptions(user.Id);
-                    CreateLikedMovies(user.Id);
-                    CreateUserMovieSearches(user.Id);
+                    //CreateUserSeenMovies(user.Id);
+                    //CreateMovieSubscriptions(user.Id);
+                    //CreateLikedMovies(user.Id);
+                    //CreateUserMovieSearches(user.Id);
                 }
             }
         }
@@ -84,7 +82,15 @@ namespace DAL.Seeders
         private static string GetUserFullName(string userName)
         {
             string[] fullNameSplit = Regex.Split(userName, @"(?<!^)(?=[A-Z])");
-            return fullNameSplit[0] + " " + fullNameSplit[1];
+            if (fullNameSplit.Length == 0)
+            {
+                return "";
+            }
+            if (fullNameSplit.Length == 1)
+            {
+                return fullNameSplit[0];
+            }
+            return fullNameSplit[0] + fullNameSplit[1];
         }
 
         private static DateTime GenerateDate()
@@ -120,7 +126,6 @@ namespace DAL.Seeders
                 throw new Exception("Error in base64Encode" + ex.Message);
             }
         }
-
 
         private async Task<ApplicationUser> CreateUser(UserRegister model)
         {
@@ -167,14 +172,15 @@ namespace DAL.Seeders
             }
         }
 
-        private void AddUserMovieRating(Random random, Guid movieGuid, string userId)
+        private void AddUserMovieRating(Random random, Guid movieGuid, string userId, DateTime createdAt)
         {
             UserMovieRating userMovieRating = new()
             {
                 UserMovieRatingGUID = new Guid(),
                 MovieGUID = movieGuid,
                 UserGUID = userId,
-                Rating = random.NextInt64(1, 5)
+                Rating = random.NextInt64(1, 5),
+                CreatedAt = createdAt
             };
             _context.UserMovieRatings.Add(userMovieRating);
         }
@@ -209,7 +215,7 @@ namespace DAL.Seeders
                     CreatedAt = createdAt,
                 };
                 _context.SeenMovies.Add(seenMovie);
-                AddUserMovieRating(random, movies[movieIndex].MovieGUID, userId);
+                AddUserMovieRating(random, movies[movieIndex].MovieGUID, userId, createdAt);
                 _context.SaveChanges();
             }
         }

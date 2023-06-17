@@ -280,6 +280,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapHub<NotificationHub>("/notification");
 });
 app.UseWebSockets();
+//await CreateUsers(app.Services);
 //CreateRoles(app.Services).Wait();
 //CreateMovies(app.Services);
 //CreateMovieRatings(app.Services);

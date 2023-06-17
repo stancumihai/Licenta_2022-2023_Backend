@@ -30,7 +30,6 @@ namespace BLL.Implementation
             return recommendation.IsLiked == false ? RecommendationStatus.Disliked : RecommendationStatus.Liked;
         }
 
-
         public RecommendationCreate Add(RecommendationCreate recommendation)
         {
             Recommendation addedRecommendation = RecommendationCreateConverter.ToDALModel(recommendation);
@@ -73,7 +72,6 @@ namespace BLL.Implementation
                .ToList();
         }
 
-
         public RecommendationRead Update(RecommendationUpdate recommendation)
         {
             Recommendation? existingRecommendation = _dalContext.Recommendations.GetByGuid(recommendation.Uid);
@@ -105,21 +103,6 @@ namespace BLL.Implementation
             }
             return startAccuracy / recommendations.Count;
         }
-
-        //public static float GetAccuracyStrategy1(List<Recommendation> recommendations)
-        //{
-        //    int startAccuracy = recommendations.Count;
-        //    foreach (Recommendation recommendation in recommendations)
-        //    {
-        //        RecommendationStatus recommendationStatus = GetRecommendationStatus(recommendation);
-        //        if (recommendationStatus == RecommendationStatus.Liked || recommendationStatus == RecommendationStatus.NotSeen)
-        //        {
-        //            continue;
-        //        }
-        //        startAccuracy--;
-        //    }
-        //    return (float)startAccuracy / recommendations.Count;
-        //}
 
         public List<MonthlyRecommendationStatusModel> GetMonthlyRecommendationStatuses(int year, int month, string algorithmName)
         {
@@ -171,14 +154,8 @@ namespace BLL.Implementation
                 RecommendationOutcome = "NotSeen",
                 Count = notSeenCount
             });
-            //monthlyRecommendationStatusModels.Add(new MonthlyRecommendationStatusModel
-            //{
-            //    RecommendationOutcome = "All",
-            //    Count = recommendations.Count
-            //});
             return monthlyRecommendationStatusModels;
         }
-
 
         public List<AccuracyPeriodModel> GetAccuracyPerMonthsByAlgorithm(string algorithmName)
         {
@@ -257,21 +234,6 @@ namespace BLL.Implementation
             }
             return summaryMonthlyStatistics;
         }
-
-        //public float GetAccuracy_Strategy2(List<Recommendation> recommendations)
-        //{
-        //    int startAccuracy = recommendations.Count;
-        //    foreach (Recommendation recommendation in recommendations)
-        //    {
-        //        RecommendationStatus recommendationStatus = GetRecommendationStatus(recommendation);
-        //        if (recommendationStatus == RecommendationStatus.Liked)
-        //        {
-        //            continue;
-        //        }
-        //        startAccuracy--;
-        //    }
-        //    return startAccuracy / recommendations.Count;
-        //}
 
         public static float GetAccuracyStrategy3(List<Recommendation> recommendations)
         {
@@ -354,6 +316,38 @@ namespace BLL.Implementation
             return "";
         }
 
+        public decimal GetAverageUsersRating(int year, int month)
+        {
+            List<UserMovieRating> userMovieRatings = _dalContext.UserMovieRatings
+                .GetAll()
+                .Where(u => u.CreatedAt.Year == year &&
+                            u.CreatedAt.Month == month)
+                .ToList();
+            if (userMovieRatings.Count == 0)
+            {
+                return 0;
+            }
+            decimal summedRating = userMovieRatings.Sum(f => f.Rating);
+            return summedRating / userMovieRatings.Count;
+        }
+
+        public decimal GetAverageUserRating(string userUid, int year, int month)
+        {
+            List<UserMovieRating> userMovieRatings = _dalContext.UserMovieRatings
+                .GetAll()
+                .Where(u => u.UserGUID == userUid &&
+                            u.CreatedAt.Year == year &&
+                            u.CreatedAt.Month == month)
+                .ToList();
+            if (userMovieRatings.Count == 0)
+            {
+                return 0;
+            }
+            decimal summedRating = userMovieRatings.Sum(f => f.Rating);
+            return summedRating / userMovieRatings.Count;
+        }
+
+
         private async Task<List<PredictedMovie>> GetDataByMonth(int year, int month)
         {
             List<PredictedMovie> predictedMovies = new();
@@ -364,6 +358,7 @@ namespace BLL.Implementation
                                                                                      .Where(p => p.CreatedAt.Year == year && p.CreatedAt.Month == month)
                                                                                      .ToList();
             List<Movie> movies = _dalContext.Movies.GetAll();
+            decimal averageUsersRating = Math.Round(GetAverageUsersRating(year, month), 2);
             foreach (ApplicationUser user in users)
             {
                 IList<string> roles = await _userManager.GetRolesAsync(user);
@@ -372,6 +367,7 @@ namespace BLL.Implementation
                     continue;
                 }
                 UserProfile? userProfile = _dalContext.UserProfiles.GetByUserGuid(user.Id);
+                decimal averageUserRating = Math.Round(GetAverageUserRating(user.Id.ToString(), year, month), 2);
                 if (userProfile == null)
                 {
                     continue;
@@ -416,6 +412,10 @@ namespace BLL.Implementation
                     List<Movie> futurePredictedMovies = movies
                         .Where(m => m.Genres.Split(',').Contains(predictedGenre))
                         .ToList();
+                    if (futurePredictedMovies.Count == 0)
+                    {
+                        futurePredictedMovies = likedMovies;
+                    }
                     string futurePredictedMovie = futurePredictedMovies[j % futurePredictedMovies.Count].Title;
                     string watchLaterMovie = "";
                     string collectionMovie = "";
@@ -455,6 +455,8 @@ namespace BLL.Implementation
                         City = userProfile.City,
                         MostWatchedGenre = mostWatchedMovie,
                         MostWatchedMovie = mostWatchedGenre,
+                        MyAverageRating = averageUserRating,
+                        AverageRating = averageUsersRating,
                         PredictedGenre = predictedGenre
                     });
                 }
@@ -473,19 +475,33 @@ namespace BLL.Implementation
             int maxCurrentSize = 0;
             for (int i = 0; i < predictedMoviesCount; i++)
             {
-                List<PredictedMovie> currentPredictedMovies = predictedMovies.Skip(i * stepSize).Take(stepSize).ToList();
-                csvHandler.WriteCSV(currentPredictedMovies);
-                List<string> currentPredictedData = ScriptEngine.GetPredictedData("predictedMovies", "predict");
-                int k = 0;
-                for (int j = i * stepSize; j < i * stepSize + currentPredictedMovies.Count; j++)
+                try
                 {
-                    predictedMovies[j].FuturePredictedMovie = currentPredictedData[k];
-                    k++;
+                    List<PredictedMovie> currentPredictedMovies = predictedMovies.Skip(i * stepSize).Take(stepSize).ToList();
+                    csvHandler.WriteCSV(currentPredictedMovies);
+                    List<string> currentPredictedData = ScriptEngine.GetPredictedData("predictedMovies", "predict");
+                    List<string> currentPredictedDataDecoded = new List<string>();
+                    foreach (string currentData in currentPredictedData)
+                    {
+                        string currentDataDecoded = currentData.Substring(2, currentData.Length - 3);
+                        currentPredictedDataDecoded.Add(currentDataDecoded);
+                    }
+                    int k = 0;
+                    for (int j = i * stepSize; j < i * stepSize + currentPredictedMovies.Count; j++)
+                    {
+                        predictedMovies[j].FuturePredictedMovie = currentPredictedDataDecoded[k];
+                        k++;
+                    }
+                    maxCurrentSize = (i + 1) * stepSize;
+                    if (maxCurrentSize > predictedMoviesCount)
+                    {
+                        break;
+                    }
                 }
-                maxCurrentSize = (i + 1) * stepSize;
-                if (maxCurrentSize > predictedMoviesCount)
+                catch (Exception e)
                 {
-                    break;
+                    Console.WriteLine(e);
+                    continue;
                 }
             }
             csvHandler.WriteCSV(predictedMovies);
@@ -506,9 +522,9 @@ namespace BLL.Implementation
                 {
                     MovieGUID = _dalContext.Movies.GetByName(predictedMovieName)!.MovieGUID,
                     UserGUID = _dalContext.Users.GetByEmail(userEmails[i])!.Id,
-                    CreatedAt = DateTime.Now
+                    CreatedAt = new DateTime(year, month, 1)
                 };
-                //_dalContext.Recommendations.Add(recommendation);
+                _dalContext.Recommendations.Add(recommendation);
             }
             ScriptEngine.TrainToPredictModel("predictedMovies", "training", currentAlgorithmName);
         }

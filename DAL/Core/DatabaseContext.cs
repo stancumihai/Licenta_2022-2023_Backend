@@ -66,13 +66,13 @@ namespace DAL.Core
 
         private static SurveyQuestionCategory StringToCategory(string category)
         {
-            switch (category)
+            return category switch
             {
-                case "Movie": return SurveyQuestionCategory.Movie;
-                case "Actor": return SurveyQuestionCategory.Actor;
-                case "Director": return SurveyQuestionCategory.Director;
-                default: return SurveyQuestionCategory.None;
-            }
+                "Movie" => SurveyQuestionCategory.Movie,
+                "Actor" => SurveyQuestionCategory.Actor,
+                "Director" => SurveyQuestionCategory.Director,
+                _ => SurveyQuestionCategory.None,
+            };
         }
 
         private static void AddSurveyRelatedData(ModelBuilder modelBuilder)
@@ -94,32 +94,46 @@ namespace DAL.Core
                     Category = StringToCategory(surveyQuestion.Key.Split('?')[1])
                 });
                 List<SurveyAnswer> surveyAnswers = new();
-                SurveyAnswer sa = new()
-                {
-                    SurveyQuestionGUID = surveyQuestionGuid,
-                    SurveyAnswerGUID = Guid.NewGuid(),
-                    Value = ""
-                };
+                //SurveyAnswer sa = new()
+                //{
+                //    SurveyQuestionGUID = surveyQuestionGuid,
+                //    SurveyAnswerGUID = Guid.NewGuid(),
+                //    Value = ""
+                //};
                 if (surveyQuestion.Value.Count != 0)
                 {
                     foreach (var surveyAnswer in surveyQuestion.Value)
                     {
-                        sa.Value = surveyAnswer;
-
-                        surveyAnswers.Add(sa);
-                        modelBuilder.Entity<SurveyAnswer>().HasData(sa);
+                        var thisSa = new SurveyAnswer()
+                        {
+                            SurveyQuestionGUID = surveyQuestionGuid,
+                            SurveyAnswerGUID = Guid.NewGuid(),
+                            Value = surveyAnswer
+                        };
+                        thisSa.Value = surveyAnswer;
+                        surveyAnswers.Add(thisSa);
+                        modelBuilder.Entity<SurveyAnswer>().HasData(thisSa);
                     }
-                    continue;
                 }
-                surveyAnswers.Add(sa);
-                modelBuilder.Entity<SurveyAnswer>().HasData(sa);
+                else
+                {
+                    var sa = new SurveyAnswer()
+                    {
+                        SurveyQuestionGUID = surveyQuestionGuid,
+                        SurveyAnswerGUID = Guid.NewGuid(),
+                        Value = ""
+                    };
+                    surveyAnswers.Add(sa);
+                    modelBuilder.Entity<SurveyAnswer>().HasData(sa);
+                }
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
+
         {
             base.OnModelCreating(modelBuilder);
-
+            //Debugger.Launch();
             modelBuilder.Entity<SurveyUserAnswer>()
                 .HasOne(sua => sua.User)
                 .WithMany(u => u.SurveyUserAnswers)
@@ -145,7 +159,7 @@ namespace DAL.Core
                 .WithMany(sq => sq.SurveyAnswers)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            //AddSurveyRelatedData(modelBuilder);
+            AddSurveyRelatedData(modelBuilder);
         }
     }
 }

@@ -10,7 +10,8 @@ namespace BLL.Converters.UserMovieRating
             {
                 MovieUid = userMovieRatingDALModel.MovieGUID,
                 UserUid = userMovieRatingDALModel.UserGUID,
-                Rating = userMovieRatingDALModel.Rating
+                Rating = userMovieRatingDALModel.Rating,
+                CreatedAt = userMovieRatingDALModel.CreatedAt
             };
 
             return userMovieRatingCreate;
@@ -22,7 +23,8 @@ namespace BLL.Converters.UserMovieRating
             {
                 MovieGUID = userMovieRatingBLLModel.MovieUid,
                 UserGUID = userMovieRatingBLLModel.UserUid,
-                Rating = userMovieRatingBLLModel.Rating
+                Rating = userMovieRatingBLLModel.Rating,
+                CreatedAt = userMovieRatingBLLModel.CreatedAt
             };
 
             return userMovieRatingEntity;

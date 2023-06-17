@@ -105,9 +105,40 @@ namespace BLL.Implementation.MachineLearning
             return (float)movieCount / usersWithSeenMovies;
         }
 
+        public decimal GetAverageUsersRating(int year, int month)
+        {
+            List<UserMovieRating> userMovieRatings = _dalContext.UserMovieRatings
+                .GetAll()
+                .Where(u => u.CreatedAt.Year == year &&
+                            u.CreatedAt.Month == month)
+                .ToList();
+            if (userMovieRatings.Count == 0)
+            {
+                return 0;
+            }
+            decimal summedRating = userMovieRatings.Sum(f => f.Rating);
+            return summedRating / userMovieRatings.Count;
+        }
+
+        public decimal GetAverageUserRating(string userUid, int year, int month)
+        {
+            List<UserMovieRating> userMovieRatings = _dalContext.UserMovieRatings
+                .GetAll()
+                .Where(u => u.UserGUID == userUid &&
+                            u.CreatedAt.Year == year &&
+                            u.CreatedAt.Month == month)
+                .ToList();
+            if (userMovieRatings.Count == 0)
+            {
+                return 0;
+            }
+            decimal summedRating = userMovieRatings.Sum(f => f.Rating);
+            return summedRating / userMovieRatings.Count;
+        }
+
         private async Task<List<Library.MachineLearningModels.PredictedMovieRuntime>> GetDataByMonth(int year, int month)
         {
-            List<UserRead> users = _dalContext.Users.GetAll()
+            List<UserRead> users = _dalContext.Users.GetAll()!
                 .Select(u => UserReadConverter.ToBLLModel(u))
                 .ToList();
             List<SeenMovie> seenMovies = _dalContext.SeenMovies.GetAll()
@@ -130,14 +161,16 @@ namespace BLL.Implementation.MachineLearning
                 .ToList().Count;
             List<UserMovieSearch> userMovieSearches = _dalContext.UserMovieSearches.GetAll();
             List<Library.MachineLearningModels.PredictedMovieRuntime> predictedMoviesRuntime = new();
+            decimal averageUsersRating = Math.Round(GetAverageUsersRating(year, month), 2);
             foreach (UserRead user in users)
             {
-                ApplicationUser applicationUser = _dalContext.Users.GetByUid(user.Uid);
+                ApplicationUser applicationUser = _dalContext.Users.GetByUid(user.Uid)!;
                 IList<string> roles = await _userManager.GetRolesAsync(applicationUser);
                 if (roles.FirstOrDefault(r => r == "Administrator") != null)
                 {
                     continue;
                 }
+                decimal averageUserRating = Math.Round(GetAverageUserRating(user.Uid.ToString(), year, month), 2);
                 Library.MachineLearningModels.PredictedMovieRuntime predictedMovieRuntime = new()
                 {
                     UserId = user.Uid.ToString(),
@@ -148,6 +181,8 @@ namespace BLL.Implementation.MachineLearning
                     AverageMovieClicks = GetAverageMovieClicks(users, userMovieSearches),
                     MyMovieClicks = userMovieSearches.Where(u => u.UserGUID == user.Uid.ToString()).ToList().Count,
                     AverageWatchLaterMoviesRuntime = GetAverageMovieSubscriptionsRuntime(users, movieSubscriptions),
+                    MyAverageRating = averageUsersRating,
+                    AverageRating = averageUserRating,
                     MyAverageWatchLaterMoviesRuntime = movieSubscriptions
                                                         .Where(s => s.UserGUID == user.Uid.ToString())
                                                         .Select(s => s.Movie)

@@ -16,7 +16,7 @@ namespace BLL.Implementation
         public static readonly string GENRES_QUESTION_IDENTIFIER = "top 3";
         public static readonly int MULTIPLY_MOVIE_RECOMMENDATIONS_CONSTANT = 3;
         public static readonly int MAX_RECOMMENDATION_COUNT = 3;
-
+        public static readonly int LOWEST_RECOMMENDATION_COUNT = 3;
 
         public RecommendationManager(IDALContext dalContext) : base(dalContext)
         {
@@ -146,7 +146,7 @@ namespace BLL.Implementation
             }
             if (movieRecommendationsCount == -1)
             {
-                movieRecommendationsCount = 3;
+                movieRecommendationsCount = LOWEST_RECOMMENDATION_COUNT;
             }
             MovieRecommendationHelperModel model = BuildInitialRecommendationModel(surveyUserAnswerCreateBatch);
             List<string> surveyQuestionPreferredGenres = GetQuestionValueByIdentifier(surveyUserAnswerCreateBatch, GENRES_QUESTION_IDENTIFIER);

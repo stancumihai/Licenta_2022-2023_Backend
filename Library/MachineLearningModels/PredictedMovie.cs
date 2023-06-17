@@ -10,6 +10,8 @@
         public string City { get; set; }
         public string MostWatchedGenre { get; set; } //all time
         public string MostWatchedMovie { get; set; } //all time
+        public decimal AverageRating { get; set; }
+        public decimal MyAverageRating { get; set; }
         public string PredictedGenre { get; set; }
         public string FuturePredictedMovie { get; set; }
     }
