@@ -318,5 +318,12 @@ namespace BLL.Implementation
 
             return principal;
         }
+
+        public void UpdatePassword(UserRead userToUpdate, string newPassword)
+        {
+            userToUpdate.Password = EncodePasswordToBase64(newPassword);
+            ApplicationUser updateUser = UserReadConverter.ToDALModel(userToUpdate);
+            _dalContext.Users.Update(updateUser);
+        }
     }
 }

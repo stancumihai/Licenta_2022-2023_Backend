@@ -1,5 +1,7 @@
 ﻿using Library.Models._UI;
 using Library.Models.Movie;
+using Library.Models.MovieSubscription;
+using Library.Models.SeenMovie;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,7 +13,7 @@ namespace Services.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MovieRead>))]
         public async Task<IActionResult> GetAll()
         {
-            //BusinessContext.MachineLearningTraining.GenerateTrainingPredictedMovies();
+            //BusinessContext.MachineLearningTraining.GenerateTrainingPredictedMovies(2023, 7);
             //BusinessContext.MachineLearningTraining.GenerateTrainingPredictedAgesViewership();
             //List<Library.MachineLearningModels.PredictedGenre> predictedGenres = await BusinessContext.PredictedGenres.GetLastMonthData();
             //ICSVWriterService writer = new CSVWriterService("test_genres_predicted.csv");
@@ -26,7 +28,7 @@ namespace Services.Controllers
             //List<Library.MachineLearningModels.PredictedMovieRuntime> predictedMovieRuntimes = await BusinessContext.PredictedMoviesRuntime.GetLastMonthData();
             //ICSVWriterService writer = new CSVWriterService("test_movies_runtimes_predicted.csv");
             //writer.WriteCSV(predictedMovieRuntimes);
-             return Ok(BusinessContext.Movies!.GetAll());
+            return Ok(BusinessContext.Movies!.GetAll());
         }
 
         [HttpGet("{pageNumber}/{pageSize}")]
@@ -98,7 +100,7 @@ namespace Services.Controllers
         }
 
         [HttpGet("history")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<List<MovieRead>>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<List<SeenMovieRead>>))]
         [Authorize]
         public IActionResult GetMoviesHistory()
         {
@@ -106,7 +108,7 @@ namespace Services.Controllers
         }
 
         [HttpGet("subscription")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<List<MovieRead>>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<List<MovieSubscriptionRead>>))]
         [Authorize]
         public IActionResult GetMoviesSubscription()
         {

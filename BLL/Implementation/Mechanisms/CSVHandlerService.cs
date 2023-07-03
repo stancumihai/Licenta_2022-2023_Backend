@@ -47,6 +47,14 @@ namespace BLL.Implementation.Mechanisms
             using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
             csv.WriteRecords(records);
         }
+        public void AppendCSV<T>(List<T> records)
+        {
+            using var writer = new StreamWriter(FileName, append: true);
+            using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+            csv.WriteHeader(typeof(CSVHandlerService));
+            csv.NextRecord();
+            csv.WriteRecords(records);
+        }
 
         public List<List<string>> ReadCsvFile()
         {

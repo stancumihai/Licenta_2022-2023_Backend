@@ -28,7 +28,7 @@ namespace DAL.Implementation
         public List<Movie> GetAll()
         {
             return _context.Movies
-                .Include(m =>m.KnowFor)
+                .Include(m => m.KnowFor)
                 .ToList();
         }
 
@@ -142,38 +142,42 @@ namespace DAL.Implementation
             return userMovieRatingsList;
         }
 
-        public List<Movie> GetMoviesHistory(string userUid)
+        public List<SeenMovie> GetMoviesHistory(string userUid)
         {
             List<SeenMovie> seenMovies = _context.SeenMovies
               .ToList()
               .Distinct(new SeenMovieComparer())
               .ToList();
 
-            List<Guid> seenMoviesUids = seenMovies
-                .Where(sm => sm.UserGUID == userUid)
-                .Select(sm => sm.MovieGUID)
-                .ToList();
+            //List<Guid> seenMoviesUids = seenMovies
+            //    .Where(sm => sm.UserGUID == userUid)
+            //    .Select(sm => sm.MovieGUID)
+            //    .ToList();
 
-            return _context.Movies
-                .Where(m => seenMoviesUids.Contains(m.MovieGUID))
+            //return _context.Movies
+            //    .Where(m => seenMoviesUids.Contains(m.MovieGUID))
+            //    .ToList();
+            return seenMovies
+                .Where(sm => sm.UserGUID == userUid)
                 .ToList();
         }
 
-        public List<Movie> GetMoviesSubscription(string userUid)
+        public List<MovieSubscription> GetMoviesSubscription(string userUid)
         {
             List<MovieSubscription> movieSubscriptions = _context.MovieSubscriptions
                .ToList()
                .Distinct(new MovieSubscriptionComparer())
                .ToList();
 
-
-            List<Guid> subscriptionsUids = movieSubscriptions
+            //List<Guid> subscriptionsUids = movieSubscriptions
+            //    .Where(sm => sm.UserGUID == userUid)
+            //    .Select(sm => sm.MovieGUID)
+            //    .ToList();
+            //return _context.Movies
+            //    .Where(m => subscriptionsUids.Contains(m.MovieGUID))
+            //    .ToList();
+            return movieSubscriptions
                 .Where(sm => sm.UserGUID == userUid)
-                .Select(sm => sm.MovieGUID)
-                .ToList();
-
-            return _context.Movies
-                .Where(m => subscriptionsUids.Contains(m.MovieGUID))
                 .ToList();
         }
 

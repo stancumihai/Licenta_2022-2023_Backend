@@ -37,7 +37,7 @@ namespace BLL.Implementation.Mechanisms.Jobs
         {
             Console.WriteLine("Predicted Movies Runtime Job");
             int year = DateTime.Now.Year;
-            int month = DateTime.Now.Month;
+            int month = 5;
             await _predictedMoviesRuntime.ProcessPredictedMovieRuntimeJobAction(year, month);
         }
 

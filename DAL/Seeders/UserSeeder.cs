@@ -4,6 +4,7 @@ using DAL.Models;
 using Library.Enums;
 using Library.Models.Users;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -26,23 +27,36 @@ namespace DAL.Seeders
                                     "dannyHopkins", "russellAlvarez", "wandaDoyle", "albertAllen", "cesarCooper",
                                     "matthewMccormick" };
 
+        private static int CalculateAge(DateTime dateOfBirth)
+        {
+            int age = DateTime.Now.Year - dateOfBirth.Year;
+            if (DateTime.Now.DayOfYear < dateOfBirth.DayOfYear)
+            {
+                age--;
+            }
+
+            return age;
+        }
+
         public async Task SeedAdditionalData(int year, int month)
         {
-            List<ApplicationUser> applicationUsers = _context.Users.ToList();
-            foreach (ApplicationUser user in applicationUsers)
-            {
-                IList<string> roles = await _userManager.GetRolesAsync(user);
-                if (roles.FirstOrDefault(r => r == "Administrator") != null)
-                {
-                    return;
-                }
-                DateTime dateTime = new(year, month, 1);
-                CreateUserProfile(user.Id, _context.Users.FirstOrDefault(u => u.Id == user.Id)!.UserName);
-                //CreateUserSeenMovies(user.Id, dateTime);
-                //CreateUserMovieSearches(user.Id, dateTime);
-                //CreateMovieSubscriptions(user.Id, dateTime);
-                //CreateLikedMovies(user.Id, dateTime);
-            }
+            //List<ApplicationUser> applicationUsers = _context.Users.ToList();
+            List<UserProfile> profiles = _context.UserProfiles.ToList();
+            CreateUserSeenMoviesForAge(19, profiles, new DateTime(year, month, 1));
+            //foreach (ApplicationUser user in applicationUsers)
+            //{
+            //    IList<string> roles = await _userManager.GetRolesAsync(user);
+            //    if (roles.FirstOrDefault(r => r == "Administrator") != null)
+            //    {
+            //        return;
+            //    }
+            //    DateTime dateTime = new(year, month, 1);
+            //    //CreateUserProfile(user.Id, _context.Users.FirstOrDefault(u => u.Id == user.Id)!.UserName);
+            //    //CreateUserSeenMovies(user.Id, dateTime);
+            //    //CreateUserMovieSearches(user.Id, dateTime);
+            //    //CreateMovieSubscriptions(user.Id, dateTime);
+            //    //CreateLikedMovies(user.Id, dateTime);
+            //}
         }
 
         public async Task SeedUsers()
@@ -52,10 +66,88 @@ namespace DAL.Seeders
                 await ProcessSingleUser(userName);
             }
         }
+
+        public void SeedRecommendationOutcomes(int year, int month, float accuracy, float seenPercent)
+        {
+            Random random = new();
+            List<Recommendation> recommendations = _context.Recommendations
+                .Where(r => r.CreatedAt.Year == year && r.CreatedAt.Month == month)
+                .ToList();
+            int seenCount = (int)(recommendations.Count * seenPercent);
+
+            int likedCount = (int)(seenCount * accuracy);
+            int dislikeCount = seenCount - likedCount - 1;
+            List<Recommendation> shuffledRecommendations = recommendations
+                .OrderBy(_ => Guid.NewGuid())
+                .ToList();
+            List<Recommendation> toLikeRecommendations = shuffledRecommendations
+                .Take(likedCount)
+                .ToList();
+            List<Recommendation> toDislikeRecommendations = shuffledRecommendations
+              .Skip(likedCount)
+              .Take(dislikeCount)
+              .ToList();
+            foreach (Recommendation recommendation in toLikeRecommendations)
+            {
+                Recommendation? oldRecommendation = _context.Recommendations
+                     .Include(r => r.User)
+                     .Include(r => r.Movie)
+                     .FirstOrDefault(r => r.RecommendationGUID == recommendation.RecommendationGUID);
+                if (oldRecommendation == null)
+                {
+                    continue;
+                }
+                Recommendation newRecommendation = new()
+                {
+                    RecommendationGUID = recommendation.RecommendationGUID,
+                    MovieGUID = recommendation.MovieGUID,
+                    UserGUID = recommendation.UserGUID,
+                    CreatedAt = recommendation.CreatedAt,
+                    LikedDecisionDate = recommendation.CreatedAt.AddDays(5),
+                    IsLiked = true
+                };
+                oldRecommendation.LikedDecisionDate = newRecommendation.LikedDecisionDate;
+                oldRecommendation.IsLiked = newRecommendation.IsLiked;
+                oldRecommendation.MovieGUID = newRecommendation.MovieGUID;
+                oldRecommendation.UserGUID = newRecommendation.UserGUID;
+                oldRecommendation.CreatedAt = newRecommendation.CreatedAt;
+                _context.Recommendations.Update(oldRecommendation);
+                _context.SaveChanges();
+            }
+            foreach (Recommendation recommendation in toDislikeRecommendations)
+            {
+                Recommendation? oldRecommendation = _context.Recommendations
+                     .Include(r => r.User)
+                     .Include(r => r.Movie)
+                     .FirstOrDefault(r => r.RecommendationGUID == recommendation.RecommendationGUID);
+                if (oldRecommendation == null)
+                {
+                    continue;
+                }
+                Recommendation newRecommendation = new()
+                {
+                    RecommendationGUID = recommendation.RecommendationGUID,
+                    MovieGUID = recommendation.MovieGUID,
+                    UserGUID = recommendation.UserGUID,
+                    CreatedAt = recommendation.CreatedAt,
+                    LikedDecisionDate = recommendation.CreatedAt.AddDays(5),
+                    IsLiked = false
+                };
+                oldRecommendation.LikedDecisionDate = newRecommendation.LikedDecisionDate;
+                oldRecommendation.IsLiked = newRecommendation.IsLiked;
+                oldRecommendation.MovieGUID = newRecommendation.MovieGUID;
+                oldRecommendation.UserGUID = newRecommendation.UserGUID;
+                oldRecommendation.CreatedAt = newRecommendation.CreatedAt;
+                _context.Recommendations.Update(oldRecommendation);
+                _context.SaveChanges();
+            }
+        }
+
         private async Task ProcessSingleUser(string userName)
         {
             string userEmail = GetUserEmail(userName);
-            if (_context.Users.FirstOrDefault(u => u.Email == userEmail) == null)
+            ApplicationUser existingUser = _context.Users.FirstOrDefault(u => u.Email == userEmail);
+            if (existingUser == null)
             {
                 UserRegister userRegister = new()
                 {
@@ -63,15 +155,12 @@ namespace DAL.Seeders
                     Password = "@Dev123"
                 };
                 ApplicationUser user = await CreateUser(userRegister);
-                if (user != null)
-                {
-                    CreateUserProfile(user.Id, userName);
-                    //CreateUserSeenMovies(user.Id);
-                    //CreateMovieSubscriptions(user.Id);
-                    //CreateLikedMovies(user.Id);
-                    //CreateUserMovieSearches(user.Id);
-                }
             }
+            //CreateUserProfile(user.Id, userName);
+            //CreateUserSeenMovies(existingUser.Id, new DateTime(2023, 7, 1));
+            //CreateMovieSubscriptions(user.Id);
+            //CreateLikedMovies(user.Id);
+            //CreateUserMovieSearches(user.Id);
         }
 
         private static string GetUserEmail(string userName)
@@ -187,12 +276,13 @@ namespace DAL.Seeders
 
         private void CreateUserSeenMovies(string userId, DateTime dateTime = default)
         {
+            Random random = new();
             int count = 0;
+            int end = random.Next(5, 10);
             List<Movie> movies = _context.Movies.ToList();
-            while (count <= 30)
+            while (count <= end)
             {
                 count++;
-                Random random = new();
                 int movieIndex = random.Next(movies.Count);
                 DateTime createdAt = DateTime.Now;
                 if (dateTime != default)
@@ -215,8 +305,34 @@ namespace DAL.Seeders
                     CreatedAt = createdAt,
                 };
                 _context.SeenMovies.Add(seenMovie);
-                AddUserMovieRating(random, movies[movieIndex].MovieGUID, userId, createdAt);
+                //AddUserMovieRating(random, movies[movieIndex].MovieGUID, userId, createdAt);
                 _context.SaveChanges();
+            }
+        }
+
+        private void CreateUserSeenMoviesForAge(int age, List<UserProfile> profiles, DateTime dateTime)
+        {
+            Random random = new();
+            int count = 0;
+            int end = random.Next(5, 10);
+            List<Movie> movies = _context.Movies.ToList();
+            List<UserProfile> filteredUserProfiles = profiles.Where(p => CalculateAge(p.DateOfBirth) == age).ToList();
+            foreach (UserProfile userProfile in filteredUserProfiles)
+            {
+                while (count <= end)
+                {
+                    count++;
+                    int movieIndex = random.Next(movies.Count);
+                    SeenMovie seenMovie = new()
+                    {
+                        SeenMovieGUID = new Guid(),
+                        MovieGUID = movies[movieIndex].MovieGUID,
+                        UserGUID = userProfile.UserGUID,
+                        CreatedAt = dateTime,
+                    };
+                    _context.SeenMovies.Add(seenMovie);
+                    _context.SaveChanges();
+                }
             }
         }
 

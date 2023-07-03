@@ -22,6 +22,11 @@ namespace BLL.Implementation
 
         public MovieSubscriptionCreate Add(MovieSubscriptionCreate movieSubscription)
         {
+            MovieSubscription? existingMovieSubscription = _dalContext.MovieSubscriptions.GetAll().FirstOrDefault(m => m.MovieGUID == movieSubscription.MovieUid && m.UserGUID == movieSubscription.UserUid);
+            if (existingMovieSubscription != null)
+            {
+                return null;
+            }
             MovieSubscription addedMovieSubscription = MovieSubscriptionCreateConverter.ToDALModel(movieSubscription);
             if (addedMovieSubscription == null)
             {

@@ -1,18 +1,18 @@
 UserId,AverageGenre1,AverageGenre2,MyAverageGenre1,MyAverageGenre2,AverageDirector,MyAverageDirector,Clicks,AverageRating,MyAverageRating,FuturePredictedGenre
-050e64c1-8cdd-4102-b703-125ff56652e1,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Marina Abramovic,979,2.45,2.48,War
-051d7ffb-14a6-4837-9c14-90c478d77c78,Drama,Comedy,Drama,Comedy,Eliette Abecassis,João Mário Grilo,979,2.55,2.48,War
-1f2d4b1b-7013-4fd6-8b9e-e914acc4dcf2,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Charles Lamont,979,2.65,2.48,War
-2cabaf29-f4f8-4ec8-b0f2-f15d0147dd54,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Steve Barron,979,2.39,2.48,War
-2f2edd26-2309-446f-a501-efd4ff95698c,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Dev Anand,979,2.42,2.48,War
-395e3f78-f527-434b-a285-8cb7d6c9859a,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Marc Allégret,979,2.39,2.48,War
-3c176379-742c-4534-91e4-addf71b44cee,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Walter Lassally,979,3.16,2.48,War
-4a8b4a64-5dc3-4e33-a858-09a96518a389,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Frank Darabont,979,2.16,2.48,War
-7865dc03-d371-4a17-88cc-7ba0103a1941,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Eliette Abecassis,979,2.23,2.48,War
-7e0ac2e6-c2a9-4176-a64d-ffb23fb5c6fd,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Gabriela Acher,979,2.48,2.48,War
-816925f2-1a84-4f5e-8f68-9bb61e47a831,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Peter Weir,979,2.61,2.48,War
-8f27e002-d3e5-439f-a601-ea2a39f34ad8,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Charles Lamont,979,2.52,2.48,War
-968630e1-f235-4d48-a6a2-e14828e24ec5,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Khwaja Ahmad Abbas,979,2.23,2.48,War
-a3cf3f05-d647-4112-8f5f-6ad667453e96,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Sam Irvin,979,2.16,2.48,History
-bda79ecd-904e-4928-8ce4-e5c53cc98110,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Jean-Charles Tacchella,979,2.77,2.48,Crime
-cb9a5e24-f2d6-4aef-b519-34286e9753fb,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Marcel Achard,979,2.52,2.48,War
-f0bc1222-022f-4e79-b27e-6a3d2ca3caa8,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Carlos Salces,979,0,2.48,War
+050e64c1-8cdd-4102-b703-125ff56652e1,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Marina Abramovic,979,2.45,2.48,Comedy
+051d7ffb-14a6-4837-9c14-90c478d77c78,Drama,Comedy,Drama,Comedy,Eliette Abecassis,João Mário Grilo,979,2.55,2.48,Comedy
+1f2d4b1b-7013-4fd6-8b9e-e914acc4dcf2,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Charles Lamont,979,2.65,2.48,Comedy
+2cabaf29-f4f8-4ec8-b0f2-f15d0147dd54,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Steve Barron,979,2.39,2.48,Comedy
+2f2edd26-2309-446f-a501-efd4ff95698c,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Dev Anand,979,2.42,2.48,Drama
+395e3f78-f527-434b-a285-8cb7d6c9859a,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Marc Allégret,979,2.39,2.48,Fantasy
+3c176379-742c-4534-91e4-addf71b44cee,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Walter Lassally,979,3.16,2.48,Comedy
+4a8b4a64-5dc3-4e33-a858-09a96518a389,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Frank Darabont,979,2.16,2.48,Comedy
+7865dc03-d371-4a17-88cc-7ba0103a1941,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Eliette Abecassis,979,2.23,2.48,Comedy
+7e0ac2e6-c2a9-4176-a64d-ffb23fb5c6fd,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Gabriela Acher,979,2.48,2.48,Comedy
+816925f2-1a84-4f5e-8f68-9bb61e47a831,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Peter Weir,979,2.61,2.48,Comedy
+8f27e002-d3e5-439f-a601-ea2a39f34ad8,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Charles Lamont,979,2.52,2.48,Comedy
+968630e1-f235-4d48-a6a2-e14828e24ec5,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Khwaja Ahmad Abbas,979,2.23,2.48,Comedy
+a3cf3f05-d647-4112-8f5f-6ad667453e96,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Sam Irvin,979,2.16,2.48,FilmNoir
+bda79ecd-904e-4928-8ce4-e5c53cc98110,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Jean-Charles Tacchella,979,2.77,2.48,Comedy
+cb9a5e24-f2d6-4aef-b519-34286e9753fb,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Marcel Achard,979,2.52,2.48,Comedy
+f0bc1222-022f-4e79-b27e-6a3d2ca3caa8,Drama,Comedy,Drama,Comedy,Eliette Abecassis,Carlos Salces,979,0,2.48,Comedy

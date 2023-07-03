@@ -22,7 +22,7 @@ namespace BLL.Converters.MovieSubscription
             {
                 MovieGUID = movieSubscriptionBLLModel.MovieUid,
                 UserGUID = movieSubscriptionBLLModel.UserUid,
-                CreatedAt = movieSubscriptionBLLModel.CreatedAt
+                CreatedAt = DateTime.Now,
             };
 
             return movieSubscriptionEntity;

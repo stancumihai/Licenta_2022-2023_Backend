@@ -2,10 +2,10 @@
 {
     public interface IMachineLearningTraining
     {
-        void GenerateTrainingPredictedGenre();
-        void GenerateTrainingPredictedMovieCount();
-        void GenerateTrainingPredictedMovieRuntime();
-        void GenerateTrainingPredictedAgesViewership();
-        void GenerateTrainingPredictedMovies();
+        void GenerateTrainingPredictedGenre(int year, int month);
+        void GenerateTrainingPredictedMovieCount(int year, int month);
+        void GenerateTrainingPredictedMovieRuntime(int year, int month);
+        void GenerateTrainingPredictedAgesViewership(int year, int month);
+        void GenerateTrainingPredictedMovies(int year, int month);
     }
 }

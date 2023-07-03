@@ -268,6 +268,14 @@ async Task AddAdditionalDataToUsers(IServiceProvider serviceProvider)
     await userSeeder.SeedAdditionalData(2023, 7);
 }
 
+void SeedRecommendations(IServiceProvider serviceProvider)
+{
+    using var scope = app!.Services.CreateScope();
+    DAL.Interfaces.IUserSeeder userSeeder = (DAL.Seeders.UserSeeder)scope.ServiceProvider.GetService(typeof(DAL.Interfaces.IUserSeeder))!;
+    userSeeder.SeedRecommendationOutcomes(2023, 7, 0.75f, 0.85f);
+}
+
+
 app.UseHttpsRedirection();
 app.UseCors("CorsPolicy");
 app.UseRouting();
@@ -286,4 +294,5 @@ app.UseWebSockets();
 //CreateMovieRatings(app.Services);
 //CreatePersons(app.Services);
 //await AddAdditionalDataToUsers(app.Services);
+//SeedRecommendations(app.Services);
 app.Run();

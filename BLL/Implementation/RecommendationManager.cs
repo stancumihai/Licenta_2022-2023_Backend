@@ -86,7 +86,7 @@ namespace BLL.Implementation
             {
                 return MapMovieRecommendationsCount(surveyUserAnswer);
             }
-            return MAX_RECOMMENDATION_COUNT;
+            return -2;
         }
 
         public MovieRecommendationHelperModel BuildInitialRecommendationModel(SurveyUserAnswerCreateBatch surveyUserAnswerCreateBatch)
@@ -141,6 +141,10 @@ namespace BLL.Implementation
                 movieRecommendationsCount = GetMovieRecommendationsCount(surveyUserAnswer);
                 if (movieRecommendationsCount != -1)
                 {
+                    if (movieRecommendationsCount == -2)
+                    {
+                        continue;
+                    }
                     break;
                 }
             }

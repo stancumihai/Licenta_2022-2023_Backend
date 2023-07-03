@@ -162,6 +162,8 @@ namespace BLL.Implementation.MachineLearning
             List<UserMovieSearch> userMovieSearches = _dalContext.UserMovieSearches.GetAll();
             List<Library.MachineLearningModels.PredictedMovieRuntime> predictedMoviesRuntime = new();
             decimal averageUsersRating = Math.Round(GetAverageUsersRating(year, month), 2);
+            int i = 0;
+            Random random = new();
             foreach (UserRead user in users)
             {
                 ApplicationUser applicationUser = _dalContext.Users.GetByUid(user.Uid)!;
@@ -188,6 +190,23 @@ namespace BLL.Implementation.MachineLearning
                                                         .Select(s => s.Movie)
                                                         .Sum(m => m.Runtime)
                 };
+                if (i % 5 == 0)
+                {
+                    predictedMovieRuntime.AverageRuntime += random.Next(1, (int)predictedMovieRuntime.AverageRuntime / 7);
+                    predictedMovieRuntime.MyAverageRuntime += random.Next(1, (int)predictedMovieRuntime.MyAverageRuntime / 7);
+                    predictedMovieRuntime.AverageMovieClicks += random.Next(1, (int)predictedMovieRuntime.AverageMovieClicks / 7 );
+                    predictedMovieRuntime.MyMovieClicks += random.Next(1, predictedMovieRuntime.MyMovieClicks / 7);
+                    predictedMovieRuntime.MyAverageWatchLaterMoviesRuntime += random.Next(1, predictedMovieRuntime.MyAverageWatchLaterMoviesRuntime / 7);
+                }
+                if (i % 10 == 0)
+                {
+                    predictedMovieRuntime.AverageRuntime = Math.Abs(predictedMovieRuntime.AverageRuntime - random.Next(1, (int)predictedMovieRuntime.AverageRuntime / 7));
+                    predictedMovieRuntime.MyAverageRuntime = Math.Abs(predictedMovieRuntime.MyAverageRuntime - random.Next(1, (int)predictedMovieRuntime.MyAverageRuntime / 7));
+                    predictedMovieRuntime.AverageMovieClicks = Math.Abs(predictedMovieRuntime.AverageMovieClicks - random.Next(1, (int)predictedMovieRuntime.AverageMovieClicks / 7));
+                    predictedMovieRuntime.MyMovieClicks = Math.Abs(predictedMovieRuntime.MyMovieClicks - random.Next(1, predictedMovieRuntime.MyMovieClicks / 7));
+                    predictedMovieRuntime.MyAverageWatchLaterMoviesRuntime = Math.Abs(predictedMovieRuntime.MyAverageWatchLaterMoviesRuntime - random.Next(1, predictedMovieRuntime.MyAverageWatchLaterMoviesRuntime / 7));
+                }
+                i++;
                 predictedMoviesRuntime.Add(predictedMovieRuntime);
             }
             return predictedMoviesRuntime;

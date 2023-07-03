@@ -1,5 +1,6 @@
 ﻿using Library.Models;
 using Library.Models.Movie;
+using Library.Models.Recommendation;
 using Library.Models.SurveyUserAnswer;
 using Library.Settings;
 using Microsoft.AspNetCore.Authorization;
@@ -58,17 +59,35 @@ namespace Services.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize]
-        public async Task<ActionResult<string>> AddInSuperBatches([FromBody] SurveyUserAnswerCreateBatch surveyUserAnswerCreateBatch)
+        public async Task<ActionResult<List<RecommendationRead>>> AddInSuperBatches([FromBody] SurveyUserAnswerCreateBatch surveyUserAnswerCreateBatch)
         {
             int added = BusinessContext.SurveyUserAnswers!.AddInSuperBatches(surveyUserAnswerCreateBatch);
-            List<MovieRead> initialMovieRecommendations = BusinessContext.RecommendationManager.GetInitialMovieRecommendations(surveyUserAnswerCreateBatch);
             if (added == -1)
             {
                 return NotFound();
             }
+            string? email = _httpContextAccessor.HttpContext!.User?.FindFirstValue(ClaimTypes.Name);
+            List<MovieRead> initialMovieRecommendations = BusinessContext.RecommendationManager.GetInitialMovieRecommendations(surveyUserAnswerCreateBatch);
+            List<RecommendationRead> recommendations = initialMovieRecommendations.Select(m => new RecommendationRead
+            {
+                Uid = new Guid(),
+                Movie = m,
+                UserUid = BusinessContext.Users.GetByEmail(email).Uid.ToString(),
+                CreatedAt = DateTime.Now
+            }).ToList();
+            foreach (RecommendationRead recommendationRead in recommendations)
+            {
+                BusinessContext.Recommendations.Add(new RecommendationCreate
+                {
+                    MovieUid = recommendationRead.Movie.Uid,
+                    UserUid = recommendationRead.UserUid,
+                    CreatedAt = recommendationRead.CreatedAt,
+                    IsLiked = recommendationRead.IsLiked,
+                    LikedDecisionDate = recommendationRead.LikedDecisionDate
+                });
+            }
             try
             {
-                string? email = _httpContextAccessor.HttpContext!.User?.FindFirstValue(ClaimTypes.Name);
                 string body = "<p>Here are the the initial recommendations</p><ul>";
                 foreach (MovieRead movie in initialMovieRecommendations)
                 {
@@ -83,10 +102,11 @@ namespace Services.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                Console.WriteLine(e);
+                return Ok(recommendations);
 
             }
-            return Ok("Recommendations Sent");
+            return Ok(recommendations);
         }
     }
 }

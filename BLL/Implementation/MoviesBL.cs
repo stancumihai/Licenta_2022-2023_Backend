@@ -1,9 +1,13 @@
 ﻿using BLL.Converters.Movie;
+using BLL.Converters.MovieSubscription;
+using BLL.Converters.SeenMovie;
 using BLL.Core;
 using BLL.Interfaces;
 using DAL.Models;
 using Library.Models._UI;
 using Library.Models.Movie;
+using Library.Models.MovieSubscription;
+using Library.Models.SeenMovie;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
@@ -123,21 +127,28 @@ namespace BLL.Implementation
               .ToList();
         }
 
-        public List<MovieRead> GetMoviesHistory()
+        public List<SeenMovieRead> GetMoviesHistory()
         {
             var email = _httpContextAccessor.HttpContext!.User?.FindFirstValue(ClaimTypes.Name);
             ApplicationUser? userEntity = _dalContext.Users.GetByEmail(email!);
             if (userEntity == null)
             {
                 return null;
+            }
+            List<SeenMovie> seenMovies = _dalContext.Movies
+              .GetMoviesHistory(userEntity.Id);
+            List<Movie> movies = _dalContext.Movies.GetAll();
+            foreach (SeenMovie seenMovie in seenMovies)
+            {
+                seenMovie.Movie = movies.FirstOrDefault(m => m.MovieGUID == seenMovie.MovieGUID)!;
             }
             return _dalContext.Movies
               .GetMoviesHistory(userEntity.Id)
-              .Select(movie => MovieReadConverter.ToBLLModel(movie))
+              .Select(seenMovie => SeenMovieReadConverter.ToBLLModel(seenMovie))
               .ToList();
         }
 
-        public List<MovieRead> GetMoviesSubscription()
+        public List<MovieSubscriptionRead> GetMoviesSubscription()
         {
             var email = _httpContextAccessor.HttpContext!.User?.FindFirstValue(ClaimTypes.Name);
             ApplicationUser? userEntity = _dalContext.Users.GetByEmail(email!);
@@ -145,9 +156,15 @@ namespace BLL.Implementation
             {
                 return null;
             }
-            return _dalContext.Movies
-              .GetMoviesSubscription(userEntity.Id)
-              .Select(movie => MovieReadConverter.ToBLLModel(movie))
+            List<MovieSubscription> movieSubscriptions = _dalContext.Movies
+              .GetMoviesSubscription(userEntity.Id).ToList();
+            List<Movie> movies = _dalContext.Movies.GetAll();
+            foreach (MovieSubscription movieSubscription in movieSubscriptions)
+            {
+                movieSubscription.Movie = movies.FirstOrDefault(m => m.MovieGUID == movieSubscription.MovieGUID)!;
+            }
+            return movieSubscriptions
+              .Select(movie => MovieSubscriptionReadConverter.ToBLLModel(movie))
               .ToList();
         }
 

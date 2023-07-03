@@ -37,7 +37,7 @@ namespace BLL.Implementation.Mechanisms.Jobs
         {
             Console.WriteLine("Predicted Ages Viewership Job");
             int year = DateTime.Now.Year;
-            int month = DateTime.Now.Month;
+            int month = 7;
             _predictedAgesViewership.ProcessPredictedAgeViwershipAction(year, month);
         }
 

@@ -1,5 +1,7 @@
 ﻿using Library.Models._UI;
 using Library.Models.Movie;
+using Library.Models.MovieSubscription;
+using Library.Models.SeenMovie;
 
 namespace BLL.Interfaces
 {
@@ -16,8 +18,8 @@ namespace BLL.Interfaces
         List<MovieRead> GetMoviesHistoryPaginated(int pageNumber, int pageSize);
         List<MovieRead> GetMoviesSubscriptionPaginated(int pageNumber, int pageSize);
         List<MovieRead> GetMoviesCollectionPaginated(int pageNumber, int pageSize);
-        List<MovieRead> GetMoviesHistory();
-        List<MovieRead> GetMoviesSubscription();
+        List<SeenMovieRead> GetMoviesHistory();
+        List<MovieSubscriptionRead> GetMoviesSubscription();
         List<MovieRead> GetMoviesCollection();
         List<string> GetTopLikedGenres();
         List<MovieRead> GetAdvancedSearchMovies(SearchModel searcModel);

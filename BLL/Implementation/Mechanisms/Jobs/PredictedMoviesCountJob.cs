@@ -29,15 +29,15 @@ namespace BLL.Implementation.Mechanisms.Jobs
         {
             _logger.LogInformation("Service is starting.");
             //_timer = new Timer(ProcessPredictedMovieCountJob, null, TimeSpan.Zero,
-                //TimeSpan.FromSeconds(_jobTimeFrame.Time));
+            //    TimeSpan.FromSeconds(_jobTimeFrame.Time));
             return Task.CompletedTask;
         }
 
         private async void ProcessPredictedMovieCountJob(object state)
         {
             int year = DateTime.Now.Year;
-            int month = 5;
-            await _predictedMoviesCount.ProcessPredictedMovieCountJobAction(year, month);
+            int month = 7;
+            await _predictedMoviesCount.ProcessPredictedMovieCountJobAction(year, month); 
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

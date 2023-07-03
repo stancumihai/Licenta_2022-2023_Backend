@@ -221,13 +221,26 @@ namespace BLL.Implementation
                     .ToList();
 
                 float accuracy = GetAccuracyStrategy3(monthlyRecommendations);
-                AlgorithmChange? algorithmChange = algorithmChanges
-                    .FirstOrDefault(a => a.StartDate <= recommendation.CreatedAt && a.EndDate >= recommendation.CreatedAt);
+
+                AlgorithmChange? algorithmChange = new();
+                algorithmChange = algorithmChanges
+                    .FirstOrDefault(a => a.StartDate.Year == a.StartDate.Year &&
+                                         a.StartDate.Month == recommendation.CreatedAt.Month &&
+                                         a.EndDate.Year >= recommendation.CreatedAt.Year &&
+                                         a.EndDate.Month >= recommendation.CreatedAt.Month);
+                if (algorithmChange == null)
+                {
+                    algorithmChange = algorithmChanges
+                    .FirstOrDefault(a => a.StartDate.Year <= recommendation.CreatedAt.Year &&
+                                         a.StartDate.Month <= recommendation.CreatedAt.Month &&
+                                         a.EndDate.Year >= recommendation.CreatedAt.Year &&
+                                         a.EndDate.Month >= recommendation.CreatedAt.Month);
+                }
                 summaryMonthlyStatistics.Add(new SummaryMonthlyStatistics
                 {
                     Month = month,
                     Year = year,
-                    Accuracy = accuracy,
+                    Accuracy = (float)Math.Round(accuracy, 2),
                     Algorithm = algorithmChange.AlgorithmName,
                     Count = monthlyRecommendations.Count
                 });
@@ -325,7 +338,7 @@ namespace BLL.Implementation
                 .ToList();
             if (userMovieRatings.Count == 0)
             {
-                return 0;
+                return 1;
             }
             decimal summedRating = userMovieRatings.Sum(f => f.Rating);
             return summedRating / userMovieRatings.Count;
@@ -341,7 +354,7 @@ namespace BLL.Implementation
                 .ToList();
             if (userMovieRatings.Count == 0)
             {
-                return 0;
+                return 1;
             }
             decimal summedRating = userMovieRatings.Sum(f => f.Rating);
             return summedRating / userMovieRatings.Count;
@@ -480,7 +493,7 @@ namespace BLL.Implementation
                     List<PredictedMovie> currentPredictedMovies = predictedMovies.Skip(i * stepSize).Take(stepSize).ToList();
                     csvHandler.WriteCSV(currentPredictedMovies);
                     List<string> currentPredictedData = ScriptEngine.GetPredictedData("predictedMovies", "predict");
-                    List<string> currentPredictedDataDecoded = new List<string>();
+                    List<string> currentPredictedDataDecoded = new();
                     foreach (string currentData in currentPredictedData)
                     {
                         string currentDataDecoded = currentData.Substring(2, currentData.Length - 3);

@@ -15,5 +15,6 @@ namespace BLL.Interfaces
         Task<bool> Logout();
         Task<UserRead> GetLoggedInUser();
         Task<string> GetUserDecodedPasswordByEmail(string email);
+        void UpdatePassword(UserRead userToUpdate, string newPassword);
     }
 }

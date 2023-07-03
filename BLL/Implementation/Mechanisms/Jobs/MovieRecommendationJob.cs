@@ -56,32 +56,32 @@ namespace BLL.Implementation.Mechanisms.Jobs
             int month = 7;
             //await _predictedGenresService.ProcessPredictedGenreJobAction(year, month);
             await _recommendationService.ProcessPredictedMoviesJobAction(year, month);
-            foreach (UserRead user in _usersService.GetAll())
-            {
-                string body = "<p>Here are the this month recommendations:</p>";
-                string email = user.Email;
-                try
-                {
-                    List<RecommendationRead> recommendations = _recommendationService.GetAllByUserAndMonth(user.Uid.ToString(), DateTime.Now.Year, DateTime.Now.Month);
-                    body += "<ul>";
-                    foreach (RecommendationRead recommendation in recommendations)
-                    {
-                        body += "<li>" + recommendation.Movie.Title + "</li>";
-                    }
-                    body += "</ul>";
-                    var message = new Message(new string[] { email },
-                    "Movie Recommendations",
-                    body,
-                    null);
-                    _emailSender.SendEmail(message);
-                    _logger.LogInformation($"Email sent to {email}");
-                    await _notificationHubContext.Clients.All.ReceiveNotification("Yes");
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e, e.Message);
-                }
-            }
+            //foreach (UserRead user in _usersService.GetAll())
+            //{
+            //    string body = "<p>Here are the this month recommendations:</p>";
+            //    string email = user.Email;
+            //    try
+            //    {
+            //        List<RecommendationRead> recommendations = _recommendationService.GetAllByUserAndMonth(user.Uid.ToString(), DateTime.Now.Year, DateTime.Now.Month);
+            //        body += "<ul>";
+            //        foreach (RecommendationRead recommendation in recommendations)
+            //        {
+            //            body += "<li>" + recommendation.Movie.Title + "</li>";
+            //        }
+            //        body += "</ul>";
+            //        var message = new Message(new string[] { email },
+            //        "Movie Recommendations",
+            //        body,
+            //        null);
+            //        _emailSender.SendEmail(message);
+            //        _logger.LogInformation($"Email sent to {email}");
+            //        await _notificationHubContext.Clients.All.ReceiveNotification("Yes");
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        _logger.LogError(e, e.Message);
+            //    }
+            //}
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

@@ -11,7 +11,7 @@ namespace BLL.Converters.LikedMovie
             {
                 Uid = likedMovieDALModel.LikedMovieGUID,
                 Movie = MovieReadConverter.ToBLLModel(likedMovieDALModel.Movie),
-                UserGUID = likedMovieDALModel.UserGUID,
+                UserUid = likedMovieDALModel.UserGUID,
                 CreatedAt = likedMovieDALModel.CreatedAt
             };
 
@@ -24,7 +24,7 @@ namespace BLL.Converters.LikedMovie
             {
                 LikedMovieGUID = likedMovieBLLModel.Uid,
                 MovieGUID = likedMovieBLLModel.Movie.Uid,
-                UserGUID = likedMovieBLLModel.UserGUID,
+                UserGUID = likedMovieBLLModel.UserUid,
                 CreatedAt = likedMovieBLLModel.CreatedAt
             };
 

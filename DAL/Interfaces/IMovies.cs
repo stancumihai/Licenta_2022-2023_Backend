@@ -15,8 +15,8 @@ namespace DAL.Interfaces
         List<Movie> GetMoviesHistoryPaginated(string userUid, int pageNumber, int pageSize);
         List<Movie> GetMoviesSubscriptionPaginated(string userUid, int pageNumber, int pageSize);
         List<Movie> GetMoviesCollectionPaginated(string userUid, int pageNumber, int pageSize);
-        List<Movie> GetMoviesHistory(string userUid);
-        List<Movie> GetMoviesSubscription(string userUid);
+        List<SeenMovie> GetMoviesHistory(string userUid);
+        List<MovieSubscription> GetMoviesSubscription(string userUid);
         List<Movie> GetMoviesCollection(string userUid);
         Movie? GetByName(string movieName);
     }

@@ -64,8 +64,7 @@ namespace Services.Controllers
             {
                 return BadRequest("User does not exist");
             }
-            userToUpdate.Password = request.Password;
-            BusinessContext.Users.Update(userToUpdate);
+            BusinessContext.Authentication!.UpdatePassword(userToUpdate, request.Password);
             return Ok(userToUpdate);
         }
 
