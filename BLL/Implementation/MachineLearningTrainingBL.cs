@@ -57,8 +57,6 @@ namespace BLL.Implementation
             return Tuple.Create(mostappreciatedPersonsSortedGenres.ToList()[0],
                                 mostappreciatedPersonsSortedGenres.ToList()[1]);
         }
-
-
         public decimal GetAverageUsersRating()
         {
             List<UserMovieRating> userMovieRatings = _dalContext.UserMovieRatings.GetAll();

@@ -67,7 +67,6 @@ namespace Services.Controllers
         public IActionResult GetAllByMonth([FromRoute] int year, int month)
         {
             return Ok(BusinessContext.Recommendations.GetAllByMonth(year, month));
-
         }
     }
 }
